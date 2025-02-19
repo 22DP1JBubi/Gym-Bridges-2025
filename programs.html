@@ -1,0 +1,136 @@
+<style>
+	.container.pt-6 .row .fw-400 h1{
+		font-size: 50px;
+	}
+	.container.pt-6 .row .fw-300 h1{
+		font-size: 40px;
+	}
+.btn-custom {
+		text-decoration: none; /* Подчёркивание текста */
+        background-color: #A01C36; /* Цвет фона кнопки */
+        color: #ffffff; /* Цвет текста */
+        padding-top: 15px;
+        padding-bottom: 15px;
+        padding-left: 40px;
+        padding-right: 40px;
+        display: block; /* Растягиваем кнопку на весь контейнер */
+        text-align: center; /* Центрируем текст кнопки */
+        border: none; /* Убираем границу */
+        border-radius: 0; /* Убираем закругление */
+    }
+    .btn-custom:hover {
+        background-color: #821228; /* Цвет фона кнопки при наведении */
+        color: #ffffff; /* Цвет текста кнопки при наведении */
+    }
+    .button-container {
+        display: flex; /* Используем Flexbox для контейнера */
+        align-items: center; /* Центрирование по вертикали */
+        margin-top: 20px; /* Добавляем немного отступа сверху */
+		margin-bottom: 60px;
+    }
+a.link .btn-custom:hover {
+    text-decoration: none !important; /* Убираем подчёркивание текста при наведении */
+}	
+.custom-link {
+    color: #A01C36; /* Цвет ссылки */
+    text-decoration: underline; /* Подчёркивание текста */
+}
+.accordion-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.accordion-icon {
+    width: 20px;
+    height: 20px;
+    background-image: url('https://wordpress-881574-4515938.cloudwaysapps.com/wp-content/uploads/2024/05/unnamed-file.png'); /* Path to your plus icon */
+    background-size: cover;
+    transition: transform 0.3s ease;
+}
+
+.accordion-button:not(.collapsed) .accordion-icon {
+    background-image: url('https://wordpress-881574-4515938.cloudwaysapps.com/wp-content/uploads/2024/05/unnamed-file-1.png'); /* Path to your minus icon */
+    transform: rotate(0deg);
+}
+
+.accordion-button:not(.collapsed) .accordion-icon:before {
+    content: '';
+    position: absolute;
+    top: -20px; /* Adjust this value to place the icon at the top */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 20px;
+    background-image: url('https://wordpress-881574-4515938.cloudwaysapps.com/wp-content/uploads/2024/05/unnamed-file-1.png'); /* Path to your minus icon */
+    background-size: cover;
+}
+
+.accordion-button:not(.collapsed) .accordion-icon:after {
+    content: '';
+    position: absolute;
+    bottom: -20px; /* Adjust this value to place the icon at the bottom */
+    left: 50%;
+    transform: translsateX(-50%);
+    width: 20px;
+    height: 20px;
+    background-image: url('https://wordpress-881574-4515938.cloudwaysapps.com/wp-content/uploads/2024/05/unnamed-file-1.png'); /* Path to your minus icon */
+    background-size: cover;
+}
+
+
+</style>
+
+<section style="background-color: #F8F8F8;">
+	<div class="container pt-6">
+		<div class="row">
+			<h1 class="fw-400">Sertifikācija</h1>
+			<p>Ārstu sertifikācija un resertifikācija tiek veikta saskaņā ar MK noteikumiem Nr. 943 – Ārstniecības personu sertifikācijas kārtība, kas stājušies spēkā no 2013.gada 3.janvāra. Noteikumi pieejami <a href="https://likumi.lv/ta/id/253782-arstniecibas-personu-sertifikacijas-kartiba" class="custom-link">šeit</a>.</p>
+			<p>Maksa: sertifikācija – 59,76 EUR, resertifikācija – 48,38 EUR</p>
+			<p>Dokumentus jānodod Asociācijas sekretāram Gastonam Neimanim, sūtot epastu uz <a href="mailto:info@lema.lv" class="custom-link">info@lema.lv</a></p>
+		</div>
+		<div class="row pt-4">
+			<h1 class="fw-300">Komisijas sēžu datumi</h1>
+			<p>Nākamais komisijas sēdes datums ir 26.04.2024</p>
+			<p>Dokumentus lūdzam iesniegt līdz 01.04.2024</p>
+			<p>Šajā gadā vēl plānotas šādas sēdes:</p>
+			<p>05.10.2024</p>
+			<p>10.10.2024</p>
+			<p>15.11.2024</p>
+			<div class="button-container">
+				<a href="/komisijas" class="btn-custom fw-500">SKATĪT KOMISIJU</a>
+			</div>
+		</div>
+	</div>
+</section>
+<section style="background-color: #F8F8F8;">
+	<div class="container">
+		<div class="row">
+			<div class="accordion accordion-flush" id="accordionFlushExample">
+				<div class="accordion-item">
+					<h2 class="accordion-header">
+						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+							Sertifikācija
+							<span class="accordion-icon"></span>
+						</button>
+					</h2>
+					<div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+						<div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the first item's accordion body.</div>
+					</div>
+				</div>
+				<div class="accordion-item">
+					<h2 class="accordion-header">
+						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+							Resertifikācija
+							<span class="accordion-icon"></span>
+						</button>
+					</h2>
+					<div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+						<div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the second item's accordion body. Let's imagine this being filled with some actual content.</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

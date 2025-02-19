@@ -1,0 +1,150 @@
+html, body {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh; /* Минимальная высота контейнера body равная высоте видимой области экрана */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #F6F6F8;
+  }
+  
+::-webkit-scrollbar{
+    display:none}
+
+.navbar-dark.bg-primary {
+  background-color: #457B9D !important; /* !important для переопределения стилей Bootstrap */
+  color: #fff;
+}
+
+/* Для изменения цвета текста ссылок в навигационной панели */
+.navbar-dark .navbar-nav .nav-link {
+  color: #fff;
+}
+.logo {
+  width: auto; /* Сохранение пропорций логотипа */
+  height: 80%; /* Уменьшение высоты логотипа до 80% от высоты хедера */
+  max-height: 233px; /* Максимальная высота логотипа */
+  position: absolute;
+  left: 0;
+  transform: translateY(-50%); /* Сдвиг вверх на 50% от его высоты */
+}
+  
+@import url(https://fonts.googleapis.com/css?family=Anton:regular);
+nav ul li {
+    margin-right: 20px;
+    color: #FFF;
+    font-family: anton;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 200;
+    line-height: normal;
+    letter-spacing: 0.7px;
+    text-decoration: none; /* Убрать подчеркивание */
+    list-style: none; /* Убрать маркеры списка */
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+/* Анимация при наведении */
+ul li:hover {
+    background-color: #5C99B1; /* Новый цвет фона при наведении */
+
+  }
+
+/* Добавьте стили для ссылок (a) внутри li */
+nav ul li a {
+    color: inherit; /* Унаследует цвет от родительского элемента li */
+    text-decoration: none; /* Убрать подчеркивание для ссылок */
+}
+  
+
+
+main {
+  position: relative;
+  min-height: calc(100% - 100px); /* 100px - высота футера */
+  flex: 1 0 auto;
+}
+
+.footer {
+  background-color: #457B9D;
+  color: #fff;
+}
+
+/* Стили для изображений (иконок) */
+.insta img,
+.google img {
+  width: 24px;
+  height: 24px;
+  margin-right: 10px;
+}
+
+/* Стили для контейнера ссылки */
+.insta a,
+.google a,
+.back-to-top a {
+  text-decoration: none;
+  color: #FFF;
+}
+
+/* Стили для текста */
+.insta p,
+.google p,
+.back-to-top p {
+  transition: background-color 0.3s ease;
+  display: inline-block;
+}
+
+/* Стили для подсветки при наведении на текст */
+.insta a:hover,
+.google a:hover,
+.back-to-top a:hover {
+  background-color: #5C99B1;
+}
+
+.back-to-top {
+  font-family: Anton;
+  font-size: 18px;
+}
+
+
+
+
+
+  
+  .hero-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s, transform 0.3s, font-size 0.3s;
+  z-index: 1;
+  }
+  
+  .hero-text h1 {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 10px 0;
+  z-index: 1;
+  }
+  
+  .hero-text p {
+  font-size: 16px;
+  z-index: 1;
+  }
+  
+
+  .map-text{
+    color: #0D1C2E;
+    font-family: Anton;
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: 1.8px;
+    text-align: center;
+  }
+
+  
+
+
