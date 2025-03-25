@@ -8,7 +8,7 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-$conn = new mysqli('localhost', 'root', '', 'user_database');
+$conn = new mysqli('localhost', 'root', '', 'gymbridges');
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
