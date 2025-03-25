@@ -28,6 +28,21 @@
           }).mouseout(function(e) {
               $('#squidhead').mouseout();
           }).click(function(e) { e.preventDefault(); });
+
+          
+            // Initialize map on load
+          if ($('#map').length) {
+              initMap();
+          }
+
+          // Reinitialize map when home link is clicked
+          $('a[href="index.html"]').click(function() {
+              setTimeout(function() {
+                  if ($('#map').length) {
+                      initMap();
+                  }
+              }, 100);
+          });
   });
 </script>
 <style>
@@ -125,26 +140,29 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                      <a class="nav-link" href="#section1">Home</a>
+                      <a class="nav-link" href="index.html">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#section1">Muscle selection</a>
+                        <a class="nav-link" href="#target-muscle-map"  onclick="scrollToSection()">Muscle selection</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="programs.html">Training programs</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">About us</a>
+                        <a class="nav-link" href="aboutus.html">About us</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#section2">Contacts & Map</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Login</a>
+                        <a class="nav-link" href="login.php">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Register</a>
+                        <a class="nav-link" href="register.php">Register</a>
                     </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="welcome.php">Your profile</a>
+                  </li>
                 </ul>
             </div>
         </div>
@@ -178,7 +196,7 @@
 
 <section class="muscle-map-s">
   <div class="container">
-    <div class="row">
+    <div class="row" style="margin-top: 190px;">
       <!-- Front view -->
       <p class="muscle-text">Muscle selection</p>
       <div class="col-12 col-lg-6">
@@ -192,14 +210,14 @@
   </div>
   
 <map name="muscle-map-front">
-<area href="arms.html" title="left-forearm" shape="poly" coords="75,365,80,353,86,338,92,326,98,306,104,293,112,285,122,275,124,287,125,295,134,293,145,288,152,286,152,295,148,308,143,318,135,327,124,336,113,346,105,355,99,364,96,371,92,378" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
-<area href="arms.html" title="left-biceps" shape="poly" coords="127,298,125,286,123,272,125,259,129,246,134,234,143,230,151,223,160,219,167,223,172,230,170,239,169,250,167,261,164,272,159,281,151,287,142,290,134,294" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
-<area href="arms.html" title="left-sholder" shape="poly" coords="137,229,134,216,134,202,137,191,143,179,151,173,161,168,171,167,184,168,192,169,200,175,191,179,183,186,174,198,166,210,161,219,154,220,146,225" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
-<area href="back_and_cheast.html" title="left-chest" shape="poly" coords="160,218,163,212,168,205,173,199,177,192,183,186,188,181,194,178,200,176,206,177,211,179,216,181,221,184,226,188,229,193,231,199,231,205,231,211,232,216,232,223,231,230,226,234,219,236,211,236,205,238,198,238,191,236,183,234,175,231,167,225" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
-<area href="#" title="right-chest" shape="poly" coords="310,219,305,223,299,227,293,231,287,235,280,237,272,239,264,238,255,236,247,236,240,233,238,225,239,217,239,209,239,201,241,195,244,190,249,187,253,183,258,179,263,177,269,175,274,176,279,179,284,183,289,187,293,194,297,198,300,203,303,207,306,211" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
-<area href="arms.html" title="right-shoulder" shape="poly" coords="273,174,278,169,283,168,289,167,295,167,302,167,307,168,314,170,319,172,323,175,327,179,331,183,333,187,335,192,335,198,336,203,336,208,336,215,336,220,335,226,332,231,325,224,319,219,312,219,307,213,302,205,298,197,291,189,285,182,278,177" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
-<area href="arms.html" title="right-biceps" shape="poly" coords="302,227,310,220,316,218,330,228,335,230,339,234,345,244,348,257,349,268,349,275,348,287,346,296,331,291,320,286,313,279,309,270,306,257,303,249,303,238" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
-<area href="arms.html" title="right-forearm" shape="poly" coords="347,295,350,274,356,280,362,288,370,297,374,306,377,316,380,327,384,337,389,347,392,356,395,365,378,378,376,367,368,357,359,346,348,335,336,326,327,312,322,298,319,284" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
+<area href="arm_exercises.html" title="left-forearm" shape="poly" coords="75,365,80,353,86,338,92,326,98,306,104,293,112,285,122,275,124,287,125,295,134,293,145,288,152,286,152,295,148,308,143,318,135,327,124,336,113,346,105,355,99,364,96,371,92,378" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
+<area href="arm_exercises.html" title="left-biceps" shape="poly" coords="127,298,125,286,123,272,125,259,129,246,134,234,143,230,151,223,160,219,167,223,172,230,170,239,169,250,167,261,164,272,159,281,151,287,142,290,134,294" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
+<area href="arm_exercises.html" title="left-sholder" shape="poly" coords="137,229,134,216,134,202,137,191,143,179,151,173,161,168,171,167,184,168,192,169,200,175,191,179,183,186,174,198,166,210,161,219,154,220,146,225" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
+<area href="chest_exercises.html" title="left-chest" shape="poly" coords="160,218,163,212,168,205,173,199,177,192,183,186,188,181,194,178,200,176,206,177,211,179,216,181,221,184,226,188,229,193,231,199,231,205,231,211,232,216,232,223,231,230,226,234,219,236,211,236,205,238,198,238,191,236,183,234,175,231,167,225" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
+<area href="chest_exercises.html" title="right-chest" shape="poly" coords="310,219,305,223,299,227,293,231,287,235,280,237,272,239,264,238,255,236,247,236,240,233,238,225,239,217,239,209,239,201,241,195,244,190,249,187,253,183,258,179,263,177,269,175,274,176,279,179,284,183,289,187,293,194,297,198,300,203,303,207,306,211" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
+<area href="arm_exercises.html" title="right-shoulder" shape="poly" coords="273,174,278,169,283,168,289,167,295,167,302,167,307,168,314,170,319,172,323,175,327,179,331,183,333,187,335,192,335,198,336,203,336,208,336,215,336,220,335,226,332,231,325,224,319,219,312,219,307,213,302,205,298,197,291,189,285,182,278,177" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
+<area href="arm_exercises.html" title="right-biceps" shape="poly" coords="302,227,310,220,316,218,330,228,335,230,339,234,345,244,348,257,349,268,349,275,348,287,346,296,331,291,320,286,313,279,309,270,306,257,303,249,303,238" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
+<area href="arm_exercises.html" title="right-forearm" shape="poly" coords="347,295,350,274,356,280,362,288,370,297,374,306,377,316,380,327,384,337,389,347,392,356,395,365,378,378,376,367,368,357,359,346,348,335,336,326,327,312,322,298,319,284" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
 <area href="#" title="abdominal-muscles" shape="poly" coords="199,240,219,236,230,234,237,235,243,234,252,236,263,238,270,242,271,251,271,259,271,266,271,272,271,278,271,286,272,294,271,302,269,310,268,319,266,324,265,330,264,338,264,346,262,355,259,365,257,374,254,382,250,392,247,400,240,404,231,404,222,400,216,391,212,380,208,368,205,356,203,343,202,331,201,322,198,314,196,305,196,292,196,275,197,256" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
 <area href="#" title="left latissimus muscle and oblique muscles" shape="poly" coords="175,348,174,332,176,313,178,293,179,276,173,259,168,250,169,236,169,226,177,229,184,232,191,235,198,238,198,250,197,259,197,268,197,278,197,289,197,299,198,311,201,320,202,328,203,337,206,348,207,358,209,367,211,374,214,381,213,386,204,376,196,365,186,357" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
 <area href="#" title="right latissimus muscle and oblique muscles" shape="poly" coords="268,240,281,238,293,232,303,226,303,234,305,244,305,252,299,260,295,270,293,284,295,296,297,312,298,326,297,340,297,349,286,359,277,366,270,372,262,383,260,388,253,396,253,386,255,379,260,368,263,356,265,340,269,321,272,308,273,288,272,270,271,252" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
@@ -207,14 +225,11 @@
 <area href="#" title="right quadriceps" shape="poly" coords="297,350,301,358,304,368,307,379,311,392,314,408,315,420,317,430,317,442,319,456,317,469,314,478,309,491,305,502,302,510,297,519,291,515,290,503,286,508,283,514,277,520,271,526,262,527,261,514,261,500,265,480,269,459,275,438,278,421,283,404,289,382,287,369,289,355" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
 <area href="#" title="left-adductor muscle" shape="poly" coords="184,356,191,360,199,367,205,376,214,386,219,394,225,401,230,410,229,418,229,434,227,450,225,462,225,474,221,486,218,501,212,515,210,498,209,481,205,462,200,442,196,421,191,404,187,390,182,384,184,368" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
 <area href="#" title="right-adductor muscle" shape="poly" coords="289,355,281,360,272,368,266,376,260,384,254,392,250,398,245,404,243,410,242,420,243,430,244,440,246,448,248,458,249,468,250,479,252,487,254,495,257,503,261,512,263,501,265,486,267,475,269,462,271,448,277,432,281,416,284,399,290,386,289,370" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
-<area href="#" title="Lannister" shape="poly" coords="210,95,207,86,206,77,207,67,210,61,215,52,221,52,226,48,231,48,237,48,242,50,249,52,255,56,260,62,265,66,267,75,267,82,267,88,266,94,261,86,261,77,259,70,255,64,249,64,241,66,232,68,223,68,216,67,213,72,212,78,213,86" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:6,&quot;fillColor&quot;:&quot;FFD700&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
+<area href="https://www.hbo.com/game-of-thrones" title="Lannister" shape="poly" coords="210,95,207,86,206,77,207,67,210,61,215,52,221,52,226,48,231,48,237,48,242,50,249,52,255,56,260,62,265,66,267,75,267,82,267,88,266,94,261,86,261,77,259,70,255,64,249,64,241,66,232,68,223,68,216,67,213,72,212,78,213,86" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:6,&quot;fillColor&quot;:&quot;FFD700&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
 <area href="#" title="left-calf muscle" shape="poly" coords="158,697,158,683,154,664,151,643,149,617,153,593,161,554,161,601,162,623,165,648,174,673,175,681,176,665,177,634,181,610,191,583,201,563,203,593,201,609,195,631,187,653,178,675,181,699" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
 <area href="#" title="right-calf muscle" shape="poly" coords="314,693,315,676,321,661,324,625,319,596,311,553,312,572,311,595,311,618,305,648,300,684,294,683,295,660,295,634,289,607,279,575,270,560,271,584,273,614,281,640,291,669,294,693" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
 <area href="#" title="trapezius muscles l" shape="poly" coords="229,175,217,172,205,169,193,168,181,166,188,163,197,160,205,156,210,148,215,137,219,149,223,160" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
 <area href="#" title="trapezius muscles r" shape="poly" coords="259,135,261,147,266,155,274,160,282,164,289,166,277,168,268,169,261,170,253,172,243,176,247,166,252,154,255,144" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
-<area href="#" title="" shape="poly" coords="" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
-<area href="#" title="" shape="poly" coords="" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
-<area href="#" title="" shape="poly" coords="" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
 </map>
 
 <map name="muscle-map-back">
