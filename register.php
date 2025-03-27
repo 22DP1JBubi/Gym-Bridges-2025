@@ -1,199 +1,181 @@
-<?php
-session_start();
-$conn = new mysqli('localhost', 'root', '', 'gymbridges');
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-$message = '';
-$message_type = '';
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = trim($_POST['username']);
-    $email = trim($_POST['email']);
-    $password = trim($_POST['password']);
-    $confirm_password = trim($_POST['confirm_password']);
-    $weight = trim($_POST['weight']);
-    $gender = trim($_POST['gender']);
-    $age = trim($_POST['age']);
-    $height = trim($_POST['height']);
-
-    // Валидация
-    $errors = [];
-
-    // Проверка пустых строк
-    if (empty($username)) $errors[] = "Username is required.";
-    if (empty($email)) $errors[] = "Email is required.";
-    if (empty($password)) $errors[] = "Password is required.";
-    if (empty($confirm_password)) $errors[] = "Please confirm your password.";
-    if (empty($weight)) $errors[] = "Weight is required.";
-    if (empty($gender)) $errors[] = "Gender is required.";
-    if (empty($age)) $errors[] = "Age is required.";
-    if (empty($height)) $errors[] = "Height is required.";
-
-    // Проверка на совпадение паролей
-    if ($password !== $confirm_password) $errors[] = "Passwords do not match.";
-
-    // Проверка формата email
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = "Invalid email format.";
-
-    // Валидация чисел и диапазонов
-    if (!is_numeric($weight) || $weight < 5 || $weight > 250) $errors[] = "Weight must be a number between 5 and 250 kg.";
-    if (!is_numeric($age) || $age < 0 || $age > 120) $errors[] = "Age must be a number between 0 and 120.";
-    if (!is_numeric($height) || $height < 30 || $height > 250) $errors[] = "Height must be a number between 30 and 250 cm.";
-
-    // Проверка уникальности пользователя по email и никнейму
-    $user_check_query = "SELECT * FROM users WHERE email = '$email' OR username = '$username' LIMIT 1";
-    $result = $conn->query($user_check_query);
-    if ($result->num_rows > 0) {
-        $user = $result->fetch_assoc();
-        if ($user['email'] === $email) {
-            $errors[] = "Email is already registered.";
-        }
-        if ($user['username'] === $username) {
-            $errors[] = "Username is already taken.";
-        }
-    }
-
-    // Проверка на наличие ошибок
-    if (empty($errors)) {
-        $password_hash = password_hash($password, PASSWORD_DEFAULT);
-        $registrationDate = date('Y-m-d');
-
-        $sql = "INSERT INTO users (username, email, password, weight, gender, age, height, registrationDate)
-                VALUES ('$username', '$email', '$password_hash', '$weight', '$gender', '$age', '$height', '$registrationDate')";
-
-        if ($conn->query($sql) === TRUE) {
-            $message = "Registration successful";
-            $message_type = "success";
-            header("Location: login.php");
-            exit();
-        } else {
-            $message = "Error: " . $conn->error;
-            $message_type = "danger";
-        }
-    } else {
-        $message = implode("<br>", $errors);
-        $message_type = "danger";
-    }
-}
-
-$conn->close();
-?>
+<?php session_start(); ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Registration</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="custom.css" rel="stylesheet">
-    <script>
-        function validateForm() {
-            var username = document.getElementById("username").value.trim();
-            var email = document.getElementById("email").value.trim();
-            var password = document.getElementById("password").value.trim();
-            var confirm_password = document.getElementById("confirm_password").value.trim();
-            var weight = document.getElementById("weight").value.trim();
-            var gender = document.getElementById("gender").value.trim();
-            var age = document.getElementById("age").value.trim();
-            var height = document.getElementById("height").value.trim();
-
-            if (username === "" || email === "" || password === "" || confirm_password === "" || weight === "" || gender === "" || age === "" || height === "") {
-                alert("All fields are required.");
-                return false;
-            }
-
-            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailPattern.test(email)) {
-                alert("Invalid email format.");
-                return false;
-            }
-
-            if (password !== confirm_password) {
-                alert("Passwords do not match.");
-                return false;
-            }
-
-            if (isNaN(weight) || weight < 5 || weight > 250) {
-                alert("Weight must be a number between 5 and 250 kg.");
-                return false;
-            }
-
-            if (isNaN(age) || age < 0 || age > 120) {
-                alert("Age must be a number between 0 and 120.");
-                return false;
-            }
-
-            if (isNaN(height) || height < 30 || height > 250) {
-                alert("Height must be a number between 30 and 250 cm.");
-                return false;
-            }
-
-            return true;
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      background: url("images/background.jpg") no-repeat center center fixed;
+      background-size: cover;
+    }
+    .register-container {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      margin: auto;
+    }
+    .form-text.text-danger {
+      display: none;
+    }
+    .main-link {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+    
         }
-    </script>
+  </style>
 </head>
 <body>
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header text-center">
-                    <h2>Register</h2>
-                </div>
-                <div class="card-body">
-                    <?php if ($message): ?>
-                        <div class="alert alert-<?php echo $message_type; ?>" role="alert">
-                            <?php echo $message; ?>
-                        </div>
-                    <?php endif; ?>
-                    <form method="POST" action="register.php" onsubmit="return validateForm()">
-                        <div class="form-group">
-                            <label for="username">Username</label>
-                            <input type="text" class="form-control" id="username" name="username" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="confirm_password">Confirm Password</label>
-                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="weight">Weight (kg)</label>
-                            <input type="number" step="0.1" class="form-control" id="weight" name="weight" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="gender">Gender</label>
-                            <select class="form-control" id="gender" name="gender" required>
-                                <option value="">Select</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                                <option value="Other">Other</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="age">Age</label>
-                            <input type="number" class="form-control" id="age" name="age" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="height">Height (cm)</label>
-                            <input type="number" step="0.1" class="form-control" id="height" name="height" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-block">Register</button>
-                    </form>
-                </div>
-                <div class="card-footer text-center">
-                    <p>Already have an account? <a href="login.php">Login here</a></p>
-                    <p>To main <a href="index.html">LETS'GO</a></p>
-                </div>
-            </div>
+
+<div class="register-container">
+  <h2 class="text-center mb-4">Create an Account</h2>
+
+  <?php if (isset($_SESSION['error'])): ?>
+    <div class="alert alert-danger"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></div>
+  <?php endif; ?>
+  <?php if (isset($_SESSION['success'])): ?>
+    <div class="alert alert-success"><?php echo $_SESSION['success']; unset($_SESSION['success']); ?></div>
+  <?php endif; ?>
+
+  <form method="POST" action="register_process.php" onsubmit="return validateForm()">
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" class="form-control" id="username" name="username" placeholder="Enter username">
+      <small id="username-error" class="form-text text-danger">Invalid username</small>
+    </div>
+
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
+      <small id="email-error" class="form-text text-danger">Invalid email</small>
+    </div>
+
+    <div class="form-group">
+      <label>Password</label>
+      <div class="input-group">
+        <input type="password" class="form-control" id="password" name="password" placeholder="At least 8 characters, 1 uppercase, 1 number, 1 symbol">
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="button" id="toggle-password">
+            <i class="bi bi-eye" id="password-icon"></i>
+          </button>
         </div>
+      </div>
+      <div class="mt-2 d-flex gap-2">
+        <button type="button" class="btn btn-sm btn-light" id="generate-password">Generate password</button>
+        <button type="button" class="btn btn-sm btn-secondary" id="copy-password">Copy password</button>
+      </div>
+      <small id="password-error" class="form-text text-danger">Password must contain uppercase, number and symbol</small>
+    </div>
+
+    <div class="form-group">
+      <label>Confirm Password</label>
+      <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm your password">
+      <small id="confirm-password-error" class="form-text text-danger">Passwords do not match</small>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label>Weight (kg)</label>
+        <input type="number" step="0.1" class="form-control" id="weight" name="weight" placeholder="Enter weight">
+        <small id="weight-error" class="form-text text-danger">Enter weight between 5–250</small>
+      </div>
+      <div class="form-group col-md-6">
+        <label>Height (cm)</label>
+        <input type="number" step="0.1" class="form-control" id="height" name="height" placeholder="Enter height">
+        <small id="height-error" class="form-text text-danger">Height must be 30–250</small>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label>Age</label>
+        <input type="number" class="form-control" id="age" name="age" placeholder="Enter age">
+        <small id="age-error" class="form-text text-danger">Age must be 1–120</small>
+      </div>
+      <div class="form-group col-md-6">
+        <label>Gender</label>
+        <select class="form-control" id="gender" name="gender">
+          <option value="">Select</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>Other</option>
+        </select>
+        <small id="gender-error" class="form-text text-danger">Please select gender</small>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block">Register</button>
+  </form>
+
+  <p class="text-center mt-3">Already have an account? <a href="login.php">Login here</a></p>
+  <div class="main-link">
+      <a href="index.html">Go to main page</a>
     </div>
 </div>
+
+<script>
+  document.getElementById('toggle-password').addEventListener('click', function () {
+    const pw = document.getElementById('password');
+    const icon = document.getElementById('password-icon');
+    pw.type = pw.type === 'password' ? 'text' : 'password';
+    icon.classList.toggle('bi-eye');
+    icon.classList.toggle('bi-eye-slash');
+  });
+
+  document.getElementById('generate-password').addEventListener('click', function () {
+    fetch('password_generator.php', { method: 'POST' })
+      .then(res => res.text())
+      .then(password => {
+        document.getElementById('password').value = password;
+        document.getElementById('confirm_password').value = '';
+      });
+  });
+
+  document.getElementById('copy-password').addEventListener('click', function () {
+    const passwordField = document.getElementById('password');
+    passwordField.select();
+    passwordField.setSelectionRange(0, 99999); // for mobile
+    navigator.clipboard.writeText(passwordField.value)
+      .then(() => console.log('Password copied'))
+      .catch(err => console.error('Copy failed', err));
+  });
+
+  function validateForm() {
+    let valid = true;
+    const show = id => { document.getElementById(id).style.display = 'block'; valid = false; };
+    const hideAll = () => document.querySelectorAll('.form-text.text-danger').forEach(e => e.style.display = 'none');
+    hideAll();
+
+    const username = document.getElementById('username').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const pw = document.getElementById('password').value;
+    const cpw = document.getElementById('confirm_password').value;
+    const weight = parseFloat(document.getElementById('weight').value);
+    const gender = document.getElementById('gender').value;
+    const age = parseInt(document.getElementById('age').value);
+    const height = parseFloat(document.getElementById('height').value);
+
+    if (!/^[a-zA-Z0-9_]{3,}$/.test(username)) show('username-error');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) show('email-error');
+    if (pw.length < 8 || !/[A-Z]/.test(pw) || !/\d/.test(pw) || !/[\W_]/.test(pw)) show('password-error');
+    if (pw !== cpw) show('confirm-password-error');
+    if (isNaN(weight) || weight < 5 || weight > 250) show('weight-error');
+    if (!gender) show('gender-error');
+    if (isNaN(age) || age < 1 || age > 120) show('age-error');
+    if (isNaN(height) || height < 30 || height > 250) show('height-error');
+
+    return valid;
+  }
+</script>
+
 </body>
 </html>
