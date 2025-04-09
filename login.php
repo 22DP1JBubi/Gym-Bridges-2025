@@ -82,7 +82,7 @@ if (isset($_GET['redirect'])) {
         <p>Don't have an account? <a href="register.php">Register here</a></p>
     </div>
     <div class="main-link">
-      <a href="index.html">Go to main page</a>
+      <a href="index.php">Go to main page</a>
     </div>
 </div>
 

@@ -136,7 +136,7 @@ $conn->close();
             <a href="todo.php" class="btn btn-primary mt-3">To-Do List</a><br>
             <a href="notes.php" class="btn btn-primary mt-3">Notes</a><br>
             <a href="progress.php" class="btn btn-primary mt-3">Track Progress</a><br>
-            <a href="index.html" class="btn btn-primary mt-3">To main</a><br>
+            <a href="index.php" class="btn btn-primary mt-3">To main</a><br>
             <a href="logout.php" class="btn btn-secondary mt-3">Logout</a>
         </div>
     </div>

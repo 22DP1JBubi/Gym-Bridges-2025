@@ -1,3 +1,8 @@
+<?php
+session_start();
+?>
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -131,7 +136,7 @@
   <header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="index.html">
+            <a class="navbar-brand" href="index.php">
                 <img src="images/logo.png" alt="Logo" style="height: 40px;">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -140,7 +145,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                      <a class="nav-link" href="index.html">Home</a>
+                      <a class="nav-link" href="index.php">Home</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#target-muscle-map"  onclick="scrollToSection()">Muscle selection</a>
@@ -154,15 +159,23 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#section2">Contacts & Map</a>
                     </li>
-                    <li class="nav-item">
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                      <!-- If user is logged in -->
+                      <li class="nav-item">
+                        <a class="nav-link" href="welcome.php">Your profile</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="logout.php">Logout</a>
+                      </li>
+                    <?php else: ?>
+                      <!-- If user is not logged in -->
+                      <li class="nav-item">
                         <a class="nav-link" href="login.php">Login</a>
-                    </li>
-                    <li class="nav-item">
+                      </li>
+                      <li class="nav-item">
                         <a class="nav-link" href="register.php">Register</a>
-                    </li>
-                    <li class="nav-item">
-                      <a class="nav-link" href="welcome.php">Your profile</a>
-                  </li>
+                      </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>

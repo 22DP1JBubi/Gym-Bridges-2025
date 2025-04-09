@@ -118,7 +118,7 @@
 
   <p class="text-center mt-3">Already have an account? <a href="login.php">Login here</a></p>
   <div class="main-link">
-      <a href="index.html">Go to main page</a>
+      <a href="index.php">Go to main page</a>
     </div>
 </div>
 
