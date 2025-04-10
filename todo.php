@@ -110,7 +110,7 @@ $tasks = $conn->query("SELECT * FROM tasks WHERE user_id = $user_id AND $filter_
   </style>
 </head>
 <body>
-
+<?php include 'includes/avatar_loader.php'; ?> 
 <?php include 'includes/header.php'; ?>
 
 

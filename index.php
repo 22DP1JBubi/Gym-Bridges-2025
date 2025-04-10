@@ -2,7 +2,6 @@
 session_start();
 ?>
 
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -133,7 +132,7 @@ session_start();
 </style>
 </head>
 <body>
-  
+<?php include 'includes/avatar_loader.php'; ?> 
 <?php include 'includes/header.php'; ?>
   
 

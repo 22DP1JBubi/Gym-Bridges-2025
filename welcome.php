@@ -1,24 +1,43 @@
 <?php
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
+// Включаем отображение всех ошибок
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+// Запускаем сессию
+session_start();
+
+// Проверяем, залогинен ли пользователь
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+    echo "Ошибка: пользователь не авторизован.";
     exit();
 }
+
+// Подключение к БД
 $conn = new mysqli('localhost', 'root', '', 'gymbridges');
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    die("Ошибка подключения к базе: " . $conn->connect_error);
 }
+
 $user_id = $_SESSION['user_id'];
-$sql = "SELECT * FROM users WHERE userID='$user_id'";
-$result = $conn->query($sql);
+
+// Подготовленный запрос
+$stmt = $conn->prepare("SELECT * FROM users WHERE userID = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
 $user = $result->fetch_assoc();
-
-
-$avatar = !empty($user['avatar']) ? htmlspecialchars($user['avatar']) : 'images/default_avatar.png';
-
+$stmt->close();
 $conn->close();
+
+// Проверка: нашли ли пользователя
+if (!$user) {
+    echo "Ошибка: пользователь с ID $user_id не найден.";
+    exit();
+}
+
+// Аватар по умолчанию
+$avatar = !empty($user['avatar']) ? htmlspecialchars($user['avatar']) : 'images/default_avatar.png';
+$avatarPath = !empty($user['avatar']) ? $user['avatar'] : 'images/default_avatar.png';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -36,12 +55,15 @@ $conn->close();
         border-radius: 15px;
     }
     .profile-pic {
-        width: 120px;
-        height: 120px;
-        border: 4px solid #fff;
-        margin-top: -60px;
-        background-color: #fff;
+      width: 120px;
+      height: 120px;
+      object-fit: cover;       /* обрезает лишнее, не растягивает */
+      object-position: center; /* центрирует содержимое */
+      border-radius: 50%;
+      border: 4px solid #fff;
+      background-color: #fff;
     }
+
     .settings-card {
         border-radius: 15px;
         border: none;
@@ -68,6 +90,7 @@ $conn->close();
   </style>
 </head>
 <body>
+  
 <?php include 'includes/header.php'; ?>
 
 <div class="bg-light">
@@ -138,6 +161,6 @@ $conn->close();
     </div>
   </div>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
