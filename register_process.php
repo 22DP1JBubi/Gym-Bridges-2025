@@ -55,8 +55,10 @@ $stmt->close();
 $hashed = password_hash($password, PASSWORD_DEFAULT);
 $regDate = date('Y-m-d');
 
-$stmt = $conn->prepare("INSERT INTO users (username, email, password, weight, gender, age, height, registrationDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-$stmt->bind_param("sssdsids", $username, $email, $hashed, $weight, $gender, $age, $height, $regDate);
+
+$defaultAvatar = 'images/default_avatar.png';
+$stmt = $conn->prepare("INSERT INTO users (username, email, password, weight, gender, age, height, registrationDate, avatar) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("sssdsidss", $username, $email, $hashed, $weight, $gender, $age, $height, $regDate, $defaultAvatar);
 
 if ($stmt->execute()) {
     $_SESSION['success'] = "Registration successful!";
