@@ -85,22 +85,24 @@
     <div class="form-row">
       <div class="form-group col-md-6">
         <label>Weight (kg)</label>
-        <input type="number" step="0.1" class="form-control" id="weight" name="weight" placeholder="Enter weight">
+        <input type="number" step="0.1" min="5" max="250" class="form-control" id="weight" name="weight" placeholder="Enter weight">
         <small id="weight-error" class="form-text text-danger">Enter weight between 5–250</small>
       </div>
+
       <div class="form-group col-md-6">
         <label>Height (cm)</label>
-        <input type="number" step="0.1" class="form-control" id="height" name="height" placeholder="Enter height">
+        <input type="number" step="0.1" min="30" max="250" class="form-control" id="height" name="height" placeholder="Enter height">
         <small id="height-error" class="form-text text-danger">Height must be 30–250</small>
       </div>
     </div>
 
     <div class="form-row">
       <div class="form-group col-md-6">
-        <label>Age</label>
-        <input type="number" class="form-control" id="age" name="age" placeholder="Enter age">
-        <small id="age-error" class="form-text text-danger">Age must be 1–120</small>
+        <label for="birthdate">Date of Birth</label>
+        <input type="date" name="birthdate" min="1900-01-01" class="form-control" required max="<?= date('Y-m-d') ?>">
       </div>
+
+
       <div class="form-group col-md-6">
         <label>Gender</label>
         <select class="form-control" id="gender" name="gender">

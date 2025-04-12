@@ -13,10 +13,10 @@ $password = $_POST['password'];
 $confirm_password = $_POST['confirm_password'];
 $weight = trim($_POST['weight']);
 $gender = trim($_POST['gender']);
-$age = trim($_POST['age']);
+$birthdate = $_POST['birthdate'];
 $height = trim($_POST['height']);
 
-if (empty($username) || empty($email) || empty($password) || empty($confirm_password) || empty($weight) || empty($gender) || empty($age) || empty($height)) {
+if (empty($username) || empty($email) || empty($password) || empty($confirm_password) || empty($weight) || empty($gender) || empty($birthdate) || empty($height)) {
     $_SESSION['error'] = "All fields are required.";
     header("Location: register.php");
     exit();
@@ -34,8 +34,24 @@ if ($password !== $confirm_password) {
     exit();
 }
 
-if (!is_numeric($weight) || $weight < 5 || $weight > 250 || !is_numeric($age) || $age < 1 || $age > 120 || !is_numeric($height) || $height < 30 || $height > 250) {
+if (!is_numeric($weight) || $weight < 5 || $weight > 250 || !is_numeric($height) || $height < 30 || $height > 250) {
     $_SESSION['error'] = "Invalid numeric values.";
+    header("Location: register.php");
+    exit();
+}
+
+if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $birthdate)) {
+    $_SESSION['error'] = "Invalid birthdate format.";
+    header("Location: register.php");
+    exit();
+}
+
+$birthDateTime = new DateTime($birthdate);
+$today = new DateTime();
+$age = $birthDateTime->diff($today)->y;
+
+if ($age < 1 || $age > 120) {
+    $_SESSION['error'] = "Age must be between 1 and 120.";
     header("Location: register.php");
     exit();
 }
@@ -57,8 +73,13 @@ $regDate = date('Y-m-d');
 
 
 $defaultAvatar = 'images/default_avatar.png';
-$stmt = $conn->prepare("INSERT INTO users (username, email, password, weight, gender, age, height, registrationDate, avatar) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-$stmt->bind_param("sssdsidss", $username, $email, $hashed, $weight, $gender, $age, $height, $regDate, $defaultAvatar);
+$isPremium = 0;
+
+
+$stmt = $conn->prepare("INSERT INTO users (username, email, password, weight, height, gender, registrationDate, birthdate, avatar, isPremium) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("sssddssssi", $username, $email, $hashed, $weight, $height, $gender, $regDate, $birthdate, $defaultAvatar, $isPremium);
+
+
 
 if ($stmt->execute()) {
     $_SESSION['success'] = "Registration successful!";

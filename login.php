@@ -1,9 +1,17 @@
 <?php
-session_start(); // Стартуем сессию для проверки ошибок
+session_start();
+
 if (isset($_GET['redirect'])) {
     $_SESSION['redirect'] = $_GET['redirect'];
 }
-?>
+
+if (isset($_SESSION['success'])): ?>
+    <div class="alert alert-success text-center">
+        <?= $_SESSION['success'] ?>
+    </div>
+    <?php unset($_SESSION['success']); ?>
+<?php endif; ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

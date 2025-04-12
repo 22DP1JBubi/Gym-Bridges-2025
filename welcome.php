@@ -35,6 +35,28 @@ if (!$user) {
     exit();
 }
 
+$regDate = !empty($user['registrationDate']) ? $user['registrationDate'] : 'N/A';
+$lastLogin = !empty($user['lastLoginDate']) ? $user['lastLoginDate'] : 'N/A';
+$isPremium = isset($user['isPremium']) ? ($user['isPremium'] ? 'Yes' : 'No') : 'N/A';
+$birthdate = !empty($user['birthdate']) ? $user['birthdate'] : 'N/A';
+$height = isset($user['height']) ? htmlspecialchars($user['height']) : 'N/A';
+$weight = isset($user['weight']) ? htmlspecialchars($user['weight']) : 'N/A';
+$gender = isset($user['gender']) ? htmlspecialchars($user['gender']) : 'N/A';
+
+// Автоматический расчет возраста
+$age = 'N/A';
+if (!empty($user['birthdate']) && $user['birthdate'] !== '0000-00-00') {
+    try {
+        $birth = new DateTime($user['birthdate']);
+        $today = new DateTime();
+        $age = $birth->diff($today)->y;
+    } catch (Exception $e) {
+        $age = 'Invalid date';
+    }
+}
+
+
+
 // Аватар по умолчанию
 $avatar = !empty($user['avatar']) ? htmlspecialchars($user['avatar']) : 'images/default_avatar.png';
 $avatarPath = !empty($user['avatar']) ? $user['avatar'] : 'images/default_avatar.png';
@@ -140,9 +162,12 @@ $avatarPath = !empty($user['avatar']) ? $user['avatar'] : 'images/default_avatar
                     <div class="col-md-6"><strong>Last Login:</strong> <?= htmlspecialchars($user['lastLoginDate']) ?></div>
                     <div class="col-md-6"><strong>Premium:</strong> <?= $user['isPremium'] ? 'Yes' : 'No' ?></div>
                     <div class="col-md-6"><strong>Gender:</strong> <?= htmlspecialchars($user['gender']) ?></div>
-                    <div class="col-md-6"><strong>Age:</strong> <?= htmlspecialchars($user['age']) ?></div>
+                    <div class="col-md-6"><strong>Birthdate:</strong> <?= $birthdate ?></div>
+                    <div class="col-md-6"><strong>Age:</strong> <?= $age ?></div>
                     <div class="col-md-6"><strong>Height:</strong> <?= htmlspecialchars($user['height']) ?> cm</div>
                     <div class="col-md-6"><strong>Weight:</strong> <?= htmlspecialchars($user['weight']) ?> kg</div>
+                    <p><strong>Premium:</strong> <?= isset($user['isPremium']) && $user['isPremium'] ? 'Yes' : 'No' ?></p>
+
                   </div>
 
                   <hr class="my-4">
