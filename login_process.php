@@ -41,6 +41,7 @@ if ($user = $result->fetch_assoc()) {
         $update->execute();
 
         unset($_SESSION['redirect']);
+        $_SESSION['success'] = "Welcome back, " . $user['username'] . "!";
         header("Location: welcome.php");
         exit();
     } else {

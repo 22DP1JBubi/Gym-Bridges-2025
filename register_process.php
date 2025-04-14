@@ -18,30 +18,35 @@ $height = trim($_POST['height']);
 
 if (empty($username) || empty($email) || empty($password) || empty($confirm_password) || empty($weight) || empty($gender) || empty($birthdate) || empty($height)) {
     $_SESSION['error'] = "All fields are required.";
+    $_SESSION['form_data'] = $_POST;
     header("Location: register.php");
     exit();
 }
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     $_SESSION['error'] = "Invalid email format.";
+    $_SESSION['form_data'] = $_POST;
     header("Location: register.php");
     exit();
 }
 
 if ($password !== $confirm_password) {
     $_SESSION['error'] = "Passwords do not match.";
+    $_SESSION['form_data'] = $_POST;
     header("Location: register.php");
     exit();
 }
 
 if (!is_numeric($weight) || $weight < 5 || $weight > 250 || !is_numeric($height) || $height < 30 || $height > 250) {
     $_SESSION['error'] = "Invalid numeric values.";
+    $_SESSION['form_data'] = $_POST;
     header("Location: register.php");
     exit();
 }
 
 if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $birthdate)) {
     $_SESSION['error'] = "Invalid birthdate format.";
+    $_SESSION['form_data'] = $_POST;
     header("Location: register.php");
     exit();
 }
@@ -72,7 +77,14 @@ $hashed = password_hash($password, PASSWORD_DEFAULT);
 $regDate = date('Y-m-d');
 
 
-$defaultAvatar = 'images/default_avatar.png';
+if ($gender === 'Male') {
+    $defaultAvatar = 'images/default_male_avatar.png';
+} elseif ($gender === 'Female') {
+    $defaultAvatar = 'images/default_female_avatar.png';
+} else {
+    $defaultAvatar = 'images/default_other_avatar.png'; // для Other или если не выбрано
+}
+
 $isPremium = 0;
 
 

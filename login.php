@@ -1,16 +1,9 @@
 <?php
 session_start();
-
 if (isset($_GET['redirect'])) {
     $_SESSION['redirect'] = $_GET['redirect'];
 }
-
-if (isset($_SESSION['success'])): ?>
-    <div class="alert alert-success text-center">
-        <?= $_SESSION['success'] ?>
-    </div>
-    <?php unset($_SESSION['success']); ?>
-<?php endif; ?>
+?>
 
 
 <!DOCTYPE html>
@@ -64,6 +57,12 @@ if (isset($_SESSION['success'])): ?>
 
 <div class="login-container">
     <h2 class="text-center mb-4">Login</h2>
+
+    <?php if (isset($_SESSION['success'])): ?>
+        <div class="alert alert-success text-center">
+            <?= $_SESSION['success']; unset($_SESSION['success']); ?>
+        </div>
+    <?php endif; ?>
 
     <form action="login_process.php" method="POST" onsubmit="return validateForm()">
         <input type="hidden" name="redirect" value="<?php echo htmlspecialchars($_GET['redirect'] ?? ($_SESSION['redirect'] ?? '')); ?>">

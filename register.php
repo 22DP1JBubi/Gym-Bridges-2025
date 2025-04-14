@@ -1,4 +1,13 @@
-<?php session_start(); ?>
+<?php session_start();
+
+$form_data = $_SESSION['form_data'] ?? [];
+unset($_SESSION['form_data']);
+
+$today = date('Y-m-d');
+$minBirthdate = date('Y-m-d', strtotime('-120 years'));
+$maxBirthdate = date('Y-m-d', strtotime('-1 year')); // минимум 1 год
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -46,16 +55,18 @@
     <div class="alert alert-success"><?php echo $_SESSION['success']; unset($_SESSION['success']); ?></div>
   <?php endif; ?>
 
+    
+
   <form method="POST" action="register_process.php" onsubmit="return validateForm()">
     <div class="form-group">
       <label>Username</label>
-      <input type="text" class="form-control" id="username" name="username" placeholder="Enter username">
+      <input type="text" class="form-control" id="username" name="username"  value="<?= htmlspecialchars($form_data['username'] ?? '') ?>" placeholder="Enter username">
       <small id="username-error" class="form-text text-danger">Invalid username</small>
     </div>
 
     <div class="form-group">
       <label>Email</label>
-      <input type="email" class="form-control" id="email" name="email" placeholder="Enter email">
+      <input type="email" class="form-control" id="email" name="email" value="<?= htmlspecialchars($form_data['email'] ?? '') ?>" placeholder="Enter email">
       <small id="email-error" class="form-text text-danger">Invalid email</small>
     </div>
 
@@ -85,13 +96,13 @@
     <div class="form-row">
       <div class="form-group col-md-6">
         <label>Weight (kg)</label>
-        <input type="number" step="0.1" min="5" max="250" class="form-control" id="weight" name="weight" placeholder="Enter weight">
+        <input type="number" step="0.1" min="5" max="250" class="form-control" id="weight" name="weight" value="<?= htmlspecialchars($form_data['weight'] ?? '') ?>" placeholder="Enter weight">
         <small id="weight-error" class="form-text text-danger">Enter weight between 5–250</small>
       </div>
 
       <div class="form-group col-md-6">
         <label>Height (cm)</label>
-        <input type="number" step="0.1" min="30" max="250" class="form-control" id="height" name="height" placeholder="Enter height">
+        <input type="number" step="0.1" min="30" max="250" class="form-control" id="height" name="height" value="<?= htmlspecialchars($form_data['height'] ?? '') ?>" placeholder="Enter height">
         <small id="height-error" class="form-text text-danger">Height must be 30–250</small>
       </div>
     </div>
@@ -99,7 +110,13 @@
     <div class="form-row">
       <div class="form-group col-md-6">
         <label for="birthdate">Date of Birth</label>
-        <input type="date" name="birthdate" min="1900-01-01" class="form-control" required max="<?= date('Y-m-d') ?>">
+        <input type="date" name="birthdate"
+          class="form-control"
+          min="<?= $minBirthdate ?>"
+          max="<?= $maxBirthdate ?>"
+          value="<?= htmlspecialchars($form_data['birthdate'] ?? '') ?>"
+          required>
+
       </div>
 
 
@@ -107,9 +124,9 @@
         <label>Gender</label>
         <select class="form-control" id="gender" name="gender">
           <option value="">Select</option>
-          <option>Male</option>
-          <option>Female</option>
-          <option>Other</option>
+          <option value="Male" <?= (isset($form_data['gender']) && $form_data['gender'] === 'Male') ? 'selected' : '' ?>>Male</option>
+          <option value="Female" <?= (isset($form_data['gender']) && $form_data['gender'] === 'Female') ? 'selected' : '' ?>>Female</option>
+          <option value="Other" <?= (isset($form_data['gender']) && $form_data['gender'] === 'Other') ? 'selected' : '' ?>>Other</option>
         </select>
         <small id="gender-error" class="form-text text-danger">Please select gender</small>
       </div>

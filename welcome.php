@@ -114,6 +114,12 @@ $avatarPath = !empty($user['avatar']) ? $user['avatar'] : 'images/default_avatar
 <body>
   
 <?php include 'includes/header.php'; ?>
+<?php if (isset($_SESSION['success'])): ?>
+  <div id="success-alert" class="alert alert-success text-center w-100 mx-auto" style="max-width: 400px;">
+    <?= $_SESSION['success']; unset($_SESSION['success']); ?>
+  </div>
+<?php endif; ?>
+
 
 <div class="bg-light">
   <div class="container py-5">
@@ -126,7 +132,12 @@ $avatarPath = !empty($user['avatar']) ? $user['avatar'] : 'images/default_avatar
         </div>
         <div class="text-center">
           <div class="position-relative d-inline-block">
-          <img src="<?= $avatar ?>" class="rounded-circle profile-pic" alt="Avatar">
+
+
+          <img src="<?= $avatar ?>" class="rounded-circle profile-pic" alt="Avatar" data-bs-toggle="modal" data-bs-target="#avatarModal" style="cursor: pointer;">
+
+
+
             <form method="POST" action="upload_avatar.php" enctype="multipart/form-data" class="position-absolute bottom-0 end-0">
               <label class="btn btn-primary btn-sm rounded-circle m-0">
                 <i class="fas fa-camera"></i>
@@ -186,6 +197,35 @@ $avatarPath = !empty($user['avatar']) ? $user['avatar'] : 'images/default_avatar
     </div>
   </div>
 </div>
+
+<!-- Модальное окно для увеличенного аватара -->
+<div class="modal fade" id="avatarModal" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content bg-light">
+      <div class="modal-header">
+        <h5 class="modal-title" id="avatarModalLabel">Your Avatar</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img src="<?= $avatar ?>" class="img-fluid rounded" alt="Enlarged Avatar">
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  setTimeout(() => {
+    const alert = document.getElementById('success-alert');
+    if (alert) {
+      alert.style.transition = 'opacity 0.5s ease';
+      alert.style.opacity = '0';
+      setTimeout(() => alert.remove(), 500); // Удаляем элемент из DOM
+    }
+  }, 3000); // 3 секунды
+</script>
+
 </body>
 </html>
