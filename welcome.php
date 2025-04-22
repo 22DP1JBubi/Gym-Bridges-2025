@@ -115,10 +115,12 @@ $avatarPath = !empty($user['avatar']) ? $user['avatar'] : 'images/default_avatar
   
 <?php include 'includes/header.php'; ?>
 <?php if (isset($_SESSION['success'])): ?>
-  <div id="success-alert" class="alert alert-success text-center w-100 mx-auto" style="max-width: 400px;">
+  <div id="success-alert" class="position-fixed top-0 start-50 translate-middle-x alert alert-success text-center shadow" 
+       style="z-index: 1050; margin-top: 60px; min-width: 300px;">
     <?= $_SESSION['success']; unset($_SESSION['success']); ?>
   </div>
 <?php endif; ?>
+
 
 
 <div class="bg-light">

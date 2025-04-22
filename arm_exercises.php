@@ -1,0 +1,214 @@
+<?php
+$conn = new mysqli("localhost", "root", "", "gymbridges");
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Здесь ты можешь фильтровать по категории или мышечной группе
+$category = $_GET['category'] ?? 'legs'; // Пример: arms, legs и т.д.
+
+$stmt = $conn->prepare("SELECT * FROM exercises WHERE category = ?");
+$stmt->bind_param("s", $category);
+$stmt->execute();
+$result = $stmt->get_result();
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gym bridges</title>
+  <!-- Подключение CSS файла -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <link href='https://fonts.googleapis.com/css?family=Anton' rel='stylesheet'>
+  <link rel="icon" href="Logo1.svg" type="image/x-icon">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script type="text/javascript" src="jquery-1.6.4.min.js"></script>
+  <script type="text/javascript" src="jquery.maphilight.js"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCaLxpPOdyV8bVweF1y0AQRAtLPdfftFvs&callback=initMap"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $('.card').delay(1800).queue(function(next) {
+          $(this).removeClass('hover');
+          $('a.hover').removeClass('hover');
+          next();
+      });
+    });
+  </script>
+  <style>
+    .muscle-text {
+      color: #0D1C2E;
+      font-family: Anton;
+      font-size: 36px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      letter-spacing: 1.8px;
+      text-align: center;
+    }
+    .muscle-text2 {
+      color: #0D1C2E;
+      font-family: Anton;
+      font-size: 36px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      letter-spacing: 1.8px;
+    }
+    .row.justify-content-center {
+      margin-top: 100px;
+      margin-bottom: 100px;
+    }
+    .card {
+      border-radius: 4px;
+      box-shadow: 0 -1px 1px 0 rgba(0, 0, 0, .05), 0 1px 2px 0 rgba(0, 0, 0, .2);
+      transition: all .2s ease;
+      background: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .card:hover, .card.hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 25px 0 rgba(0, 0, 0, .3), 0 0 1px 0 rgba(0, 0, 0, .25);
+    }
+    .card:hover .card-content, .card.hover .card-content {
+      box-shadow: inset 0 3px 0 0 #ccb65e;
+      border-color: #ccb65e;
+    }
+    .card:hover .card-img .overlay, .card.hover .card-img .overlay {
+      background-color: rgba(25, 29, 38, .85);
+      transition: opacity .2s ease;
+      opacity: 1;
+    }
+    .card-img {
+      position: relative;
+      height: 224px;
+      width: 100%;
+      background-color: #fff;
+      transition: opacity .2s ease;
+      background-position: center center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+    .card-img .overlay {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #fff;
+      opacity: 0;
+    }
+    .card-img .overlay .overlay-content {
+      line-height: 224px;
+      width: 100%;
+      text-align: center;
+      color: #fff;
+    }
+    .card-img .overlay .overlay-content a {
+      color: #fff;
+      padding: 0 2rem;
+      display: inline-block;
+      border: 1px solid rgba(255, 255, 255, .4);
+      height: 40px;
+      line-height: 40px;
+      border-radius: 20px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .card-img .overlay .overlay-content a:hover, .card-img .overlay .overlay-content a.hover {
+      background-color: #ccb65e;
+      border-color: #ccb65e;
+    }
+    .card-content {
+      width: 100%;
+      min-height: 104px;
+      background-color: #fff;
+      border-top: 1px solid #E9E9EB;
+      border-bottom-right-radius: 4px;
+      border-bottom-left-radius: 4px;
+      padding: 1rem 2rem;
+      transition: all .2s ease;
+    }
+    .card-content a {
+      text-decoration: none;
+      color: #202927;
+    }
+    .card-content h2, .card-content a h2 {
+      font-size: 1rem;
+      font-weight: 500;
+    }
+    .card-content p, .card-content a p {
+      font-size: .8rem;
+      font-weight: 400;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: rgba(32, 41, 28, .8);
+    }
+  </style>
+</head>
+<body>
+<main>
+<div class="container">
+  <div class="row justify-content-center">
+    <p class="muscle-text"><?= ucfirst($category) ?> exercises</p>
+    <div class="row">
+      <?php while ($row = $result->fetch_assoc()): ?>
+        <div class="col-lg-3 col-md-6 mb-4">
+          <div class="card hover">
+            <div class="card-img" style="background-image:url('<?= htmlspecialchars($row['image']) ?>');">
+              <div class="overlay">
+                <div class="overlay-content">
+                  <a class="hover" href="exercise_view.php?id=<?= $row['id'] ?>">Show exercise</a>
+                </div>
+              </div>
+            </div>
+            <div class="card-content">
+              <a href="exercise_view.php?id=<?= $row['id'] ?>">
+                <h2><?= htmlspecialchars($row['name']) ?></h2>
+                <p><?= htmlspecialchars(mb_strimwidth($row['description'], 0, 60, "...")) ?></p>
+              </a>
+            </div>
+          </div>
+        </div>
+      <?php endwhile; ?>
+    </div>
+  </div>
+</div>
+
+<?php $stmt->close(); $conn->close(); ?>
+
+</main>
+  <footer class="footer text-white text-center text-lg-start">
+    <div class="container">
+      <div class="row align-items-center" style="height: 100px;">
+        <div class="col-lg-8 col-md-12">
+          <div class="insta d-inline-flex align-items-center me-3">
+            <a href="https://www.instagram.com/evgeni_ibubin" target="_blank" class="text-white">
+              <img src="images/instagram_icon.svg" alt="Иконка Instagram" class="me-2">
+              <p>evgeni_ibubin</p>
+            </a>
+          </div>
+          <div class="google d-inline-flex align-items-center">
+            <a href="#" class="text-white">
+              <img src="images/gmail_icon.svg" alt="Иконка Gmail" class="me-2">
+              <p>jevgenijs.bubins@gmail.com</p>
+            </a>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-12 d-flex justify-content-end">
+          <div class="back-to-top">
+            <a href="#" id="back-to-topid" class="text-white">
+              <p>Back to top</p>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="script.js" defer></script>
+</body>
+</html>
