@@ -25,31 +25,41 @@ if (isset($_GET['edit'])) {
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['edit_submit'])) {
     $id = intval($_POST['edit_id']);
 
+    // Получаем текущий путь к изображению из базы
     $imagePath = $conn->query("SELECT image FROM exercises WHERE id = $id")->fetch_assoc()['image'] ?? '';
 
+    // Удаляем изображение, если пользователь отметил "remove"
     if (isset($_POST['remove_image']) && $imagePath && file_exists($imagePath)) {
         unlink($imagePath);
         $imagePath = '';
     }
 
+    // Загружаем новое изображение, если выбрано
     if (!empty($_FILES['new_image']['name'])) {
         $target_dir = "uploads/";
         $imagePath = $target_dir . basename($_FILES["new_image"]["name"]);
         move_uploaded_file($_FILES["new_image"]["tmp_name"], $imagePath);
     }
 
+    $category = isset($_POST['category']) ? implode(',', $_POST['category']) : '';
+    $muscle_group = isset($_POST['muscle_group']) ? implode(',', $_POST['muscle_group']) : '';
+    $equipment = isset($_POST['equipment']) ? implode(',', $_POST['equipment']) : '';
+    
+
+    // Обновляем запись
     $stmt = $conn->prepare("UPDATE exercises SET name=?, description=?, video_url=?, category=?, muscle_group=?, equipment=?, difficulty=?, image=? WHERE id=?");
-   $stmt->bind_param("ssssssisi",
-    $_POST['name'],
-    $_POST['description'],
-    $_POST['video_url'],
-    $_POST['category'],
-    $_POST['muscle_group'],
-    $_POST['equipment'],
-    $_POST['difficulty'],
-    $imagePath,
-    $id
-);
+    $stmt->bind_param("ssssssisi",
+        $_POST['name'],
+        $_POST['description'],
+        $_POST['video_url'],
+        $category,
+        $muscle_group,
+        $equipment,
+        $_POST['difficulty'],
+        $imagePath,
+        $id
+    );
+
 
     $stmt->execute();
     $stmt->close();
@@ -57,6 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['edit_submit'])) {
     header("Location: exercises_list.php");
     exit();
 }
+
 
 
 if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['create_submit'])) {
@@ -67,13 +78,31 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['create_submit'])) {
         move_uploaded_file($_FILES["image"]["tmp_name"], $image);
     }
 
+    $muscle_group = implode(',', $_POST['muscle_group']);
+
+    $equipment = isset($_POST['equipment']) && is_array($_POST['equipment']) ? implode(',', $_POST['equipment']): '';
+
+
+    $category = implode(',', $_POST['category']);
+
     $stmt = $conn->prepare("INSERT INTO exercises (name, description, video_url, image, category, muscle_group, equipment, difficulty) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssssssi", $_POST['name'], $_POST['description'], $_POST['video_url'], $image, $_POST['category'], $_POST['muscle_group'], $_POST['equipment'], $_POST['difficulty']);
+    $stmt->bind_param("sssssssi",
+        $_POST['name'],
+        $_POST['description'],
+        $_POST['video_url'],
+        $image,
+        $category,
+        $muscle_group,
+        $equipment,
+        $_POST['difficulty']
+    );
+
     $stmt->execute();
     $stmt->close();
     header("Location: exercises_list.php");
     exit();
 }
+
 
 $exercises = $conn->query("SELECT * FROM exercises ORDER BY id DESC");
 ?>
@@ -84,6 +113,10 @@ $exercises = $conn->query("SELECT * FROM exercises ORDER BY id DESC");
     <title>Exercises</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 
     <style>
         .form-section { display: none; }
@@ -106,15 +139,34 @@ $exercises = $conn->query("SELECT * FROM exercises ORDER BY id DESC");
                 <div class="col-md-6 mb-3"><label>Name</label><input name="name" class="form-control" required></div>
                 <div class="col-md-6 mb-3"><label>Video URL</label><input name="video_url" class="form-control"></div>
                 <div class="col-md-6 mb-3"><label>Image</label><input type="file" name="image" class="form-control"></div>
-                <div class="col-md-6 mb-3"><label>Equipment</label><input name="equipment" class="form-control"></div>
-                <div class="col-md-6 mb-3"><label>Category</label>
-                    <select name="category" class="form-select" onchange="updateMuscles(this.value, null)" id="category_create" required>
-                        <option value="">Select</option><option value="arms">Arms</option><option value="legs">Legs</option>
-                        <option value="back">Back</option><option value="chest">Chest</option><option value="abs">Abs</option>
+                <div class="col-md-6 mb-3">
+                    <label>Equipment</label>
+                    <select name="equipment[]" id="equipment_create" class="form-select" multiple="multiple">
+                        <option value="Barbell">Barbell</option>
+                        <option value="Dumbbells">Dumbbells</option>
+                        <option value="Pull-up bar">Pull-up bar</option>
+                        <option value="Dip bars">Dip bars</option>
+                        <option value="Bench">Bench</option>
+                        <option value="Cable machine">Cable machine</option>
+                        <option value="Smith machine">Smith machine</option>
+                        <option value="Crossover machine">Crossover machine</option>
+                        <option value="TRX straps">TRX straps</option>
+                        <option value="Medicine ball">Medicine ball</option>
                     </select>
                 </div>
+
+                <div class="col-md-6 mb-3"><label>Category</label>
+                    <select name="category[]" id="category_create" class="form-select" multiple required>
+                        <option value="arms">Arms</option>
+                        <option value="legs">Legs</option>
+                        <option value="back">Back</option>
+                        <option value="chest">Chest</option>
+                        <option value="abs">Abs</option>
+                    </select>
+
+                </div>
                 <div class="col-md-6 mb-3"><label>Muscle Group</label>
-                    <select name="muscle_group" class="form-select" id="muscle_group_create" required></select>
+                    <select name="muscle_group[]" class="form-select" id="muscle_group_create" multiple="multiple" required></select>
                 </div>
                 <div class="col-12 mb-3"><label>Description</label><textarea name="description" class="form-control" required></textarea></div>
                 <div class="col-12 mb-3"><label>Difficulty</label><input type="number" name="difficulty" class="form-control" min="1" max="5" required></div>
@@ -131,9 +183,25 @@ $exercises = $conn->query("SELECT * FROM exercises ORDER BY id DESC");
             <div class="row">
                 <div class="col-md-6 mb-3"><label>Name</label><input name="name" class="form-control" required></div>
                 <div class="col-md-6 mb-3"><label>Video URL</label><input name="video_url" class="form-control"></div>
-                <div class="col-md-6 mb-3"><label>Equipment</label><input name="equipment" class="form-control"></div>
+                <div class="col-md-6 mb-3">
+                    <label>Equipment</label>
+                    <select name="equipment[]" id="equipment_edit" class="form-select" multiple="multiple">
+                        <option value="Barbell">Barbell</option>
+                        <option value="Dumbbells">Dumbbells</option>
+                        <option value="Pull-up bar">Pull-up bar</option>
+                        <option value="Dip bars">Dip bars</option>
+                        <option value="Bench">Bench</option>
+                        <option value="Cable machine">Cable machine</option>
+                        <option value="Smith machine">Smith machine</option>
+                        <option value="Crossover machine">Crossover machine</option>
+                        <option value="TRX straps">TRX straps</option>
+                        <option value="Medicine ball">Medicine ball</option>
+                    </select>
+                </div>
+
                 <div class="col-md-6 mb-3"><label>Category</label>
-                    <select name="category" class="form-select" id="category_edit" required onchange="updateMuscles(this.value, 'muscle_group_edit')">
+                    <select name="category[]" class="form-select" id="category_edit" multiple required>
+
                         <option value="">Select</option>
                         <option value="arms">Arms</option>
                         <option value="legs">Legs</option>
@@ -143,7 +211,7 @@ $exercises = $conn->query("SELECT * FROM exercises ORDER BY id DESC");
                     </select>
                 </div>
                 <div class="col-md-6 mb-3"><label>Muscle Group</label>
-                    <select name="muscle_group" class="form-select" id="muscle_group_edit" required></select>
+                + <select name="muscle_group[]" class="form-select" id="muscle_group_edit" multiple="multiple" required></select>
                 </div>
                 <div class="col-12 mb-3"><label>Description</label><textarea name="description" class="form-control" required></textarea></div>
                 <div class="col-12 mb-3"><label>Difficulty</label><input type="number" name="difficulty" class="form-control" min="1" max="5" required></div>
@@ -160,6 +228,13 @@ $exercises = $conn->query("SELECT * FROM exercises ORDER BY id DESC");
                     <input type="file" name="new_image" class="form-control">
                 </div>
             </div>
+
+            <!-- Добавь в editForm перед </form> -->
+            <input type="hidden" name="equipment[]" value="">
+            <input type="hidden" name="category[]" value="">
+            <input type="hidden" name="muscle_group[]" value="">
+
+
             <button type="submit" name="edit_submit" class="btn btn-primary">Update</button>
         </form>
     </div>
@@ -237,19 +312,32 @@ const muscleOptions = {
 };
 
 // Универсальная функция обновления списка мышц
-function updateMuscles(category, selectId, selected = null) {
+function updateMuscles(categoryArray, selectId, selected = []) {
     const select = document.getElementById(selectId);
     if (!select) return;
 
     select.innerHTML = "";
-    if (muscleOptions[category]) {
-        muscleOptions[category].forEach(muscle => {
-            const opt = new Option(muscle, muscle);
-            if (selected && muscle === selected) opt.selected = true;
-            select.appendChild(opt);
-        });
-    }
+
+    const categories = Array.isArray(categoryArray) ? categoryArray : [categoryArray];
+
+    const added = new Set();
+
+    categories.forEach(category => {
+        if (muscleOptions[category]) {
+            muscleOptions[category].forEach(muscle => {
+                if (!added.has(muscle)) {
+                    const opt = new Option(muscle, muscle);
+                    if (selected.includes(muscle)) opt.selected = true;
+                    select.appendChild(opt);
+                    added.add(muscle);
+                }
+            });
+        }
+    });
+
+    $(`#${selectId}`).trigger('change');
 }
+
 </script>
 
 <script>
@@ -277,11 +365,23 @@ document.addEventListener("DOMContentLoaded", () => {
             form.querySelector("input[name='edit_id']").value = id;
             form.querySelector("input[name='name']").value = btn.dataset.name;
             form.querySelector("input[name='video_url']").value = btn.dataset.video;
-            form.querySelector("input[name='equipment']").value = btn.dataset.equipment;
-            form.querySelector("select[name='category']").value = btn.dataset.category;
-            updateMuscles(btn.dataset.category, "muscle_group_edit", btn.dataset.muscle);
             form.querySelector("textarea[name='description']").value = btn.dataset.description;
             form.querySelector("input[name='difficulty']").value = btn.dataset.difficulty;
+
+
+            const categories = btn.dataset.category.split(',').map(c => c.trim());
+            $('#category_edit').val(categories).trigger('change');
+
+            const muscles = btn.dataset.muscle.split(',').map(m => m.trim());
+            updateMuscles(categories, "muscle_group_edit", muscles);
+
+            // equipment as tags
+            const equipmentField = $('#equipment_edit');
+            if (btn.dataset.equipment) {
+                const items = btn.dataset.equipment.split(',').map(e => e.trim());
+                equipmentField.val(items).trigger('change');
+            }
+
 
             // 👉 Показ текущей картинки
             const imagePreview = document.getElementById("current-image-preview");
@@ -321,6 +421,45 @@ function toggleForm(id) {
 }
 </script>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    $('#equipment_create').select2({
+        tags: true,
+        placeholder: "Select or add equipment",
+        width: '100%'
+    });
+
+    $('#equipment_edit').select2({
+        tags: true,
+        placeholder: "Select or add equipment",
+        width: '100%'
+    });
+
+    $('#category_create, #category_edit, #muscle_group_create, #muscle_group_edit').select2({
+        tags: false,
+        placeholder: "Select or add",
+        width: '100%'
+    });
+
+    // 🧠 Вот это добавь:
+    $('#category_create').on('change', function () {
+        const selected = $(this).val(); // массив категорий
+        updateMuscles(selected, 'muscle_group_create');
+    });
+
+    $('#category_edit').on('change', function () {
+        const selected = $(this).val(); // массив категорий
+        updateMuscles(selected, 'muscle_group_edit');
+    });
+});
+
+
+
+</script>
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 </body>
 </html>

@@ -1,14 +1,66 @@
 <?php
+session_start();
+
 $conn = new mysqli("localhost", "root", "", "gymbridges");
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+include 'includes/avatar_loader.php';
 
-// Здесь ты можешь фильтровать по категории или мышечной группе
-$category = $_GET['category'] ?? 'legs'; // Пример: arms, legs и т.д.
 
-$stmt = $conn->prepare("SELECT * FROM exercises WHERE category = ?");
-$stmt->bind_param("s", $category);
+$muscleGroups = [
+  "Arms" => ["Biceps", "Triceps", "Forearms", "Shoulders"],
+  "Chest" => ["Chest Muscles"],
+  "Abs" => ["Abdominal Muscles"],
+  "Back" => ["Lats", "Teres Major", "Trapezius", "Lower Back"],
+  "Legs" => ["Quadriceps", "Hamstrings", "Adductors", "Calves", "Glutes"]
+];
+
+
+$muscle = $_GET['muscle'] ?? null;
+$category = $_GET['category'] ?? null;
+
+if ($muscle) {
+    $stmt = $conn->prepare("SELECT * FROM exercises WHERE FIND_IN_SET(?, muscle_group)");
+    $stmt->bind_param("s", $muscle);
+} elseif ($category && isset($muscleGroups[$category])) {
+    // Генерируем условие WHERE для всех мышц категории
+    $placeholders = implode(',', array_fill(0, count($muscleGroups[$category]), '?'));
+    $types = str_repeat('s', count($muscleGroups[$category]));
+    $stmt = $conn->prepare("SELECT * FROM exercises WHERE " . implode(" OR ", array_fill(0, count($muscleGroups[$category]), "FIND_IN_SET(?, muscle_group)")));
+    $stmt->bind_param($types, ...$muscleGroups[$category]);
+} else {
+    $stmt = $conn->prepare("SELECT * FROM exercises");
+}
+
+// Определим активную категорию
+$activeCategory = null;
+if ($muscle) {
+    foreach ($muscleGroups as $category => $muscles) {
+        if (in_array($muscle, $muscles)) {
+            $activeCategory = $category;
+            break;
+        }
+    }
+}
+
+$currentMuscle = $_GET['muscle'] ?? null;
+
+$currentCategory = $_GET['category'] ?? null;
+
+if (!$currentCategory && $currentMuscle) {
+    foreach ($muscleGroups as $category => $muscles) {
+        if (in_array($currentMuscle, $muscles)) {
+            $currentCategory = $category;
+            break;
+        }
+    }
+}
+
+
+
+
+
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
@@ -148,13 +200,80 @@ $result = $stmt->get_result();
       text-overflow: ellipsis;
       color: rgba(32, 41, 28, .8);
     }
+
+
+    .dropdown-submenu ul {
+      padding-left: 0;
+      margin-bottom: 0;
+    }
+    .dropdown-submenu span {
+      display: block;
+      padding: .25rem 1rem;
+      color: #6c757d;
+    }
+    .dropdown-submenu a.dropdown-item {
+      padding-left: 2rem;
+    }
+
+
   </style>
 </head>
 <body>
+
+<?php include 'includes/header.php'; ?>
+
 <main>
 <div class="container">
   <div class="row justify-content-center">
-    <p class="muscle-text"><?= ucfirst($category) ?> exercises</p>
+    <?php if ($muscle): ?>
+    <h2><?= htmlspecialchars($muscle) ?> Exercises</h2>
+  <?php elseif ($category): ?>
+    <h2><?= htmlspecialchars($category) ?> Exercises</h2>
+  <?php else: ?>
+    <h2>All Exercises</h2>
+  <?php endif; ?>
+
+
+
+    <div class="d-flex flex-wrap gap-2 justify-content-center mb-4">
+      <!-- Кнопка Show All -->
+      <a href="exercises_page.php" class="btn btn-outline-primary <?= (!$currentMuscle && !$currentCategory) ? 'active' : '' ?>">Show All</a>
+
+      <!-- Категории -->
+      <?php foreach ($muscleGroups as $category => $muscles): ?>
+        <div class="dropdown">
+          <button class="btn btn-outline-primary dropdown-toggle <?= ($currentCategory === $category || in_array($currentMuscle, $muscles)) ? 'active' : '' ?>" type="button" data-bs-toggle="dropdown">
+            <?= htmlspecialchars($category) ?>
+          </button>
+          <ul class="dropdown-menu">
+            <!-- All in category -->
+            <li>
+              <a class="dropdown-item <?= ($currentCategory === $category && !$currentMuscle) ? 'active' : '' ?>"
+                href="exercises_page.php?category=<?= urlencode($category) ?>">
+                All <?= htmlspecialchars($category) ?> exercises
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <!-- Отдельные мышцы -->
+            <?php foreach ($muscles as $muscle): ?>
+              <li>
+                <a class="dropdown-item <?= ($currentMuscle === $muscle) ? 'active' : '' ?>"
+                  href="exercises_page.php?muscle=<?= urlencode($muscle) ?>">
+                  <?= htmlspecialchars($muscle) ?>
+                </a>
+              </li>
+            <?php endforeach; ?>
+          </ul>
+        </div>
+      <?php endforeach; ?>
+
+    </div>
+
+
+
+
+
+
     <div class="row">
       <?php while ($row = $result->fetch_assoc()): ?>
         <div class="col-lg-3 col-md-6 mb-4">
