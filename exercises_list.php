@@ -45,12 +45,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['edit_submit'])) {
     $muscle_group = isset($_POST['muscle_group']) ? implode(',', $_POST['muscle_group']) : '';
     $equipment = isset($_POST['equipment']) ? implode(',', $_POST['equipment']) : '';
     
+    $description = $_POST['description'] ?? '';
+    $instruction = $_POST['instruction'] ?? '';
+
 
     // Обновляем запись
-    $stmt = $conn->prepare("UPDATE exercises SET name=?, description=?, video_url=?, category=?, muscle_group=?, equipment=?, difficulty=?, image=? WHERE id=?");
-    $stmt->bind_param("ssssssisi",
+    $stmt = $conn->prepare("UPDATE exercises SET name=?, description=?, instruction=?, video_url=?, category=?, muscle_group=?, equipment=?, difficulty=?, image=? WHERE id=?");
+    $stmt->bind_param("sssssssisi",
         $_POST['name'],
-        $_POST['description'],
+        $description,
+        $instruction,
         $_POST['video_url'],
         $category,
         $muscle_group,
@@ -85,10 +89,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['create_submit'])) {
 
     $category = implode(',', $_POST['category']);
 
-    $stmt = $conn->prepare("INSERT INTO exercises (name, description, video_url, image, category, muscle_group, equipment, difficulty) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssssssi",
+    $description = $_POST['description'] ?? '';
+    $instruction = $_POST['instruction'] ?? '';
+
+
+    $stmt = $conn->prepare("INSERT INTO exercises (name, description, instruction, video_url, image, category, muscle_group, equipment, difficulty) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("ssssssssi",
         $_POST['name'],
-        $_POST['description'],
+        $description,
+        $instruction,
         $_POST['video_url'],
         $image,
         $category,
@@ -168,7 +177,17 @@ $exercises = $conn->query("SELECT * FROM exercises ORDER BY id DESC");
                 <div class="col-md-6 mb-3"><label>Muscle Group</label>
                     <select name="muscle_group[]" class="form-select" id="muscle_group_create" multiple="multiple" required></select>
                 </div>
-                <div class="col-12 mb-3"><label>Description</label><textarea name="description" class="form-control" required></textarea></div>
+
+                <div class="col-12 mb-3">
+                    <label>Description</label>
+                    <textarea name="description" class="form-control" required></textarea>
+                </div>
+
+                <div class="col-12 mb-3">
+                    <label for="instruction" class="form-label">Instruction</label>
+                    <textarea class="form-control" id="instruction" name="instruction" rows="4" placeholder="Step-by-step instructions"></textarea>
+                </div>
+
                 <div class="col-12 mb-3"><label>Difficulty</label><input type="number" name="difficulty" class="form-control" min="1" max="5" required></div>
             </div>
             <button type="submit" name="create_submit" class="btn btn-success">Save</button>
@@ -213,7 +232,19 @@ $exercises = $conn->query("SELECT * FROM exercises ORDER BY id DESC");
                 <div class="col-md-6 mb-3"><label>Muscle Group</label>
                 + <select name="muscle_group[]" class="form-select" id="muscle_group_edit" multiple="multiple" required></select>
                 </div>
-                <div class="col-12 mb-3"><label>Description</label><textarea name="description" class="form-control" required></textarea></div>
+
+                <div class="col-12 mb-3">
+                    <label>Description</label>
+                    <textarea name="description" class="form-control" required></textarea>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="edit_instruction" class="form-label">Instruction</label>
+                    <textarea class="form-control" id="edit_instruction" name="instruction" rows="4" placeholder="Step-by-step instructions"><?= htmlspecialchars($row['instruction']) ?></textarea>
+                </div>
+
+
+                
                 <div class="col-12 mb-3"><label>Difficulty</label><input type="number" name="difficulty" class="form-control" min="1" max="5" required></div>
                 <div class="col-md-6 mb-3">
                     <label>Current Image</label><br>
@@ -281,6 +312,7 @@ $exercises = $conn->query("SELECT * FROM exercises ORDER BY id DESC");
                     data-category="<?= htmlspecialchars($row['category']) ?>"
                     data-muscle="<?= htmlspecialchars($row['muscle_group']) ?>"
                     data-description="<?= htmlspecialchars($row['description']) ?>"
+                    data-instruction="<?= htmlspecialchars($row['instruction']) ?>"
                     data-difficulty="<?= $row['difficulty'] ?>"
                     data-image="<?= htmlspecialchars($row['image']) ?>">
                     <i class="bi bi-pencil-square"></i>
@@ -306,7 +338,7 @@ $exercises = $conn->query("SELECT * FROM exercises ORDER BY id DESC");
 const muscleOptions = {
     arms: ["Biceps", "Triceps", "Shoulders", "Forearms"],
     legs: ["Glutes", "Quadriceps", "Calves", "Hamstrings", "Adductors"],
-    back: ["Back Muscles", "Trapezius", "Lats"],
+    back: ["Back Muscles", "Trapezius", "Lats", "Lower Back", "Teres major"],
     chest: ["Chest Muscles"],
     abs: ["Abdominal Muscles"]
 };
@@ -366,6 +398,7 @@ document.addEventListener("DOMContentLoaded", () => {
             form.querySelector("input[name='name']").value = btn.dataset.name;
             form.querySelector("input[name='video_url']").value = btn.dataset.video;
             form.querySelector("textarea[name='description']").value = btn.dataset.description;
+            form.querySelector("textarea[name='instruction']").value = btn.dataset.instruction || '';
             form.querySelector("input[name='difficulty']").value = btn.dataset.difficulty;
 
 
