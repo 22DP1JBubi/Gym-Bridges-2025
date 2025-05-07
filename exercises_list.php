@@ -134,7 +134,7 @@ $exercises = $conn->query("SELECT * FROM exercises ORDER BY id DESC");
 </head>
 <body class="bg-light">
 <div class="container mt-5">
-    <h2 class="mb-4">Exercise List</h2>
+    <h2 class="mb-4">Exercise List123</h2>
     <button class="btn btn-primary mb-3" onclick="toggleForm('createForm')">
         <i class="bi bi-plus-circle"></i> Add Exercise
     </button>
