@@ -151,16 +151,21 @@ $exercises = $conn->query("SELECT * FROM exercises ORDER BY id DESC");
                 <div class="col-md-6 mb-3">
                     <label>Equipment</label>
                     <select name="equipment[]" id="equipment_create" class="form-select" multiple="multiple">
-                        <option value="Barbell">Barbell</option>
-                        <option value="Dumbbells">Dumbbells</option>
-                        <option value="Pull-up bar">Pull-up bar</option>
-                        <option value="Dip bars">Dip bars</option>
-                        <option value="Bench">Bench</option>
-                        <option value="Cable machine">Cable machine</option>
-                        <option value="Smith machine">Smith machine</option>
-                        <option value="Crossover machine">Crossover machine</option>
-                        <option value="TRX straps">TRX straps</option>
-                        <option value="Medicine ball">Medicine ball</option>
+                            <option value="Barbell">Barbell</option>
+                            <option value="EZ-bar">EZ-bar</option>
+                            <option value="Straight bar">Straight bar</option>
+                            <option value="Dumbbells">Dumbbells</option>
+                            <option value="Pull-up bar">Pull-up bar</option>
+                            <option value="Dip bars">Dip bars</option>
+                            <option value="Bench">Bench</option>
+                            <option value="Cable machine">Cable machine</option>
+                            <option value="Smith machine">Smith machine</option>
+                            <option value="Crossover machine">Crossover machine</option>
+                            <option value="TRX straps">TRX straps</option>
+                            <option value="Medicine ball">Medicine ball</option>
+                            <option value="Rope attachment">Rope attachment</option>
+                            <option value="V-bar attachment">V-bar attachment</option>
+                            <option value="Single handle">Single handle</option>
                     </select>
                 </div>
 
@@ -206,6 +211,8 @@ $exercises = $conn->query("SELECT * FROM exercises ORDER BY id DESC");
                     <label>Equipment</label>
                     <select name="equipment[]" id="equipment_edit" class="form-select" multiple="multiple">
                         <option value="Barbell">Barbell</option>
+                        <option value="EZ-bar">EZ-bar</option>
+                        <option value="Straight bar">Straight bar</option>
                         <option value="Dumbbells">Dumbbells</option>
                         <option value="Pull-up bar">Pull-up bar</option>
                         <option value="Dip bars">Dip bars</option>
@@ -215,6 +222,9 @@ $exercises = $conn->query("SELECT * FROM exercises ORDER BY id DESC");
                         <option value="Crossover machine">Crossover machine</option>
                         <option value="TRX straps">TRX straps</option>
                         <option value="Medicine ball">Medicine ball</option>
+                        <option value="Rope attachment">Rope attachment</option>
+                        <option value="V-bar attachment">V-bar attachment</option>
+                        <option value="Single handle">Single handle</option>
                     </select>
                 </div>
 
