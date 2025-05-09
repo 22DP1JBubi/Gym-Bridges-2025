@@ -41,9 +41,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['edit_submit'])) {
         move_uploaded_file($_FILES["new_image"]["tmp_name"], $imagePath);
     }
 
-    $category = isset($_POST['category']) ? implode(',', $_POST['category']) : '';
-    $muscle_group = isset($_POST['muscle_group']) ? implode(',', $_POST['muscle_group']) : '';
-    $equipment = isset($_POST['equipment']) ? implode(',', $_POST['equipment']) : '';
+    $muscle_group = $_POST['muscle_group'] ?? '';
+    $equipment = $_POST['equipment'] ?? '';
+    $category = $_POST['category'] ?? '';
+    
+
     
     $description = $_POST['description'] ?? '';
     $instruction = $_POST['instruction'] ?? '';
@@ -82,12 +84,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['create_submit'])) {
         move_uploaded_file($_FILES["image"]["tmp_name"], $image);
     }
 
-    $muscle_group = implode(',', $_POST['muscle_group']);
+    $muscle_group = $_POST['muscle_group'] ?? '';
+    $equipment = $_POST['equipment'] ?? '';
+    $category = $_POST['category'] ?? '';
 
-    $equipment = isset($_POST['equipment']) && is_array($_POST['equipment']) ? implode(',', $_POST['equipment']): '';
-
-
-    $category = implode(',', $_POST['category']);
 
     $description = $_POST['description'] ?? '';
     $instruction = $_POST['instruction'] ?? '';
@@ -142,46 +142,40 @@ $exercises = $conn->query("SELECT * FROM exercises ORDER BY id DESC");
 
     <!-- Create Form -->
     <div id="createForm" class="form-section">
-        <form method="POST" enctype="multipart/form-data" class="card p-4 mb-4 shadow-sm bg-white">
+        <form method="POST" enctype="multipart/form-data" class="card p-4 mb-4 shadow-sm bg-white" onsubmit="return prepareMuscles();">
             <h4>Create Exercise</h4>
             <div class="row">
                 <div class="col-md-6 mb-3"><label>Name</label><input name="name" class="form-control" required></div>
                 <div class="col-md-6 mb-3"><label>Video URL</label><input name="video_url" class="form-control"></div>
                 <div class="col-md-6 mb-3"><label>Image</label><input type="file" name="image" class="form-control"></div>
+
                 <div class="col-md-6 mb-3">
                     <label>Equipment</label>
-                    <select name="equipment[]" id="equipment_create" class="form-select" multiple="multiple">
-                            <option value="Barbell">Barbell</option>
-                            <option value="EZ-bar">EZ-bar</option>
-                            <option value="Straight bar">Straight bar</option>
-                            <option value="Dumbbells">Dumbbells</option>
-                            <option value="Pull-up bar">Pull-up bar</option>
-                            <option value="Dip bars">Dip bars</option>
-                            <option value="Bench">Bench</option>
-                            <option value="Cable machine">Cable machine</option>
-                            <option value="Smith machine">Smith machine</option>
-                            <option value="Crossover machine">Crossover machine</option>
-                            <option value="TRX straps">TRX straps</option>
-                            <option value="Medicine ball">Medicine ball</option>
-                            <option value="Rope attachment">Rope attachment</option>
-                            <option value="V-bar attachment">V-bar attachment</option>
-                            <option value="Single handle">Single handle</option>
-                    </select>
+                    <div id="equipment_buttons" class="d-flex flex-wrap gap-2"></div>
+
+                    <div id="equipment_order_display" class="mt-2 text-muted small"></div>
+
+                    <input type="hidden" name="equipment" id="equipment_hidden">
                 </div>
 
-                <div class="col-md-6 mb-3"><label>Category</label>
-                    <select name="category[]" id="category_create" class="form-select" multiple required>
-                        <option value="arms">Arms</option>
-                        <option value="legs">Legs</option>
-                        <option value="back">Back</option>
-                        <option value="chest">Chest</option>
-                        <option value="abs">Abs</option>
-                    </select>
+                <div class="col-md-6 mb-3">
+                    <label>Category</label>
+                    <div id="category_buttons" class="d-flex flex-wrap gap-2"></div>
 
+                    <div id="category_order_display" class="mt-2 text-muted small"></div>
+
+                    <input type="hidden" name="category" id="category_hidden">
                 </div>
-                <div class="col-md-6 mb-3"><label>Muscle Group</label>
-                    <select name="muscle_group[]" class="form-select" id="muscle_group_create" multiple="multiple" required></select>
+
+                <div class="col-md-6 mb-3">
+                    <label>Muscle Group</label>
+                    <div id="muscle_group_buttons_create" class="d-flex flex-wrap gap-2"></div>
+
+                    <div id="muscle_order_display" class="mt-2 text-muted small"></div>
+
+                    <input type="hidden" name="muscle_group" id="muscle_group_hidden_create">
                 </div>
+
 
                 <div class="col-12 mb-3">
                     <label>Description</label>
@@ -201,46 +195,32 @@ $exercises = $conn->query("SELECT * FROM exercises ORDER BY id DESC");
 
     <!-- Edit Form -->
     <div id="editForm" class="form-section">
-        <form method="POST" enctype="multipart/form-data" class="card p-4 mb-4 shadow-sm bg-white">
+        <form method="POST" enctype="multipart/form-data" class="card p-4 mb-4 shadow-sm bg-white" onsubmit="return prepareEditForm();">
             <input type="hidden" name="edit_id">
             <h4>Edit Exercise</h4>
             <div class="row">
                 <div class="col-md-6 mb-3"><label>Name</label><input name="name" class="form-control" required></div>
                 <div class="col-md-6 mb-3"><label>Video URL</label><input name="video_url" class="form-control"></div>
+
                 <div class="col-md-6 mb-3">
                     <label>Equipment</label>
-                    <select name="equipment[]" id="equipment_edit" class="form-select" multiple="multiple">
-                        <option value="Barbell">Barbell</option>
-                        <option value="EZ-bar">EZ-bar</option>
-                        <option value="Straight bar">Straight bar</option>
-                        <option value="Dumbbells">Dumbbells</option>
-                        <option value="Pull-up bar">Pull-up bar</option>
-                        <option value="Dip bars">Dip bars</option>
-                        <option value="Bench">Bench</option>
-                        <option value="Cable machine">Cable machine</option>
-                        <option value="Smith machine">Smith machine</option>
-                        <option value="Crossover machine">Crossover machine</option>
-                        <option value="TRX straps">TRX straps</option>
-                        <option value="Medicine ball">Medicine ball</option>
-                        <option value="Rope attachment">Rope attachment</option>
-                        <option value="V-bar attachment">V-bar attachment</option>
-                        <option value="Single handle">Single handle</option>
-                    </select>
+                    <div id="equipment_buttons_edit" class="d-flex flex-wrap gap-2"></div>
+                    <input type="hidden" name="equipment" id="equipment_hidden_edit">
+                    <div class="small text-muted mt-1" id="equipment_order_edit"></div>
                 </div>
 
-                <div class="col-md-6 mb-3"><label>Category</label>
-                    <select name="category[]" class="form-select" id="category_edit" multiple required>
-
-                        <option value="">Select</option>
-                        <option value="arms">Arms</option>
-                        <option value="legs">Legs</option>
-                        <option value="back">Back</option>
-                        <option value="chest">Chest</option>
-                        <option value="abs">Abs</option>
-                    </select>
+                <div class="col-md-6 mb-3">
+                    <label>Category</label>
+                    <div id="category_buttons_edit" class="d-flex flex-wrap gap-2"></div>
+                    <input type="hidden" name="category" id="category_hidden_edit">
+                    <div class="small text-muted mt-1" id="category_order_edit"></div>
                 </div>
-                <div class="col-md-6 mb-3"><label>Muscle Group</label>
-                + <select name="muscle_group[]" class="form-select" id="muscle_group_edit" multiple="multiple" required></select>
+
+                <div class="col-md-6 mb-3">
+                    <label>Muscle Group</label>
+                    <div id="muscle_group_buttons_edit" class="d-flex flex-wrap gap-2"></div>
+                    <input type="hidden" name="muscle_group" id="muscle_group_hidden_edit">
+                    <div class="small text-muted mt-1" id="muscle_order_edit"></div>
                 </div>
 
                 <div class="col-12 mb-3">
@@ -269,11 +249,6 @@ $exercises = $conn->query("SELECT * FROM exercises ORDER BY id DESC");
                     <input type="file" name="new_image" class="form-control">
                 </div>
             </div>
-
-            <!-- Добавь в editForm перед </form> -->
-            <input type="hidden" name="equipment[]" value="">
-            <input type="hidden" name="category[]" value="">
-            <input type="hidden" name="muscle_group[]" value="">
 
 
             <button type="submit" name="edit_submit" class="btn btn-primary">Update</button>
@@ -344,7 +319,19 @@ $exercises = $conn->query("SELECT * FROM exercises ORDER BY id DESC");
 </div>
 
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
 <script>
+const categoriesList = ["arms", "legs", "back", "chest", "abs"];
+const equipmentList = [
+    "Barbell", "EZ-bar", "Straight bar", "Dumbbells", "Pull-up bar", "Dip bars",
+    "Bench", "Decline bench", "Cable machine", "Smith machine", "Crossover machine", "TRX straps",
+    "Medicine ball", "Rope attachment", "V-bar attachment", "Single handle", "Pec deck machine",  "Mat", "Roman chair", "Hammer Strength Machine"
+];
+
 const muscleOptions = {
     arms: ["Biceps", "Triceps", "Shoulders", "Forearms"],
     legs: ["Glutes", "Quadriceps", "Calves", "Hamstrings", "Adductors"],
@@ -353,108 +340,117 @@ const muscleOptions = {
     abs: ["Abdominal Muscles"]
 };
 
-// Универсальная функция обновления списка мышц
-function updateMuscles(categoryArray, selectId, selected = []) {
-    const select = document.getElementById(selectId);
-    if (!select) return;
+let selectedCategories = [];
+let selectedEquipment = [];
+let selectedMuscles = [];
 
-    select.innerHTML = "";
+// Универсальный генератор кнопок
+function setupButtonSelector(containerId, hiddenId, itemsList, selectedArray, onChange = null) {
+    const container = document.getElementById(containerId);
+    const hidden = document.getElementById(hiddenId);
 
-    const categories = Array.isArray(categoryArray) ? categoryArray : [categoryArray];
+    const render = () => {
+        container.innerHTML = '';
+        itemsList.forEach(item => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = selectedArray.includes(item)
+                ? 'btn btn-sm btn-primary'
+                : 'btn btn-sm btn-outline-secondary';
+            btn.textContent = item.charAt(0).toUpperCase() + item.slice(1);
+            btn.onclick = () => {
+                const i = selectedArray.indexOf(item);
+                if (i === -1) selectedArray.push(item);
+                else selectedArray.splice(i, 1);
+                hidden.value = selectedArray.join(',');
+                render();
+                if (onChange) onChange(selectedArray);
+            };
+            container.appendChild(btn);
+        });
 
-    const added = new Set();
+        // ⬇️ Вставь прямо сюда в конец функции render()
+        if (containerId === 'category_buttons') {
+            document.getElementById("category_order_display").textContent =
+                "Selected: " + selectedArray.join(" → ");
+        }
+        if (containerId === 'equipment_buttons') {
+            document.getElementById("equipment_order_display").textContent =
+                "Selected: " + selectedArray.join(" → ");
+        }
+    };
 
-    categories.forEach(category => {
-        if (muscleOptions[category]) {
-            muscleOptions[category].forEach(muscle => {
-                if (!added.has(muscle)) {
-                    const opt = new Option(muscle, muscle);
-                    if (selected.includes(muscle)) opt.selected = true;
-                    select.appendChild(opt);
-                    added.add(muscle);
-                }
+    render();
+}
+
+
+// Мышцы
+function renderMuscleButtons(muscles) {
+    const container = document.getElementById("muscle_group_buttons_create");
+    const hidden = document.getElementById("muscle_group_hidden_create");
+    container.innerHTML = '';
+
+    muscles.forEach(muscle => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = selectedMuscles.includes(muscle)
+            ? 'btn btn-sm btn-primary'
+            : 'btn btn-sm btn-outline-secondary';
+        btn.textContent = muscle;
+        btn.onclick = () => {
+            const i = selectedMuscles.indexOf(muscle);
+            if (i === -1) selectedMuscles.push(muscle);
+            else selectedMuscles.splice(i, 1);
+            hidden.value = selectedMuscles.join(',');
+            renderMuscleButtons(muscles);
+        };
+        container.appendChild(btn);
+    });
+
+    // 👇 Добавляем строку с текущим порядком
+    document.getElementById("muscle_order_display").textContent =
+        "Selected: " + selectedMuscles.join(" → ");
+
+        
+}
+
+
+// Обновить список мышц
+function updateAvailableMuscles(selectedCats) {
+    const allMuscles = [];
+    selectedCats.forEach(cat => {
+        if (muscleOptions[cat]) {
+            muscleOptions[cat].forEach(muscle => {
+                if (!allMuscles.includes(muscle)) allMuscles.push(muscle);
             });
         }
     });
-
-    $(`#${selectId}`).trigger('change');
+    renderMuscleButtons(allMuscles);
 }
 
-</script>
+// Финальная подготовка перед отправкой
+function prepareMuscles() {
+    document.getElementById("muscle_group_hidden_create").value = selectedMuscles.join(',');
+    document.getElementById("category_hidden").value = selectedCategories.join(',');
+    document.getElementById("equipment_hidden").value = selectedEquipment.join(',');
+    return true;
+}
 
-<script>
-let currentEditId = null;
-
+// Активация при загрузке
 document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll(".edit-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            const id = btn.dataset.id;
-            const form = document.getElementById("editForm");
-            const createForm = document.getElementById("createForm");
-
-            // Повторное нажатие по той же записи — закрытие формы
-            if (currentEditId === id && form.classList.contains("active")) {
-                form.classList.remove("active");
-                currentEditId = null;
-                return;
-            }
-
-            createForm.classList.remove("active");
-            form.classList.add("active");
-            currentEditId = id;
-
-            // Заполняем поля
-            form.querySelector("input[name='edit_id']").value = id;
-            form.querySelector("input[name='name']").value = btn.dataset.name;
-            form.querySelector("input[name='video_url']").value = btn.dataset.video;
-            form.querySelector("textarea[name='description']").value = btn.dataset.description;
-            form.querySelector("textarea[name='instruction']").value = btn.dataset.instruction || '';
-            form.querySelector("input[name='difficulty']").value = btn.dataset.difficulty;
-
-
-            const categories = btn.dataset.category.split(',').map(c => c.trim());
-            $('#category_edit').val(categories).trigger('change');
-
-            const muscles = btn.dataset.muscle.split(',').map(m => m.trim());
-            updateMuscles(categories, "muscle_group_edit", muscles);
-
-            // equipment as tags
-            const equipmentField = $('#equipment_edit');
-            if (btn.dataset.equipment) {
-                const items = btn.dataset.equipment.split(',').map(e => e.trim());
-                equipmentField.val(items).trigger('change');
-            }
-
-
-            // 👉 Показ текущей картинки
-            const imagePreview = document.getElementById("current-image-preview");
-            const checkbox = document.getElementById("remove_image_checkbox");
-            const checkboxLabel = document.querySelector("label[for='remove_image_checkbox']");
-
-            if (btn.dataset.image) {
-                imagePreview.src = btn.dataset.image;
-                imagePreview.style.display = "block";
-                checkbox.style.display = "inline";
-                checkboxLabel.style.display = "inline";
-            } else {
-                imagePreview.src = "";
-                imagePreview.style.display = "none";
-                checkbox.style.display = "none";
-                checkboxLabel.style.display = "none";
-            }
-        });
-    });
+    setupButtonSelector("category_buttons", "category_hidden", categoriesList, selectedCategories, updateAvailableMuscles);
+    setupButtonSelector("equipment_buttons", "equipment_hidden", equipmentList, selectedEquipment);
 });
-
 </script>
 
 
 <script>
+// 🔁 Функция переключения отображения формы
 function toggleForm(id) {
     const form = document.getElementById(id);
     form.classList.toggle("active");
 
-    // Если открываем создание — скрываем редактирование
+    // Скрываем вторую форму, если открыта
     if (id === "createForm") {
         const editForm = document.getElementById("editForm");
         if (editForm && editForm.classList.contains("active")) {
@@ -464,45 +460,167 @@ function toggleForm(id) {
 }
 </script>
 
+
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-    $('#equipment_create').select2({
-        tags: true,
-        placeholder: "Select or add equipment",
-        width: '100%'
+// ⚙️ Вставляется после загрузки DOM и определения setupButtonSelector и muscleOptions
+
+function openEditForm(data) {
+    const form = document.getElementById("editForm");
+    const createForm = document.getElementById("createForm");
+    createForm.classList.remove("active");
+    form.classList.add("active");
+
+    // Установить значения полей
+    form.querySelector("input[name='edit_id']").value = data.id;
+    form.querySelector("input[name='name']").value = data.name;
+    form.querySelector("input[name='video_url']").value = data.video;
+    form.querySelector("textarea[name='description']").value = data.description;
+    form.querySelector("textarea[name='instruction']").value = data.instruction || '';
+    form.querySelector("input[name='difficulty']").value = data.difficulty;
+
+    // 🧩 Разбиваем и очищаем
+    const categories = data.category ? data.category.split(',').map(s => s.trim()) : [];
+    const equipment = data.equipment ? data.equipment.split(',').map(s => s.trim()) : [];
+    const muscles = data.muscle ? data.muscle.split(',').map(s => s.trim()) : [];
+
+    selectedCategories_edit = [...categories];
+    selectedEquipment_edit = [...equipment];
+    selectedMuscles_edit = [...muscles];
+
+    document.getElementById("category_hidden_edit").value = selectedCategories_edit.join(',');
+    document.getElementById("equipment_hidden_edit").value = selectedEquipment_edit.join(',');
+    document.getElementById("muscle_group_hidden_edit").value = selectedMuscles_edit.join(',');
+
+    updateAvailableMuscles_edit(selectedCategories_edit);
+    renderAllEditButtons();
+
+    // Картинка
+    const img = document.getElementById("current-image-preview");
+    const checkbox = document.getElementById("remove_image_checkbox");
+    const checkboxLabel = document.querySelector("label[for='remove_image_checkbox']");
+
+    if (data.image) {
+        img.src = data.image;
+        img.style.display = "block";
+        checkbox.style.display = "inline";
+        checkboxLabel.style.display = "inline";
+    } else {
+        img.src = "";
+        img.style.display = "none";
+        checkbox.style.display = "none";
+        checkboxLabel.style.display = "none";
+    }
+}
+
+function renderAllEditButtons() {
+    renderEditCategoryButtons();
+    renderEditEquipmentButtons();
+    renderEditMuscleButtons();
+    updateEditOrderLabels();
+}
+
+function renderEditCategoryButtons() {
+    const container = document.getElementById("category_buttons_edit");
+    const hidden = document.getElementById("category_hidden_edit");
+    container.innerHTML = '';
+
+    categoriesList.forEach(item => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = selectedCategories_edit.includes(item) ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-outline-secondary';
+        btn.textContent = item.charAt(0).toUpperCase() + item.slice(1);
+        btn.onclick = () => {
+            const i = selectedCategories_edit.indexOf(item);
+            if (i === -1) selectedCategories_edit.push(item);
+            else selectedCategories_edit.splice(i, 1);
+            hidden.value = selectedCategories_edit.join(',');
+            renderAllEditButtons();
+        };
+        container.appendChild(btn);
+    });
+}
+
+function renderEditEquipmentButtons() {
+    const container = document.getElementById("equipment_buttons_edit");
+    const hidden = document.getElementById("equipment_hidden_edit");
+    container.innerHTML = '';
+
+    equipmentList.forEach(item => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = selectedEquipment_edit.includes(item) ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-outline-secondary';
+        btn.textContent = item;
+        btn.onclick = () => {
+            const i = selectedEquipment_edit.indexOf(item);
+            if (i === -1) selectedEquipment_edit.push(item);
+            else selectedEquipment_edit.splice(i, 1);
+            hidden.value = selectedEquipment_edit.join(',');
+            renderAllEditButtons();
+        };
+        container.appendChild(btn);
+    });
+}
+
+function renderEditMuscleButtons() {
+    const container = document.getElementById("muscle_group_buttons_edit");
+    const hidden = document.getElementById("muscle_group_hidden_edit");
+    container.innerHTML = '';
+
+    const allMuscles = [];
+    selectedCategories_edit.forEach(cat => {
+        if (muscleOptions[cat]) {
+            muscleOptions[cat].forEach(muscle => {
+                if (!allMuscles.includes(muscle)) allMuscles.push(muscle);
+            });
+        }
     });
 
-    $('#equipment_edit').select2({
-        tags: true,
-        placeholder: "Select or add equipment",
-        width: '100%'
+    allMuscles.forEach(muscle => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = selectedMuscles_edit.includes(muscle) ? 'btn btn-sm btn-primary' : 'btn btn-sm btn-outline-secondary';
+        btn.textContent = muscle;
+        btn.onclick = () => {
+            const i = selectedMuscles_edit.indexOf(muscle);
+            if (i === -1) selectedMuscles_edit.push(muscle);
+            else selectedMuscles_edit.splice(i, 1);
+            hidden.value = selectedMuscles_edit.join(',');
+            renderEditMuscleButtons();
+            updateEditOrderLabels();
+        };
+        container.appendChild(btn);
     });
+}
 
-    $('#category_create, #category_edit, #muscle_group_create, #muscle_group_edit').select2({
-        tags: false,
-        placeholder: "Select or add",
-        width: '100%'
-    });
+function updateAvailableMuscles_edit(selectedCats) {
+    renderEditMuscleButtons();
+}
 
-    // 🧠 Вот это добавь:
-    $('#category_create').on('change', function () {
-        const selected = $(this).val(); // массив категорий
-        updateMuscles(selected, 'muscle_group_create');
-    });
+function updateEditOrderLabels() {
+    document.getElementById("category_order_edit").textContent = selectedCategories_edit.join(', ');
+    document.getElementById("equipment_order_edit").textContent = selectedEquipment_edit.join(', ');
+    document.getElementById("muscle_order_edit").textContent = selectedMuscles_edit.join(', ');
+}
 
-    $('#category_edit').on('change', function () {
-        const selected = $(this).val(); // массив категорий
-        updateMuscles(selected, 'muscle_group_edit');
+// ОБРАБОТЧИК РЕДАКТИРОВАНИЯ
+document.querySelectorAll(".edit-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+        openEditForm({
+            id: btn.dataset.id,
+            name: btn.dataset.name,
+            video: btn.dataset.video,
+            equipment: btn.dataset.equipment,
+            category: btn.dataset.category,
+            muscle: btn.dataset.muscle,
+            description: btn.dataset.description,
+            instruction: btn.dataset.instruction,
+            difficulty: btn.dataset.difficulty,
+            image: btn.dataset.image
+        });
     });
 });
 
-
-
 </script>
-
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 </body>
 </html>
