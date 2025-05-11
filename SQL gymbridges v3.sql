@@ -1,0 +1,347 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: May 11, 2025 at 08:20 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `gymbridges`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `exercises`
+--
+
+CREATE TABLE `exercises` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `description` text DEFAULT NULL,
+  `video_url` varchar(255) DEFAULT NULL,
+  `category` varchar(50) DEFAULT NULL,
+  `muscle_group` varchar(100) DEFAULT NULL,
+  `equipment` varchar(100) DEFAULT NULL,
+  `difficulty` tinyint(4) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `image` varchar(255) DEFAULT NULL,
+  `instruction` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `exercises`
+--
+
+INSERT INTO `exercises` (`id`, `name`, `description`, `video_url`, `category`, `muscle_group`, `equipment`, `difficulty`, `created_at`, `image`, `instruction`) VALUES
+(13, 'Barbell Curl', 'Barbell Curl is a fundamental arm exercise focused on building the biceps using a barbell. It’s a compound isolation movement that primarily targets the biceps brachii and helps develop arm strength and size.', 'https://www.youtube.com/watch?v=kwG2ipFRgfo', 'arms', 'Biceps', 'Barbell', 2, '2025-05-08 03:35:51', 'uploads/Barbell Or EZ-Bar Curl.jpg', 'Stand upright holding a barbell with an underhand grip (palms facing forward), hands shoulder-width apart.\r\n\r\nKeep your elbows close to your torso and your back straight.\r\n\r\nExhale and curl the barbell upward by contracting your biceps. Only your forearms should move.\r\n\r\nContinue raising the barbell until your biceps are fully contracted and the bar is at shoulder level.\r\n\r\nHold for a brief pause while squeezing the biceps.\r\n\r\nInhale and slowly lower the barbell back to the starting position.'),
+(14, 'Chin-Ups', 'Chin-ups are a bodyweight pulling exercise that primarily targets the biceps and upper back. By using a supinated (underhand) grip, more emphasis is placed on the biceps compared to traditional pull-ups.', 'https://www.youtube.com/watch?v=T78xCiw_R6g&ab_channel=LIVESTRONG.COM', 'arms,back', 'Biceps,Forearms,Lats', 'Pull-up bar', 3, '2025-05-08 03:53:10', 'uploads/chin-ups.jpg', 'Grip the pull-up bar with your palms facing you (underhand grip), hands shoulder-width apart.\r\n\r\nHang with arms fully extended and legs slightly bent if needed.\r\n\r\nPull your body upward until your chin clears the bar.\r\n\r\nPause briefly at the top.\r\n\r\nLower yourself in a controlled motion until arms are fully extended.\r\n\r\nRepeat.'),
+(15, 'Dumbbell Curl', 'The dumbbell curl is an isolation exercise that targets the biceps. It involves curling a dumbbell in each hand while maintaining control throughout the movement. This helps build arm strength and muscle definition.', 'https://www.youtube.com/watch?v=ykJmrZ5v0Oo', 'arms,', 'Biceps,', 'Dumbbells,', 2, '2025-05-08 04:01:22', 'uploads/dumbbell-biceps-curl.jpg', 'Stand upright with a dumbbell in each hand, arms fully extended and palms facing forward.\r\n\r\nKeep your elbows close to your torso.\r\n\r\nCurl the weights while contracting your biceps.\r\n\r\nPause at the top of the movement, then slowly lower the dumbbells to the starting position.\r\n\r\nRepeat for the desired number of reps.'),
+(16, 'Concentration Curl', 'The concentration curl is a focused isolation exercise that targets the biceps brachii. By eliminating momentum and using a seated position, it maximizes contraction and improves bicep peak development.', 'https://www.youtube.com/watch?v=Jvj2wV0vOYU&ab_channel=ScottHermanFitness', 'arms,', 'Biceps,', 'Dumbbells,', 2, '2025-05-08 05:17:43', 'uploads/concentration-curl.jpg', 'Sit on a bench with your legs spread and hold a dumbbell in one hand.\r\n\r\nLean forward slightly and rest your elbow against your inner thigh.\r\n\r\nCurl the dumbbell upward while keeping your upper arm stationary.\r\n\r\nSqueeze the bicep at the top of the movement.\r\n\r\nSlowly lower the weight back to the starting position and repeat.'),
+(17, 'Cable Curl', 'The cable curl is a bicep isolation exercise that provides constant resistance throughout the movement. It’s an effective way to target the biceps with controlled tension and minimized cheating.', 'https://www.youtube.com/watch?v=rfRdD5PKrko&t=33s&ab_channel=TurnFit-VancouverPersonalTrainers', 'arms', 'Biceps', 'Cable machine', 2, '2025-05-08 05:24:17', 'uploads/cable-curl.jpg', 'Stand facing a low pulley cable machine with a straight bar attachment.\r\n\r\nGrasp the bar with an underhand grip, shoulder-width apart.\r\n\r\nKeep your elbows close to your sides and curl the bar toward your chest.\r\n\r\nSqueeze your biceps at the top.\r\n\r\nSlowly return to the starting position and repeat.'),
+(18, 'Straight Bar Tricep Extension', 'The Straight Bar Tricep Extension is an isolation exercise that targets the triceps using a cable machine and a straight bar attachment. It allows for controlled resistance throughout the entire range of motion.\r\n\r\n', 'https://www.youtube.com/watch?v=LlBqt8dksdk&ab_channel=FunctionalAF', 'arms', 'Triceps', 'Straight bar,Cable machine', 2, '2025-05-08 06:31:17', 'uploads/Straight Bar Tricep Extension.png', 'Attach a straight bar to a high pulley on a cable machine.\r\n\r\nStand upright with feet shoulder-width apart, grasp the bar with an overhand grip (palms facing down), hands about shoulder-width apart.\r\n\r\nKeep elbows close to your body and stationary.\r\n\r\nPush the bar downward by extending your arms fully.\r\n\r\nPause at the bottom, squeezing the triceps.\r\n\r\nSlowly return to the starting position.\r\n\r\nRepeat for the desired number of reps.'),
+(19, 'EZ Bar Skullcrusher', 'The EZ Bar Skullcrusher is an isolation triceps exercise that targets all three heads of the triceps. Performed lying on a bench, the lifter lowers an EZ bar from an extended position above the head to just above the forehead and then extends the arms back up. The unique shape of the EZ bar reduces wrist strain compared to a straight bar.', 'https://www.youtube.com/watch?v=d_KZxkY_0cM&ab_channel=ScottHermanFitness', 'arms', 'Triceps', 'EZ-bar,Bench', 3, '2025-05-08 06:37:29', 'uploads/Skullcrusher.jpg', 'Lie on a flat bench while holding an EZ curl bar with an overhand grip, hands shoulder-width apart.\r\n\r\nExtend your arms so the bar is held above your chest.\r\n\r\nSlowly lower the bar by bending your elbows until it\'s just above your forehead.\r\n\r\nPause, then push the bar back up to the starting position by extending your elbows.\r\n\r\nRepeat for the desired number of repetitions.'),
+(20, 'Tricep Dip', 'Tricep Dips on parallel bars are a powerful bodyweight exercise that primarily targets the triceps while also engaging the chest and shoulders. The movement involves lowering and lifting the body between two bars using arm strength. By keeping the torso upright and the elbows tucked, the emphasis remains on the triceps rather than the chest.\r\n\r\n', 'https://www.youtube.com/watch?v=2z8JmcrW-As&ab_channel=Calisthenicmovement', 'arms,chest', 'Triceps,Shoulders,Chest Muscles', 'Dip bars', 3, '2025-05-08 07:16:30', 'uploads/Dip.jpg', 'Grasp parallel bars and lift your body with arms fully extended.\r\n\r\nKeep your torso upright and elbows close to your body.\r\n\r\nSlowly lower yourself by bending your elbows to a 90-degree angle.\r\n\r\nPause briefly at the bottom, feeling the stretch in your triceps.\r\n\r\nPush back up to the starting position without locking your elbows.\r\n\r\nRepeat for the desired number of repetitions.\r\n\r\nTip: Keep your body as vertical as possible to maximize triceps activation and reduce chest involvement.'),
+(21, 'Rope Tricep Extension', 'Rope Tricep Extensions are an isolation cable exercise that focuses specifically on building and defining the triceps. Using a rope attachment allows for a greater range of motion at the bottom of the movement as you separate the rope ends, maximizing triceps contraction.', 'https://www.youtube.com/watch?v=vB5OHsJ3EME&ab_channel=ScottHermanFitness', 'arms', 'Triceps', 'Cable machine,Rope attachment', 2, '2025-05-08 07:21:28', 'uploads/rope-tricep-extension-1.jpg', 'Attach a rope handle to a high pulley.\r\n\r\nStand upright, grip the rope with both hands (palms facing inward), and keep your elbows close to your sides.\r\n\r\nStarting with your elbows bent at a 90-degree angle, extend your arms downward.\r\n\r\nAs you straighten your arms, pull the rope ends apart for maximum triceps activation.\r\n\r\nSlowly return to the starting position.\r\n\r\nRepeat.\r\n\r\nTip: Do not let your elbows flare out or swing your body — keep the motion strict.'),
+(22, 'Dumbbell Tricep Kickback', 'The Dumbbell Tricep Kickback is an isolation exercise that targets the triceps. It involves extending the elbow joint while keeping the upper arm stationary. It’s a popular finishing movement that helps in defining and toning the triceps, especially the long head.', 'https://www.youtube.com/watch?v=6SS6K3lAwZ8&ab_channel=ScottHermanFitness', 'arms,', 'Triceps,', 'Dumbbells,', 2, '2025-05-08 07:54:36', 'uploads/triceps-kickback.jpg', 'Hold a dumbbell in each hand with a neutral grip.\r\n\r\nBend your knees slightly and hinge forward at the hips, keeping your back straight.\r\n\r\nTuck your elbows close to your torso; your upper arms should be parallel to the floor.\r\n\r\nExtend your elbows to push the dumbbells straight back.\r\n\r\nSqueeze your triceps at the top.\r\n\r\nSlowly return to the starting position.\r\n\r\nRepeat.\r\n\r\nTip: Keep your upper arms stationary throughout — only your forearms should move'),
+(23, 'Military Press (Overhead Press)', 'The Military Press is a compound upper-body exercise that primarily targets the shoulders and engages the triceps and upper chest. It involves pressing a barbell or dumbbells from shoulder height to overhead in a standing position with strict posture — feet together, no leg drive — which differentiates it from the standard Overhead Press.', 'https://www.youtube.com/watch?v=2yjwXTZQDDI&ab_channel=ScottHermanFitness', 'arms,back,chest,', 'Shoulders,Triceps,Chest Muscles,Upper Trapezius', 'Barbell,', 3, '2025-05-08 08:03:29', 'uploads/Military-Press.jpg', 'Stand upright with your feet close together (military stance).\r\n\r\nHold the barbell at shoulder level with an overhand grip, elbows slightly forward.\r\n\r\nBrace your core and glutes.\r\n\r\nPress the bar straight overhead until your arms are fully extended.\r\n\r\nLower the bar back to shoulder level with control.\r\n\r\nRepeat for the desired number of repetitions.\r\n\r\nTip: Keep your torso rigid — do not lean back or use leg momentum. This strict form isolates the deltoids more effectively.'),
+(24, 'Dumbbell Lateral Raise', 'Dumbbell Lateral Raise is an isolation exercise targeting the lateral deltoids. It\'s commonly used to build width in the shoulders and improve upper body aesthetics.\r\n', 'https://www.youtube.com/watch?v=3VcKaXpzqRo&ab_channel=ScottHermanFitness', 'arms', 'Shoulders', 'Dumbbells', 2, '2025-05-08 09:10:01', 'uploads/Dumbbell Lateral Raise.jpg', 'Stand with your feet shoulder-width apart, holding a dumbbell in each hand at your sides, palms facing inward.\r\n\r\nKeep a slight bend in your elbows and your back straight.\r\n\r\nRaise the dumbbells out to the sides until your arms are parallel to the ground.\r\n\r\nPause briefly at the top, then slowly lower the dumbbells back to the starting position.\r\n\r\nAvoid swinging or using momentum. Focus on using your shoulder muscles to lift the weights.\r\n\r\n'),
+(25, 'Standing Dumbbell Front Raise', 'The Standing Dumbbell Front Raise targets the anterior (front) deltoids and helps build shoulder strength and definition. It\'s a great isolation movement for improving the appearance of the shoulders.', 'https://www.youtube.com/watch?v=-t7fuZ0KhDA&ab_channel=ScottHermanFitness', 'arms,', 'Shoulders,', 'Barbell,', 2, '2025-05-08 09:13:40', 'uploads/Standing Dumbbell Front Raise.jpg', 'Stand upright with your feet shoulder-width apart, holding a dumbbell in each hand in front of your thighs with your palms facing your body.\r\n\r\nKeep your arms straight but slightly bent at the elbows.\r\n\r\nRaise one or both dumbbells straight in front of you to shoulder height.\r\n\r\nPause briefly, then lower them slowly back to the starting position.\r\n\r\nDo not use momentum or swing the weights.'),
+(26, 'Cable Face Pull', 'The Cable Face Pull is an excellent exercise for strengthening the rear deltoids, trapezius, and rotator cuff muscles. It improves posture, shoulder health, and stability, especially important for people doing heavy pressing movements.\r\n\r\n', 'https://www.youtube.com/watch?v=rep-qVOkqgk&ab_channel=ScottHermanFitness', 'arms,back', 'Shoulders,Upper Trapezius', 'Smith machine,Rope attachment', 3, '2025-05-08 09:19:13', 'uploads/face-pull-cable-exercise-cover.jpg', 'Attach a rope handle to a high pulley on a cable machine.\r\n\r\nGrab the rope with both hands using a neutral grip (palms facing in), step back slightly, and lean back just a bit.\r\n\r\nPull the rope towards your face, keeping your upper arms parallel to the ground and flaring your elbows out.\r\n\r\nSqueeze your shoulder blades together at the peak of the movement.\r\n\r\nReturn to the starting position with control.'),
+(32, 'Seated Arnold Press', 'The Seated Arnold Press is a shoulder-strengthening exercise developed by Arnold Schwarzenegger. It targets all three heads of the deltoid muscle by combining a rotation with a standard overhead press. This movement promotes greater shoulder engagement and stability.', 'https://www.youtube.com/watch?v=vj2w851ZHRM&ab_channel=Instructionalfitness', 'arms', 'Shoulders', 'Bench,Dumbbells', 3, '2025-05-09 08:49:56', 'uploads/2_0f397b69-fbe0-4555-bade-e5b5c2723fc0.jpg', 'Sit on a bench with back support, holding two dumbbells in front of you at shoulder height, palms facing your body.\r\n\r\nAs you press the weights upward, rotate your palms outward.\r\n\r\nAt the top of the movement, your palms should face forward and arms fully extended.\r\n\r\nSlowly reverse the motion and bring the dumbbells back to the starting position.\r\n\r\nRepeat for the desired number of reps.'),
+(33, 'Seated Barbell Wrist Curl', 'The Seated Barbell Wrist Curl is an isolation exercise targeting the forearm flexors, performed while seated with the forearms resting on the thighs or a bench. It’s ideal for building grip strength and forearm mass.', 'https://www.youtube.com/watch?v=hSukP162H4M&ab_channel=JoshuaDavidTaubes', 'arms', 'Forearms', 'Barbell', 2, '2025-05-09 08:58:21', 'uploads/Seated Barbell Wrist Curl.jpg', 'Sit on a flat bench and hold a barbell with an underhand grip, resting your forearms on your thighs.\r\n\r\nAllow your wrists to extend fully so the barbell rolls down toward your fingers.\r\n\r\nCurl the barbell up using only your wrists, squeezing at the top.\r\n\r\nSlowly lower the barbell back to the starting position.\r\n\r\nRepeat for the desired number of repetitions.'),
+(34, 'Behind-The-Back Barbell Wrist Curl', 'The Behind-the-Back Barbell Wrist Curl is an isolation exercise that targets the forearm flexors. By holding the barbell behind the back and allowing the wrists to flex downward, this movement effectively strengthens grip and forearm size.', 'https://www.youtube.com/watch?v=xrS1UCC24do&ab_channel=TestosteroneNation', 'arms', 'Forearms', 'Barbell', 2, '2025-05-09 09:01:02', 'uploads/Behind-The-Back Barbell Wrist Curl.jpg', 'Stand upright and grasp a barbell behind your back using a shoulder-width underhand grip (palms facing forward).\r\n\r\nAllow the bar to rest against your glutes with arms fully extended.\r\n\r\nLet the barbell roll down slightly in your hands so your wrists extend fully downward.\r\n\r\nCurl the barbell upward by flexing your wrists, keeping your arms stationary.\r\n\r\nSqueeze at the top of the movement, then slowly lower the barbell back to the starting position.\r\n\r\nRepeat for the desired number of repetitions.'),
+(35, 'One-Arm Seated Dumbbell Wrist Curl', 'The One-Arm Seated Dumbbell Wrist Curl isolates the forearm flexors using a single dumbbell, allowing focused development and correction of strength imbalances between arms.', 'https://www.youtube.com/watch?v=Q7dTbE4kRUY&ab_channel=Musqle', 'arms', 'Forearms', 'Dumbbells', 2, '2025-05-09 09:04:38', 'uploads/One-Arm Seated Dumbbell Wrist Curl.jpg', 'Sit on a bench and rest your forearm on your thigh or a flat surface, palm facing upward.\r\n\r\nHold a dumbbell in your hand, letting your wrist extend so the dumbbell lowers slightly.\r\n\r\nCurl the dumbbell upward by flexing your wrist, keeping the rest of your arm stationary.\r\n\r\nSqueeze at the top, then slowly lower the dumbbell back to the starting position.\r\n\r\nPerform all reps on one arm, then switch to the other.'),
+(36, 'Reverse Grip Dumbbell Wrist Curl (Over Bench)', 'This exercise targets the forearm extensors, helping improve wrist stability and overall forearm development. It is performed using a reverse grip with the palms facing downward.', 'https://www.youtube.com/watch?v=ry4oASDKD-o&ab_channel=KasKuvvet', 'arms', 'Forearms', 'Dumbbells', 2, '2025-05-09 09:47:48', 'uploads/reverse_grip_dumbbell_wrist_curl_over_bench.jpg', 'Sit on a bench and place your forearms on your thighs or a flat surface, with your palms facing downward over the edge.\r\n\r\nHold a dumbbell in each hand, allowing your wrists to drop slightly below the bench level.\r\n\r\nRaise the dumbbells by extending your wrists upward, isolating the forearm extensors.\r\n\r\nHold for a moment at the top, then slowly lower the weights back down.\r\n\r\nKeep the movement controlled and avoid using momentum.'),
+(37, 'Reverse One Arm Cable Curl', 'This isolation exercise targets the forearm extensors and brachioradialis. Using a reverse grip with one arm allows greater focus and balance during execution.', 'youtube.com/watch?v=SIuDkLLlL6E&ab_channel=ReturnoftheAthlete-Testimonials%26Podcast', 'arms', 'Forearms', 'Cable machine,Single handle', 2, '2025-05-09 09:57:01', 'uploads/reverseonearmcablecurl1.jpg', 'Attach a single handle to a low pulley on a cable machine. Stand side-on to the machine and grasp the handle with an overhand grip (palm facing down). Keep your elbow close to your body and curl the handle towards your shoulder, focusing on keeping the wrist straight and the motion controlled. Pause at the top, then slowly return to the start position. Repeat and switch arms.'),
+(38, 'Barbell Bench Press', 'The barbell bench press is a classic compound exercise that primarily targets the chest, triceps, and front deltoids. It is one of the most effective movements for building upper body strength and mass.', 'https://www.youtube.com/watch?v=gRVjAtPip0Y&ab_channel=BuffDudes', 'chest,arms', 'Chest Muscles,Triceps,Shoulders', 'Bench,Barbell', 3, '2025-05-09 10:02:55', 'uploads/Barbell Bench Press.jpg', 'Lie flat on a bench with your eyes directly under the barbell.\r\n\r\nGrip the bar slightly wider than shoulder-width apart.\r\n\r\nUnrack the bar and slowly lower it to your mid-chest, keeping your elbows at a 45° angle.\r\n\r\nPress the bar back up to the starting position, fully extending your arms without locking the elbows.\r\n\r\nRepeat for the desired number of repetitions.'),
+(39, 'Incline Dumbbell Bench Press', 'The incline dumbbell bench press is a strength-building upper body exercise that primarily targets the upper chest (clavicular head of the pectorals) while also working the shoulders and triceps. The incline angle increases emphasis on the upper chest.\r\n', 'https://www.youtube.com/watch?v=8iPEnn-ltC8&ab_channel=ScottHermanFitness', 'chest,arms', 'Chest Muscles,Triceps,Shoulders', 'Dumbbells,Bench', 3, '2025-05-09 10:07:25', 'uploads/1_8c4ca767-1b7d-4981-9c20-c7d0b744dca5.jpg', 'Set an adjustable bench to a 30–45 degree incline and sit with a dumbbell in each hand resting on your thighs.\r\n\r\nLie back and position the dumbbells at shoulder level, palms facing forward.\r\n\r\nPress the dumbbells up until your arms are fully extended above your chest.\r\n\r\nSlowly lower the dumbbells back to the starting position, keeping control.\r\n\r\nRepeat for the desired number of reps.\r\n\r\n'),
+(40, 'Dumbbell Flys', 'The dumbbell fly is an isolation chest exercise that emphasizes the pectoral muscles by stretching and contracting them through a wide arc of motion. It helps develop chest width and definition.\r\n\r\n', 'https://www.youtube.com/watch?v=eozdVDA78K0&ab_channel=ScottHermanFitness', 'chest,arms', 'Chest Muscles,Shoulders', 'Bench,Dumbbells', 3, '2025-05-09 10:13:44', 'uploads/Dumbbell_Chest_Fly_825bd98f-7e67-4b98-ba86-3db39e835290_600x600_crop_center.jpg', 'Lie flat on a bench holding a dumbbell in each hand, arms extended above your chest with palms facing each other.\r\n\r\nWith a slight bend in your elbows, slowly lower the dumbbells out to your sides in a wide arc until you feel a stretch in your chest.\r\n\r\nBring the dumbbells back up by squeezing your chest muscles, keeping the same arc in reverse.\r\n\r\nKeep your back pressed to the bench and avoid bending your elbows more during the movement.\r\n\r\nRepeat for the desired number of reps.\r\n\r\n'),
+(41, 'Pec Deck', 'The Pec Deck is an isolation chest exercise that targets the pectoral muscles by bringing the arms together in a hugging motion using a machine.', 'https://www.youtube.com/watch?v=eGjt4lk6g34&ab_channel=PureGym', 'chest', 'Chest Muscles', 'Pec deck machine', 2, '2025-05-09 11:11:53', 'uploads/ChestFly.jpg', 'Sit on the pec deck machine and adjust the seat so the handles are chest-level.\r\n\r\nGrasp the handles with your arms slightly bent.\r\n\r\nSlowly bring your arms together in front of you in a wide arc, squeezing your chest.\r\n\r\nPause at the peak contraction.\r\n\r\nSlowly return to the starting position.\r\n\r\nRepeat for the desired number of reps.'),
+(42, 'Standing Cable Fly', 'Standing Cable Fly is an isolation exercise that targets the pectoral muscles using a cable machine. It is performed in a standing position, emphasizing the contraction of the chest throughout the movement.', 'Standing Cable Fly', 'chest', 'Chest Muscles', 'Cable machine,Single handle', 2, '2025-05-09 11:20:20', 'uploads/cable-fly-800.jpg', 'Stand between two high pulleys with a handle in each hand.\r\n\r\nStep slightly forward with one foot, keeping your back straight and core engaged.\r\n\r\nWith a slight bend in your elbows, bring your hands together in front of your chest in a wide arc.\r\n\r\nSqueeze your chest muscles at the peak, then slowly return to the starting position.\r\n\r\nRepeat for the desired number of reps.'),
+(43, 'Cable Crunch', 'Cable Crunch is a weighted abdominal exercise that effectively targets the upper abdominal muscles by using a cable machine in a kneeling position. It emphasizes spinal flexion under resistance.', 'https://www.youtube.com/watch?v=6GMKPQVERzw&ab_channel=RenaissancePeriodization', 'abs', 'Abdominal Muscles', 'Cable machine,Rope attachment', 2, '2025-05-09 11:29:32', 'uploads/1_f607c1e6-fb1a-45f8-bb2e-4dbf0ea4827f.jpg', 'Attach a rope handle to a high pulley on a cable machine.\r\n\r\nKneel down facing the machine and grab the rope with both hands, placing your hands beside your head.\r\n\r\nKeep your hips stationary and bend at the waist, crunching your abs to bring your elbows toward your knees.\r\n\r\nSqueeze at the bottom, then slowly return to the starting position.\r\n\r\nRepeat for the desired number of repetitions.'),
+(44, 'Lying Floor Leg Raise', 'The Lying Floor Leg Raise is a bodyweight exercise that primarily targets the lower abdominal muscles. It is ideal for building core strength and improving control over hip flexion.', 'https://www.youtube.com/watch?v=9qbV7ZQNqqA&ab_channel=HealthHunt', 'abs', 'Abdominal Muscles', 'Mat', 2, '2025-05-09 11:33:20', 'uploads/lying-leg-raise-800.jpg', 'Lie flat on your back on the floor or a mat, legs fully extended, arms down at your sides for support.\r\n\r\nWhile keeping your legs straight, slowly lift them toward the ceiling until they form a 90-degree angle with your torso.\r\n\r\nPause briefly at the top, then slowly lower your legs back down without letting your feet touch the ground.\r\n\r\nMaintain control and avoid arching your lower back.\r\n\r\nRepeat for the desired number of reps.'),
+(45, 'Decline Bench Sit Up', 'The Decline Bench Sit Up is a classic abdominal exercise performed on a decline bench. It increases resistance on the core muscles and helps develop definition and strength in the upper and lower abdominals.', 'https://www.youtube.com/watch?v=N7hf1_vcX5w&ab_channel=PureGym', 'abs', 'Abdominal Muscles', 'Decline bench', 3, '2025-05-09 11:38:17', 'uploads/decline-sit-up-800.jpg', 'Sit on a decline bench and secure your feet under the padded rollers.\r\n\r\nCross your arms over your chest or place your hands behind your head.\r\n\r\nSlowly lower your upper body backward until your back is just above the bench.\r\n\r\nEngage your abs and sit back up to the starting position without using momentum.\r\n\r\nExhale as you come up and inhale as you lower yourself down.\r\n\r\nRepeat for the desired number of repetitions.'),
+(46, 'Plank', 'The plank is an isometric core strength exercise that involves maintaining a position similar to a push-up for the maximum possible time. It strengthens the abdominal muscles, lower back, and shoulders.', 'https://www.youtube.com/watch?v=pSHjTRCQxIw&ab_channel=ScottHermanFitness', 'abs', 'Abdominal Muscles', '', 2, '2025-05-09 11:41:35', 'uploads/c_C3_B3mo-hacer-una-plancha-abdominal.jpg', 'Lie face down on the floor, then lift your body onto your forearms and toes.\r\n\r\nKeep your elbows directly under your shoulders, forearms flat on the floor.\r\n\r\nKeep your body in a straight line from head to heels.\r\n\r\nEngage your core, glutes, and legs.\r\n\r\nHold the position as long as you can while maintaining form.'),
+(47, 'Roman Chair Leg Raise', 'Roman Chair Leg Raise is an effective abdominal exercise performed on a Roman chair or captain’s chair. It targets the lower abdominals and hip flexors, helping improve core strength and stability.', 'https://www.youtube.com/watch?v=9FeC5SAB_3g&ab_channel=FitGent', 'abs', 'Abdominal Muscles', 'Roman chair', 3, '2025-05-09 11:45:35', 'uploads/Roman Chair Leg Raise.jpg', 'Stand on the Roman chair with your forearms resting on the pads and back supported.\r\n\r\nLet your legs hang straight down.\r\n\r\nEngage your core and slowly raise your legs in front of you until they\'re parallel to the floor.\r\n\r\nPause at the top, then lower your legs with control.\r\n\r\nRepeat for desired reps.'),
+(48, 'Lat Pulldown', 'The Lat Pulldown is a classic compound back exercise that targets the latissimus dorsi muscles. It\'s performed on a cable machine using a wide bar and is ideal for developing upper back width and improving posture.', 'https://www.youtube.com/watch?v=CAwf7n6Luuc&ab_channel=ScottHermanFitness', 'back', 'Lats, Teres major', 'Cable machine,Straight bar', 3, '2025-05-09 12:33:38', 'uploads/Does-Lat-Pulldown-Work-Forearms.jpg', 'Sit at the lat pulldown machine and adjust the thigh pad to keep your legs locked in place.\r\n\r\nGrab the bar with a wide overhand grip.\r\n\r\nPull the bar down toward your upper chest, squeezing your shoulder blades together.\r\n\r\nPause briefly, then slowly let the bar return to the starting position with control.\r\n\r\nRepeat for desired reps.'),
+(49, 'Wide Grip Pull-Up', 'The Wide Grip Pull-Up is a challenging bodyweight exercise that emphasizes the upper lats and overall back development. The wider grip increases the difficulty by minimizing arm involvement and isolating the back muscles more effectively.', 'https://www.youtube.com/watch?v=eGo4IYlbE5g&ab_channel=Calisthenicmovement', 'back', 'Lats, Teres major', 'Pull-up bar', 4, '2025-05-09 13:08:13', 'uploads/Wide Grip Pull-Up.jpg', 'Grab a pull-up bar with a wide overhand grip — hands wider than shoulder-width apart.\r\n\r\nHang with your arms fully extended and chest up.\r\n\r\nPull yourself up until your chin passes above the bar, focusing on engaging your back.\r\n\r\nSlowly lower yourself back to the starting position with control.\r\n\r\nRepeat for desired repetitions.'),
+(50, 'Straight Arm Lat Pull Down', 'The Straight Arm Lat Pulldown is an isolation exercise targeting the latissimus dorsi. It emphasizes a full stretch and contraction of the lats without significant involvement of the biceps, making it ideal for improving mind-muscle connection and back width.', 'https://www.youtube.com/watch?v=G9uNaXGTJ4w&ab_channel=RenaissancePeriodization', 'back', 'Lats, Teres major', 'Cable machine,Straight bar', 3, '2025-05-09 13:13:02', 'uploads/18e9762c1af6a35e4a8c4683dd6e7942.jpg', 'Stand in front of a cable machine with a straight bar attached to the high pulley.\r\n\r\nGrab the bar with a shoulder-width overhand grip and take a step back, keeping your arms straight.\r\n\r\nHinge slightly at the hips and engage your core.\r\n\r\nPull the bar down in an arc motion until your hands reach your thighs.\r\n\r\nPause and squeeze your lats, then return slowly to the starting position.\r\n\r\nRepeat for the desired reps.'),
+(51, 'V-Bar Pull Down', 'The V-Bar Pulldown is a cable machine exercise that targets the latissimus dorsi and middle back muscles. Using a V-bar attachment promotes a neutral grip, which can reduce stress on the wrists and shoulders while encouraging a strong contraction in the lats.', 'https://www.youtube.com/watch?v=LJ5ebC1pWkA&ab_channel=BocaRatonPersonalTraining', 'back', 'Lats,Teres major', 'Cable machine,V-bar attachment', 3, '2025-05-09 13:17:21', 'uploads/D47322CA-0A5F-4C9B-B558-BFC2CF2DB610.jpeg', 'Sit down at the lat pulldown machine and attach a V-bar handle to the top pulley.\r\n\r\nGrab the V-bar with a neutral grip (palms facing each other).\r\n\r\nPull the bar down toward your upper chest while leaning back slightly.\r\n\r\nSqueeze your back muscles at the bottom of the movement.\r\n\r\nSlowly return to the starting position under control.\r\n\r\nRepeat for the desired number of repetitions.'),
+(52, ' Iso-Lateral Lat Pulldown', 'The Iso-Lateral Lat Pulldown is a strength exercise performed on a machine with two independent handles, allowing each side of the back to work independently. It targets the latissimus dorsi while also engaging the biceps and other upper back muscles. This movement promotes muscular balance and isolation, especially useful for correcting asymmetries.', 'https://www.youtube.com/watch?v=J8rBALm7Ij0&ab_channel=ClubConnect', 'back', 'Lats,Teres major,Middle/Lower Trapezius', 'Hammer Strength Machine', 3, '2025-05-09 13:25:52', 'uploads/Plate_Loaded_Chest_and_Shoulder_Machine-1.jpg', 'Adjust the seat and thigh pad so your legs are firmly secured.\r\n\r\nSit upright and grasp each independent handle above you with a neutral or overhand grip.\r\n\r\nBegin with your arms fully extended upward.\r\n\r\nPull both handles down simultaneously or one at a time toward your upper chest by engaging your lats.\r\n\r\nSqueeze your shoulder blades together at the bottom.\r\n\r\nSlowly return to the starting position with control.\r\n\r\nRepeat for the desired number of repetitions.\r\n\r\n'),
+(53, 'Bent Over Barbell Row', 'The Barbell Bent Over Row is a foundational strength exercise that targets the entire back, especially the lats and mid-back. It’s commonly used to develop muscle thickness and improve pulling power.', 'https://www.youtube.com/watch?v=bm0_q9bR_HA&ab_channel=NationalAcademyofSportsMedicine%28NASM%29', 'back', 'Lats,Middle/Lower Trapezius,Teres major,Lower Back', 'Barbell', 3, '2025-05-10 08:19:43', 'uploads/barbell-bent-over-row.jpg', 'Stand with your feet shoulder-width apart and grasp a barbell with an overhand grip.\r\n\r\nBend your knees slightly and hinge forward at the hips, keeping your back straight and core tight.\r\n\r\nLet the bar hang at arm’s length.\r\n\r\nPull the barbell towards your lower chest, squeezing your shoulder blades together at the top.\r\n\r\nLower the bar under control and repeat.'),
+(54, 'Seated Cable Row', 'The Seated Cable Row is a compound back exercise that targets the middle of the back while also engaging the lats, biceps, and shoulders. It is performed using a cable machine with a V-bar or parallel grip handle while seated with legs extended and knees slightly bent.', 'https://www.youtube.com/watch?v=UCXxvVItLoM&ab_channel=RenaissancePeriodization', 'back', 'Middle/Lower Trapezius,Teres major,Lats', 'Cable machine,V-bar attachment', 3, '2025-05-10 08:25:22', 'uploads/1_45c5f6c0-9516-4a53-ab23-0dbed0d5af52.jpg', 'Sit at the cable row machine with your feet firmly placed on the foot platform and knees slightly bent.\r\n\r\nGrasp the V-bar handle with both hands, keeping your back straight and chest up.\r\n\r\nPull the handle towards your torso while squeezing your shoulder blades together.\r\n\r\nHold briefly at the peak contraction, then slowly extend your arms forward to the starting position.\r\n\r\nRepeat the movement for the desired number of reps, maintaining control throughout the motion.\r\n'),
+(55, 'Machine Row', 'The Machine Row is a compound back exercise performed on a seated row machine. It primarily targets the middle back and helps develop thickness and definition. By using a guided machine, it reduces strain on the lower back, making it a safer alternative to free weight rows.', 'https://www.youtube.com/watch?v=bmWA2yO9Aa0&ab_channel=TestosteroneNation', 'back', 'Middle/Lower Trapezius,Teres major,Lats', 'Seated Row Machine', 2, '2025-05-10 08:33:58', 'uploads/machine-row-800.jpg', 'Sit on the machine with your chest firmly against the pad.\r\n\r\nGrab the handles with a neutral or overhand grip.\r\n\r\nPull the handles toward your body, squeezing your shoulder blades together.\r\n\r\nHold the contraction briefly at the end of the movement.\r\n\r\nSlowly return to the starting position with control.\r\n\r\nRepeat for the desired number of reps.'),
+(57, 'Tripod Dumbbell Row', 'The Tripod Dumbbell Row is a variation of the bent-over row that uses one arm at a time while the other arm rests on a bench or stable surface for support. This unilateral movement targets the middle back and improves muscular balance and coordination.', 'https://www.youtube.com/watch?v=_DL1a7dhBDI&ab_channel=NEXOFunctionalBodybuilding', 'back', 'Middle/Lower Trapezius,Teres major,Lats', 'Dumbbells,Bench', 2, '2025-05-10 10:19:13', 'uploads/zzFwwkQgCNMtmWQ7aQSxXe.jpg', 'Stand next to a flat bench and place one hand on it for support, keeping your back flat and parallel to the ground.\r\n\r\nHold a dumbbell in the opposite hand with your arm extended straight down.\r\n\r\nPull the dumbbell up towards your waist while squeezing your shoulder blade.\r\n\r\nLower the dumbbell slowly and repeat.\r\n\r\nSwitch arms after completing the reps.'),
+(58, 'T-Bar Row', 'The T-Bar Row is a powerful compound exercise that targets the middle and lower back muscles. It allows for heavy loading with a neutral grip and is excellent for building upper back thickness. Proper form and torso control are key to avoid excessive lower back strain.', 'https://www.youtube.com/watch?v=hYo72r8Ivso&ab_channel=PureGym', 'back', 'Middle/Lower Trapezius,Teres major,Lats', 'Barbell,T-Bar attachment', 3, '2025-05-10 11:36:07', 'uploads/T-Bar+Row.jpg', 'Stand over the T-Bar row platform and grab the handles with a neutral grip.\r\n\r\nKeep your knees slightly bent and back straight as you hinge at the hips.\r\n\r\nPull the weight toward your torso, squeezing your shoulder blades together.\r\n\r\nLower the weight under control and repeat.'),
+(59, 'Machine T-Bar Row', 'The Machine T-Bar Row is a compound exercise that targets the middle and lower portions of the trapezius, along with the lats and teres major. The machine provides a fixed movement path, making it easier to maintain proper form and isolate the back muscles without overloading the lower back.', 'https://www.youtube.com/watch?v=w0KnlQ-b7jw&ab_channel=Bodybuilding.com', 'back', 'Middle/Lower Trapezius,Teres major,Lats', 'Machine T-Bar Row', 2, '2025-05-10 11:44:09', 'uploads/401007_02.jpg', 'Sit on the machine bench and position your chest against the pad.\r\n\r\nGrasp the handles with a neutral grip and keep your back flat.\r\n\r\nPull the handles toward your body, squeezing your shoulder blades together at the top.\r\n\r\nSlowly return to the starting position and repeat.'),
+(60, 'Dumbbell Shrug', 'Dumbbell Shrug is an isolation exercise that targets the upper trapezius muscles. It helps build neck and shoulder definition and improves posture by strengthening the muscles responsible for lifting the shoulders.', 'https://www.youtube.com/watch?v=yqzRYcOMx2Q&ab_channel=nutritioneering', 'back', 'Upper Trapezius', 'Dumbbells', 2, '2025-05-10 11:49:06', 'uploads/1_de47c369-810c-47d9-a009-817993895a6.jpg', 'Stand upright with a dumbbell in each hand, arms fully extended at your sides, palms facing your body.\r\n\r\nKeep your chest up and core tight.\r\n\r\nShrug your shoulders straight up toward your ears, without rotating or rolling them.\r\n\r\nPause briefly at the top, squeezing the traps.\r\n\r\nSlowly lower the dumbbells back down to the starting position.\r\n\r\nRepeat for the desired number of reps.'),
+(61, 'Barbell Shrug', 'Barbell Shrug is a strength exercise focused on the upper trapezius muscles. It is effective for developing the upper back and neck region, enhancing posture, and building shoulder stability.', 'https://www.youtube.com/watch?v=M_MjF5Nm_h4&ab_channel=RenaissancePeriodization', 'back', 'Upper Trapezius', 'Barbell', 3, '2025-05-10 11:53:15', 'uploads/skimble-workout-trainer-exercise-barbell-shrugs-5_iphone.jpg', 'Stand with your feet shoulder-width apart, holding a barbell in front of your thighs with an overhand grip.\r\n\r\nKeep your arms extended and back straight.\r\n\r\nShrug your shoulders upward toward your ears as high as possible.\r\n\r\nPause and squeeze the trapezius muscles at the top.\r\n\r\nSlowly lower your shoulders back to the starting position.\r\n\r\nAvoid rolling your shoulders — move strictly up and down.\r\n\r\nRepeat for the desired number of repetitions.'),
+(62, 'Machine Shrug', 'Machine Shrug targets the upper trapezius muscles and provides isolated and controlled movement. Using a machine allows for safe execution and consistent resistance, making it a great option for both beginners and advanced lifters.', 'https://www.youtube.com/watch?v=38ogQSjICRY&ab_channel=gymequip-eu', 'back', 'Upper Trapezius', 'Shrug machine', 2, '2025-05-10 11:59:12', 'uploads/trapezius-muscles-machine-shrug-machine-1g-plate-l.jpg', 'Stand or sit at the shrug machine with your hands gripping the handles.\r\n\r\nKeep your arms straight and maintain good posture.\r\n\r\nElevate your shoulders straight upward toward your ears.\r\n\r\nPause briefly and squeeze the trapezius muscles at the top.\r\n\r\nLower your shoulders back down slowly and under control.\r\n\r\nAvoid using momentum or rolling the shoulders.\r\n\r\nRepeat for the desired number of reps.'),
+(63, 'Smith Machine Shrug', 'The Smith Machine Shrug targets the upper trapezius muscles, helping develop size and strength in the upper back. The Smith machine offers stability, making it easier to maintain proper form and safely lift heavier weights.', 'https://www.youtube.com/watch?v=cT5_GyOXIgE&ab_channel=ChadMollickDotCom', 'back', 'Upper Trapezius', 'Smith machine', 2, '2025-05-10 12:03:32', 'uploads/MG_0178.jpg', 'Stand upright in the Smith machine with the bar set at thigh level.\r\n\r\nGrip the bar with both hands, palms facing your body (overhand grip), slightly wider than shoulder-width.\r\n\r\nUnrack the bar and let it hang at arm’s length in front of your thighs.\r\n\r\nWithout bending your elbows, elevate your shoulders as high as possible.\r\n\r\nHold and squeeze at the top for a second.\r\n\r\nLower the shoulders slowly to the starting position.\r\n\r\nAvoid rotating or rolling your shoulders.'),
+(64, 'Cable Shrug', 'The Cable Shrug is an isolation exercise focused on building the upper trapezius muscles. Using a cable machine provides constant resistance throughout the movement and can help improve muscle engagement and control.', 'https://www.youtube.com/watch?v=YykmcX2b-LY&ab_channel=RenaissancePeriodization', 'back', 'Upper Trapezius', 'Cable machine,Straight bar', 2, '2025-05-10 12:06:56', 'uploads/718_1.jpg', 'Attach a straight bar to the low pulley of a cable machine.\r\n\r\nStand upright, feet shoulder-width apart, and grasp the bar with an overhand grip.\r\n\r\nLet the bar hang in front of your thighs with arms fully extended.\r\n\r\nWithout bending your arms, shrug your shoulders straight up as high as possible.\r\n\r\nSqueeze at the top for a second.\r\n\r\nSlowly lower your shoulders to the starting position.\r\n\r\nAvoid rolling your shoulders or using momentum.'),
+(65, 'Hyperextension', 'Hyperextensions are a bodyweight or weighted exercise targeting the lower back. Performed on a hyperextension bench, the movement involves bending at the waist and extending the torso upward against resistance.', 'https://www.youtube.com/watch?v=5_ejbGfdAQE&ab_channel=RenaissancePeriodization', 'back,legs', 'Lower Back,Glutes,Hamstrings', 'Hyperextension bench', 3, '2025-05-11 03:35:39', 'uploads/400572_03_ff1a3d4c-7259-4190-af1b-93fecdac1662.jpg', 'Position yourself on a Roman chair or hyperextension bench, securing your legs under the pads.\r\n\r\nCross your arms over your chest or place your hands behind your head.\r\n\r\nStart with your torso bent forward at the waist.\r\n\r\nSlowly raise your upper body by extending your spine until your body is in a straight line.\r\n\r\nPause at the top, then lower your torso back down in a controlled motion.\r\n\r\nRepeat for the desired number of reps.'),
+(66, 'Superman', 'The Superman exercise targets the lower back by having you lie face down and lift your arms and legs off the ground simultaneously. This movement strengthens the spinal erectors, glutes, and hamstrings while also improving posture and core stability.', 'https://www.youtube.com/watch?v=z6PJMT2y8GQ&ab_channel=XHITDaily', 'back,legs', 'Lower Back,Glutes', 'Mat', 2, '2025-05-11 03:43:37', 'uploads/Superman-exercise-Bellabeat-Coach-q5xmr2cn00tt0g2d5hj4ljinp8y1zzwjc36v02kyps.jpg', 'Lie face down on the floor or a mat with your arms extended straight in front of you and legs extended behind.\r\n\r\nSimultaneously lift your arms, chest, and legs off the ground as high as you comfortably can.\r\n\r\nHold the top position for a second, squeezing your lower back and glutes.\r\n\r\nSlowly lower back down to the starting position.\r\n\r\nRepeat for the desired number of repetitions.'),
+(67, 'Barbell Good Morning', 'The Barbell Good Morning is a strength exercise that targets the lower back through a hip hinge movement. By placing a barbell on the upper back, this movement builds the spinal erectors, hamstrings, and glutes. Proper form is essential to avoid strain and injury.\r\n', 'https://www.youtube.com/watch?v=dEJ0FTm-CEk&ab_channel=RenaissancePeriodization', 'back,legs', 'Lower Back,Hamstrings,Glutes', 'Barbell', 3, '2025-05-11 03:57:17', 'uploads/desktop-barbell-good-mornings.jpg', 'Position a barbell across your upper traps and stand with feet shoulder-width apart.\r\n\r\nKeep a slight bend in the knees and maintain a straight back.\r\n\r\nSlowly bend at the hips, lowering your torso forward while keeping your back flat.\r\n\r\nLower until your torso is nearly parallel to the floor or as far as your flexibility allows.\r\n\r\nEngage your lower back and glutes to return to the upright position.\r\n\r\nRepeat for the desired number of repetitions.'),
+(68, 'Dumbbell Good Morning', 'The Dumbbell Good Morning is a lower back and hamstring-focused exercise performed by hinging at the hips while holding dumbbells at shoulder level or by your sides. It is a great variation of the barbell version and ideal for beginners or those training at home.', 'https://www.youtube.com/watch?v=hQgFixeXdZo&ab_channel=Mike%7CJ2FITStrength%26Conditioning', 'back,legs', 'Lower Back,Hamstrings,Glutes', 'Dumbbells', 2, '2025-05-11 04:23:26', 'uploads/dumbbell-rdl.jpg', 'Hold a dumbbell in each hand and place them on your shoulders (or let them hang by your sides if preferred).\r\n\r\nStand tall with feet shoulder-width apart and a slight bend in the knees.\r\n\r\nWith a straight back and engaged core, bend at the hips, lowering your torso forward.\r\n\r\nContinue lowering until your upper body is almost parallel to the ground.\r\n\r\nDrive through your hips and contract your glutes and lower back to return to the starting position.\r\n\r\nRepeat for the desired number of reps.'),
+(69, 'Barbell Rack Pulls', 'Barbell Rack Pulls are a partial range-of-motion deadlift variation, performed with the barbell elevated on a power rack or blocks. They target the posterior chain with an emphasis on the lower back, glutes, and traps. This movement allows for lifting heavier loads and improving lockout strength in conventional deadlifts.', 'Barbell Rack Pulls', 'back,legs', 'Lower Back,Glutes,Middle/Lower Trapezius', 'Barbell, Power rack', 3, '2025-05-11 04:38:28', 'uploads/DSC04169-1024x683.jpg', 'Set the safety pins in a power rack at knee level (or just below).\r\n\r\nLoad the barbell and position it on the pins.\r\n\r\nStand with your feet hip-width apart, grip the bar just outside your knees.\r\n\r\nKeep your back straight, chest up, and core braced.\r\n\r\nDrive through your heels to lift the bar until you\'re standing upright.\r\n\r\nSqueeze your glutes and traps at the top.\r\n\r\nLower the bar back to the pins under control.\r\n\r\nRepeat for the desired number of reps.'),
+(70, 'Barbell Back Squat', 'The Barbell Back Squat is a compound lower-body exercise where the barbell rests on the upper back while the lifter squats down and returns to a standing position. It is one of the most effective movements for building overall strength and leg mass.', 'https://www.youtube.com/watch?v=VZ90qWlfQUE&ab_channel=Centr', 'legs,back', 'Quadriceps,Glutes,Hamstrings,Lower Back', 'Barbell,Squat rack', 4, '2025-05-11 05:08:44', 'uploads/istockphoto-1213931001-612x612.jpg', 'Place a barbell on a squat rack at upper chest height.\r\n\r\nStep under the bar, positioning it on your upper back (not the neck).\r\n\r\nGrip the bar slightly wider than shoulder-width.\r\n\r\nUnrack the bar, step back, and stand with feet shoulder-width apart.\r\n\r\nInhale, then lower into a squat by bending hips and knees, keeping your back straight.\r\n\r\nLower until your thighs are at least parallel to the floor.\r\n\r\nDrive through your heels to stand back up.\r\n\r\nRepeat for the desired number of reps.'),
+(71, 'Leg Press', 'The leg press is a compound lower body exercise that targets the quadriceps, hamstrings, and glutes. It is performed on a leg press machine while seated, pushing a weighted platform away using the legs.', 'https://www.youtube.com/watch?v=yZmx_Ac3880&ab_channel=RenaissancePeriodization', 'legs', 'Quadriceps,Hamstrings,Glutes', 'Leg press machine', 2, '2025-05-11 05:13:23', 'uploads/Leg Press.jpg', 'Sit on the leg press machine with your back flat against the pad and feet shoulder-width apart on the platform.\r\n\r\nRelease the safety handles and lower the platform by bending your knees toward your chest.\r\n\r\nPush the platform away by extending your legs without locking your knees.\r\n\r\nLower the weight back under control and repeat.\r\n\r\nKeep your back flat and avoid lifting your hips off the seat.'),
+(72, 'Dumbbell Reverse Lunge', 'The Dumbbell Reverse Lunge is a lower-body exercise that primarily targets the glutes while also engaging the quadriceps and hamstrings. Unlike traditional forward lunges, the reverse variation places less stress on the knee joint, making it a safer option for those with knee sensitivity or recovering from injury. This is due to the reduced forward momentum and improved hip alignment when stepping backward.', 'https://www.youtube.com/watch?v=RZKXLMxPF_I&ab_channel=FITTR', 'legs', 'Glutes,Quadriceps,Hamstrings', 'Dumbbells', 2, '2025-05-11 05:22:17', 'uploads/Dumbbell Reverse Lunge.jpg', 'Stand upright holding a dumbbell in each hand, arms at your sides.\r\n\r\nStep backward with one leg and lower your hips until both knees are bent at about 90 degrees.\r\n\r\nKeep your front knee directly above your ankle, not pushed forward over the toes.\r\n\r\nPush through the heel of the front foot to return to the starting position.\r\n\r\nRepeat on the opposite leg.'),
+(73, 'Dumbbell Forward Lunge', 'The Dumbbell Forward Lunge is a classic leg exercise that emphasizes the quadriceps, while also engaging the glutes and hamstrings. Because of the forward stepping motion, this variation places more stress on the knee joint, particularly if performed with poor form. It\'s important to control your movement and avoid letting the front knee extend too far past the toes to minimize joint strain.', 'https://www.youtube.com/watch?v=3TM-vVWuLYE&ab_channel=LiveLeanTVDailyExercises', 'legs', 'Quadriceps,Glutes,Hamstrings', 'Dumbbells', 3, '2025-05-11 05:25:24', 'uploads/Dumbbell Forward Lunge.jpg', 'Stand tall with a dumbbell in each hand, arms relaxed at your sides.\r\n\r\nStep forward with one leg and lower your body until both knees form 90-degree angles.\r\n\r\nEnsure your front knee is directly above your ankle, not pushed too far forward.\r\n\r\nPush off the front foot to return to the starting position.\r\n\r\nRepeat on the opposite leg.'),
+(74, 'Leg Extension', 'The Leg Extension is an isolation exercise that targets the quadriceps. It’s performed on a leg extension machine and is commonly used to strengthen and define the front of the thighs. Due to its isolated nature and controlled movement, it\'s beginner-friendly but should be performed with moderate weight to avoid knee stress.', 'https://www.youtube.com/watch?v=m0FOpMEgero&ab_channel=RenaissancePeriodization', 'legs', 'Quadriceps', 'Leg press machine', 2, '2025-05-11 05:30:41', 'uploads/Leg Extension.jpg', 'Sit on the leg extension machine with your back flat against the pad.\r\n\r\nAdjust the pad so it rests on your lower shins just above the ankles.\r\n\r\nGrip the side handles and keep your core engaged.\r\n\r\nExtend your legs until they are straight, squeezing the quads at the top.\r\n\r\nSlowly lower back to the starting position without letting the weight stack touch.\r\n\r\nRepeat for the desired number of reps.');
+INSERT INTO `exercises` (`id`, `name`, `description`, `video_url`, `category`, `muscle_group`, `equipment`, `difficulty`, `created_at`, `image`, `instruction`) VALUES
+(75, 'Machine Hack Squat', 'The Machine Hack Squat is a compound leg exercise performed on a hack squat machine. It mainly targets the quadriceps but also works the glutes and hamstrings. The guided movement of the machine provides stability and allows for safer heavy lifting, making it a good alternative to barbell squats, especially for isolating the quads.', 'https://www.youtube.com/watch?v=8AXtP_CHO4k&ab_channel=HammerStrength', 'legs', 'Quadriceps,Glutes,Hamstrings', 'Hack squat machine', 3, '2025-05-11 05:36:39', 'uploads/is-the-hack-squat-machine-legit-702382.jpg', 'Step onto the hack squat machine and position your shoulders under the pads.\r\n\r\nPlace your feet shoulder-width apart on the platform with toes slightly pointed outward.\r\n\r\nUnlock the safety handles and lower your body by bending the knees, keeping your back flat against the pad.\r\n\r\nDescend until your thighs are at least parallel to the platform.\r\n\r\nPush through your heels to return to the starting position.\r\n\r\nRepeat for the desired number of reps, then re-lock the safety handles.'),
+(76, 'Seated Leg Curl', 'The Seated Leg Curl is an isolation exercise that targets the hamstring muscles on the back of your thighs. It is performed on a seated leg curl machine and is effective for building hamstring strength and improving flexibility.', 'https://www.youtube.com/watch?v=Orxowest56U&ab_channel=RenaissancePeriodization', 'legs', 'Hamstrings', 'Leg curl machine', 2, '2025-05-11 05:54:35', 'uploads/Seated Leg Curl.jpg', 'Sit on the leg curl machine with your back against the pad and legs extended.\r\n\r\nPosition the roller pad just above your heels and adjust the backrest so your knees align with the machine’s pivot point.\r\n\r\nGrip the side handles, keep your toes pointed forward, and slowly curl your legs down by contracting your hamstrings.\r\n\r\nPause at the bottom of the movement for a brief squeeze.\r\n\r\nSlowly return to the starting position.\r\n\r\nRepeat for the desired number of reps.'),
+(77, 'Lying Leg Curl', 'The lying leg curl is a classic isolation exercise that specifically targets the hamstrings. Performed on a prone leg curl machine, it strengthens the muscles responsible for knee flexion and plays an essential role in developing posterior leg strength and stability. It also helps reduce the risk of injury by balancing the strength between the front and back of the legs.', 'https://www.youtube.com/watch?v=n5WDXD_mpVY&ab_channel=RenaissancePeriodization', 'legs', 'Hamstrings', 'Leg curl machine', 2, '2025-05-11 06:01:28', 'uploads/Leg_Curl_Machine-1.jpg', 'Lie face down on the leg curl machine with your knees just off the edge of the bench. Position the padded lever just above your heels, below your calves.\r\n\r\nGrasp the handles or sides of the bench for stability. Keep your hips flat and core engaged throughout the movement.\r\n\r\nExhale and curl your legs upward, contracting your hamstrings. Raise the lever until your knees are fully bent or just before your heels reach your glutes.\r\n\r\nPause for a brief moment at the top, squeezing your hamstrings.\r\n\r\nInhale and slowly lower the weight back to the starting position in a controlled manner.\r\n\r\nRepeat for the desired number of reps without letting your hips lift or the weights drop abruptly.'),
+(78, 'Barbell Romanian Deadlift', 'The Romanian Deadlift is a hip-hinge movement that primarily targets the hamstrings and glutes while also engaging the lower back for stabilization. It emphasizes controlled stretching of the hamstrings and is excellent for developing posterior chain strength.', 'https://www.youtube.com/watch?v=7j-2w4-P14I&ab_channel=NuffieldHealth', 'legs,back', 'Hamstrings,Glutes,Lower Back', 'Barbell', 3, '2025-05-11 06:10:13', 'uploads/woman-doing-a-Romanian-deadlift-with-Mirafit-Technique-Plates-1024x576.jpg', 'Stand with feet hip-width apart, holding a barbell in front of your thighs with an overhand grip.\r\n\r\nKeep your knees slightly bent and back flat throughout the movement.\r\n\r\nBegin to hinge at the hips, lowering the barbell along the front of your legs while pushing your hips backward.\r\n\r\nLower the barbell until you feel a strong stretch in your hamstrings, keeping the bar close to your body.\r\n\r\nReverse the movement by driving your hips forward to return to the starting position.\r\n\r\nDo not round your back at any point during the lift.'),
+(79, 'Dumbbell Romanian Deadlift', 'The Dumbbell Romanian Deadlift is a strength exercise targeting the hamstrings and glutes while also engaging the lower back. It emphasizes the hip hinge movement and is excellent for building posterior chain strength and improving flexibility in the hamstrings.', 'https://www.youtube.com/watch?v=hQgFixeXdZo&ab_channel=Mike%7CJ2FITStrength%26Conditioning', 'legs,back', 'Hamstrings,Glutes,Lower Back', 'Dumbbells', 3, '2025-05-11 06:18:48', 'uploads/2024.08.27_SWEAT_POWERADE26826-1024x683-27c3a53.jpg', 'Stand tall holding a dumbbell in each hand, arms fully extended in front of your thighs.\r\n\r\nKeep your knees slightly bent and your back straight.\r\n\r\nBegin lowering the dumbbells by hinging at the hips, pushing your hips backward.\r\n\r\nLower until you feel a stretch in your hamstrings, keeping the dumbbells close to your legs.\r\n\r\nReturn to the starting position by driving your hips forward and engaging your glutes.\r\n\r\nRepeat for the desired number of reps.');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notes`
+--
+
+CREATE TABLE `notes` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `note` text NOT NULL,
+  `is_important` tinyint(1) DEFAULT 0,
+  `image` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `notes`
+--
+
+INSERT INTO `notes` (`id`, `user_id`, `note`, `is_important`, `image`, `created_at`, `updated_at`) VALUES
+(1, 1, 'fwefwefwe342234234', 1, 'uploads/IMG_6245.jpg', '2025-03-26 15:22:53', '2025-03-26 15:23:23'),
+(2, 2, 'Šodiens man bija ternins', 1, 'uploads/IMG_6245.jpg', '2025-03-26 16:14:45', '2025-03-26 16:14:54');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `progress`
+--
+
+CREATE TABLE `progress` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `date` date NOT NULL,
+  `weight` decimal(5,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `progress`
+--
+
+INSERT INTO `progress` (`id`, `user_id`, `date`, `weight`) VALUES
+(1, 1, '2025-03-26', 70.00),
+(2, 1, '2025-03-28', 75.00),
+(3, 1, '2025-03-30', 80.00),
+(4, 1, '2025-04-14', 90.00),
+(5, 1, '2025-04-24', 50.00),
+(6, 2, '2025-03-26', 50.00),
+(8, 2, '2025-04-02', 60.00),
+(10, 2, '2025-04-10', 80.00);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tasks`
+--
+
+CREATE TABLE `tasks` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `task` text NOT NULL,
+  `is_completed` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `due_date` date DEFAULT NULL,
+  `completed_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tasks`
+--
+
+INSERT INTO `tasks` (`id`, `user_id`, `task`, `is_completed`, `created_at`, `due_date`, `completed_at`) VALUES
+(1, 1, 'gdfgdfgd123', 0, '2025-03-26 15:22:13', NULL, NULL),
+(3, 1, '1234567', 0, '2025-03-26 15:22:30', NULL, NULL),
+(4, 2, 'Bench press 100kg', 0, '2025-03-26 16:13:50', NULL, NULL),
+(6, 8, '123', 0, '2025-04-20 08:57:39', NULL, NULL),
+(7, 8, 'gdfgdfgd', 0, '2025-04-20 08:57:48', '2025-04-23', NULL),
+(8, 8, 'Bench press 100kg', 0, '2025-04-20 11:09:17', NULL, NULL),
+(9, 8, 'пвапвап', 0, '2025-04-20 11:09:36', '2025-06-19', NULL),
+(10, 8, 'asdfgfgrteg', 0, '2025-04-20 13:16:09', NULL, NULL),
+(11, 8, 'zxcsdfsd', 0, '2025-04-20 13:16:12', NULL, NULL),
+(12, 1, 'apple', 0, '2025-04-21 06:05:52', '2025-04-25', NULL),
+(13, 1, 'Banana', 0, '2025-04-21 06:05:52', '2025-04-20', NULL),
+(14, 1, 'zebra', 0, '2025-04-21 06:05:52', '2025-04-19', NULL),
+(15, 1, 'ALMOND', 0, '2025-04-21 06:05:52', '2025-04-30', NULL),
+(16, 1, 'bench press 100kg', 0, '2025-04-21 06:05:52', '2025-04-23', NULL),
+(17, 1, 'Deadlift PR', 1, '2025-04-21 06:05:52', NULL, '2025-04-21 08:09:07'),
+(18, 1, 'Xylophone warmup', 0, '2025-04-21 06:05:52', '2025-05-01', NULL),
+(19, 1, 'gdfgdfgd', 0, '2025-04-21 06:05:52', '2025-04-27', NULL),
+(20, 1, 'Run134', 0, '2025-04-21 06:05:52', NULL, NULL),
+(21, 1, 'Push ups', 1, '2025-04-21 06:05:52', '2025-04-21', '2025-04-21 08:09:09'),
+(22, 1, 'A very long and descriptive task title to test the sorter', 0, '2025-04-21 06:05:52', NULL, NULL),
+(24, 1, 'Code review', 0, '2025-04-21 06:05:52', NULL, NULL),
+(25, 1, 'milk', 0, '2025-04-21 06:05:52', '2025-04-22', NULL),
+(27, 1, 'asdasdasd', 0, '2025-04-21 06:05:52', '2025-04-29', NULL),
+(28, 1, 'Hello world234', 0, '2025-04-28 15:28:27', '2025-04-30', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `userID` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `weight` decimal(5,2) NOT NULL,
+  `gender` enum('Male','Female','Other') NOT NULL,
+  `height` decimal(5,2) NOT NULL,
+  `registrationDate` date NOT NULL,
+  `birthdate` date DEFAULT NULL,
+  `lastLoginDate` date DEFAULT NULL,
+  `avatar` varchar(255) DEFAULT 'uploads/avatars/default_avatar.png',
+  `isPremium` tinyint(1) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`userID`, `username`, `email`, `password`, `weight`, `gender`, `height`, `registrationDate`, `birthdate`, `lastLoginDate`, `avatar`, `isPremium`) VALUES
+(1, 'Jevgenij', 'zhenjab21@gmail.com', '$2y$10$EOkJUaxAeIDIV6XPaN7egul4c17Pyt7Ip1Q3r/6y1RyxZ3dFUs4J2', 70.00, 'Male', 184.00, '2025-03-26', NULL, '2025-05-07', 'uploads/avatars/avatar_680f9e357af763.84221855.png', 0),
+(2, 'Jevgenij123', 'zhenjab212@gmail.com', '$2y$10$pD/4aKaecCHXBmINz68ESeoyt8sjjyefypgl0TJKTKIpPRQttLhMm', 80.00, 'Male', 170.00, '2025-03-26', NULL, '2025-04-10', 'uploads/avatars/Screenshot 2025-03-26 191705.png', 0),
+(3, 'Vasja', 'vacok123@gmail.com', '$2y$10$44fhaFSQ8Sa/O2MYURIt7Oif75LWb7Norv9.RfNJVW.psvTP5sAvi', 99.00, 'Male', 170.00, '2025-04-10', NULL, '2025-04-14', 'uploads/avatars/default_avatar.png', 0),
+(4, 'Admin', 'admin@gmail.com', '$2y$10$sYuICU9jPuk3pO6OS1LFdugVcngskzQ23AUEsUCvLJP8lC.aPqn4y', 6.00, 'Male', 160.00, '2025-04-10', NULL, '2025-04-10', 'images/default_avatar.png', 0),
+(5, 'Dencik', 'denten@gmail.com', '$2y$10$SxNa6UK.uaUri5wh1OAWpODlfkgQrMsfEX.wz/t0wJ.kl0kY.ZQyu', 50.00, 'Other', 176.00, '2025-04-14', '2007-06-14', NULL, 'images/default_avatar.png', 0),
+(6, 'Vanja', 'vanja@mail.ru', '$2y$10$6XlgTZvIUkrIWtMpt4fiq.wV8hLTgrhoZ8sHyl2LcY0mthILMpRXq', 77.00, 'Male', 188.00, '2025-04-14', '1995-11-23', NULL, 'images/default_avatar.png', 0),
+(7, 'Zhenjokk', 'zhenjab2ytryrt1@gmail.com', '$2y$10$jhqEtdjzDje1X2jGJe8wf.UiN2N.B50QoFAtFCv6gNqWRytUoob56', 70.00, 'Male', 185.00, '2025-04-14', '2005-06-15', '2025-04-21', 'images/default_avatar.png', 0),
+(8, 'Tomas', 'info@palami.com', '$2y$10$/cmyYxDEVUzoEBo0x5hoheDvaSQYr4uzVJw09hYCCxP0asPLKv7FO', 70.00, 'Male', 190.00, '2025-04-14', '2024-04-14', '2025-04-28', 'uploads/avatars/avatar_67fcd6cb452d10.82494353.jpg', 0),
+(9, 'Test_woman', 'woman@gmail.com', '$2y$10$tYrHZAnVnJWow1HPH7mB8eq4EAsKdIYWP56B.Qq47WI70lj80p7yq', 50.00, 'Female', 160.00, '2025-04-14', '2006-07-15', '2025-04-14', 'images/default_female_avatar.png', 0),
+(10, 'test', 'test@gmail.com', '$2y$10$YcnhhjPcwc73LHhPPoNwyuOD9BnyEhRhBRhXhvZQ3edVYYPd8xU.y', 77.00, 'Other', 200.00, '2025-04-14', '1999-03-04', '2025-04-14', 'images/default_other_avatar.png', 0),
+(11, 'rikgrayms', 'rikgrayms@gmail.com', '$2y$10$nTMLMxERMZbJbMo3z35Zs.urnuXp/bwk1I9C1uXVN8OlUeSArjJnS', 80.00, 'Male', 170.00, '2025-04-21', '1985-02-21', '2025-04-24', 'images/default_male_avatar.png', 0),
+(12, 'mishon', 'mishon@gmail.cpm', '$2y$10$.wns5QS1MLgtBosb7sbXqOTjKksqkD8qSWBNqGdNfaZwj1mwaIBp2', 50.00, 'Female', 160.00, '2025-04-21', '1988-01-08', '2025-04-21', 'images/default_female_avatar.png', 0),
+(13, 'zombie', 'zomb@mail.lv', '$2y$10$Z6gWqGpix2BXUAt.SV4fBeh0g2Q9Oxni2pZBD3h6ASBOpPO1zyaVy', 70.00, 'Other', 165.00, '2025-04-21', '2024-04-16', '2025-04-21', 'images/default_other_avatar.png', 0);
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `exercises`
+--
+ALTER TABLE `exercises`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `notes`
+--
+ALTER TABLE `notes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `progress`
+--
+ALTER TABLE `progress`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `tasks`
+--
+ALTER TABLE `tasks`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`userID`),
+  ADD UNIQUE KEY `username` (`username`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `exercises`
+--
+ALTER TABLE `exercises`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
+
+--
+-- AUTO_INCREMENT for table `notes`
+--
+ALTER TABLE `notes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `progress`
+--
+ALTER TABLE `progress`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `tasks`
+--
+ALTER TABLE `tasks`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `userID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `notes`
+--
+ALTER TABLE `notes`
+  ADD CONSTRAINT `notes_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`userID`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `progress`
+--
+ALTER TABLE `progress`
+  ADD CONSTRAINT `progress_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`userID`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `tasks`
+--
+ALTER TABLE `tasks`
+  ADD CONSTRAINT `tasks_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`userID`) ON DELETE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
