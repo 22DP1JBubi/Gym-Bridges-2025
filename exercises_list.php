@@ -329,13 +329,16 @@ const categoriesList = ["arms", "legs", "back", "chest", "abs"];
 const equipmentList = [
     "Barbell", "EZ-bar", "Straight bar", "Dumbbells", "Pull-up bar", "Dip bars",
     "Bench", "Decline bench", "Cable machine", "Smith machine", "Crossover machine", "TRX straps",
-    "Medicine ball", "Rope attachment", "V-bar attachment", "Single handle", "Pec deck machine",  "Mat", "Roman chair", "Hammer Strength Machine"
+    "Medicine ball", "Rope attachment", "V-bar attachment", "Single handle", "Pec deck machine", 
+    "Mat", "Roman chair", "Hammer Strength Machine", "Seated Row Machine", "T-Bar attachment",
+    "Machine T-Bar Row", "Shrug machine", "Hyperextension bench", " Power rack", "Squat rack",
+    "Leg press machine", "Leg extension machine", "Hack squat machine", "Leg curl machine"
 ];
 
 const muscleOptions = {
     arms: ["Biceps", "Triceps", "Shoulders", "Forearms"],
     legs: ["Glutes", "Quadriceps", "Calves", "Hamstrings", "Adductors"],
-    back: ["Back Muscles", "Trapezius", "Lats", "Lower Back", "Teres major"],
+    back: ["Lats", "Middle/Lower Trapezius", "Teres major", "Lower Back", "Upper Trapezius"],
     chest: ["Chest Muscles"],
     abs: ["Abdominal Muscles"]
 };

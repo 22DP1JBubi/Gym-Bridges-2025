@@ -9,10 +9,10 @@ include 'includes/avatar_loader.php';
 
 
 $muscleGroups = [
-  "Arms" => ["Biceps", "Triceps", "Forearms", "Shoulders"],
+  "Arms" => ["Biceps", "Triceps", "Shoulders", "Forearms"],
   "Chest" => ["Chest Muscles"],
   "Abs" => ["Abdominal Muscles"],
-  "Back" => ["Lats", "Teres Major", "Trapezius", "Lower Back"],
+  "Back" => ["Lats", "Middle/Lower Trapezius", "Teres major", "Lower Back", "Upper Trapezius"],
   "Legs" => ["Quadriceps", "Hamstrings", "Adductors", "Calves", "Glutes"]
 ];
 
