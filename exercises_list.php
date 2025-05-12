@@ -327,12 +327,13 @@ $exercises = $conn->query("SELECT * FROM exercises ORDER BY id DESC");
 <script>
 const categoriesList = ["arms", "legs", "back", "chest", "abs"];
 const equipmentList = [
-    "Barbell", "EZ-bar", "Straight bar", "Dumbbells", "Pull-up bar", "Dip bars",
+    "Barbell", "EZ-bar", "Straight bar", "Dumbbells", "Pull-up bar", "Dip bars", "Kettlebell",
     "Bench", "Decline bench", "Cable machine", "Smith machine", "Crossover machine", "TRX straps",
     "Medicine ball", "Rope attachment", "V-bar attachment", "Single handle", "Pec deck machine", 
     "Mat", "Roman chair", "Hammer Strength Machine", "Seated Row Machine", "T-Bar attachment",
     "Machine T-Bar Row", "Shrug machine", "Hyperextension bench", " Power rack", "Squat rack",
-    "Leg press machine", "Leg extension machine", "Hack squat machine", "Leg curl machine"
+    "Leg press machine", "Leg extension machine", "Hack squat machine", "Leg curl machine", "Adduction machine",
+    "Ankle strap", "Seated Calf Machine", "Standing calf raise machine", "platform"
 ];
 
 const muscleOptions = {
