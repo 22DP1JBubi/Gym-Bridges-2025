@@ -80,15 +80,6 @@ $result = $stmt->get_result();
   <script type="text/javascript" src="jquery-1.6.4.min.js"></script>
   <script type="text/javascript" src="jquery.maphilight.js"></script>
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCaLxpPOdyV8bVweF1y0AQRAtLPdfftFvs&callback=initMap"></script>
-  <script type="text/javascript">
-    $(document).ready(function() {
-      $('.card').delay(1800).queue(function(next) {
-          $(this).removeClass('hover');
-          $('a.hover').removeClass('hover');
-          next();
-      });
-    });
-  </script>
   <style>
     .muscle-text {
       color: #0D1C2E;
@@ -277,7 +268,7 @@ $result = $stmt->get_result();
     <div class="row">
       <?php while ($row = $result->fetch_assoc()): ?>
         <div class="col-lg-3 col-md-6 mb-4">
-          <div class="card hover">
+          <div class="card">
             <div class="card-img" style="background-image:url('<?= htmlspecialchars($row['image']) ?>');">
               <div class="overlay">
                 <div class="overlay-content">
@@ -290,6 +281,16 @@ $result = $stmt->get_result();
                 <h2><?= htmlspecialchars($row['name']) ?></h2>
                 <p><?= htmlspecialchars(mb_strimwidth($row['description'], 0, 60, "...")) ?></p>
               </a>
+
+              <p class="mt-2 mb-0">
+                <?php
+                $diff = intval($row['difficulty']);
+                for ($i = 1; $i <= 5; $i++) {
+                    $icon = $i <= $diff ? 'images/icon-dumbbell-color2.png' : 'images/icon-dumbbell-black2.png';
+                    echo '<img src="' . $icon . '" alt="dumbbell" width="20" height="20" class="me-1">';
+                }
+                ?>
+              
             </div>
           </div>
         </div>
@@ -301,33 +302,9 @@ $result = $stmt->get_result();
 <?php $stmt->close(); $conn->close(); ?>
 
 </main>
-  <footer class="footer text-white text-center text-lg-start">
-    <div class="container">
-      <div class="row align-items-center" style="height: 100px;">
-        <div class="col-lg-8 col-md-12">
-          <div class="insta d-inline-flex align-items-center me-3">
-            <a href="https://www.instagram.com/evgeni_ibubin" target="_blank" class="text-white">
-              <img src="images/instagram_icon.svg" alt="Иконка Instagram" class="me-2">
-              <p>evgeni_ibubin</p>
-            </a>
-          </div>
-          <div class="google d-inline-flex align-items-center">
-            <a href="#" class="text-white">
-              <img src="images/gmail_icon.svg" alt="Иконка Gmail" class="me-2">
-              <p>jevgenijs.bubins@gmail.com</p>
-            </a>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-12 d-flex justify-content-end">
-          <div class="back-to-top">
-            <a href="#" id="back-to-topid" class="text-white">
-              <p>Back to top</p>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </footer>
-  <script src="script.js" defer></script>
+<script src="script.js" defer></script>
+
+<?php include 'includes/footer.php'; ?>
+
 </body>
 </html>

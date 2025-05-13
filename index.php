@@ -15,6 +15,8 @@ session_start();
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
   <link href='https://fonts.googleapis.com/css?family=Anton' rel='stylesheet'>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
   <link rel="icon" href="Logo1.svg" type="image/x-icon">
   <link rel="stylesheet" type="text/css" href="style.css">
 
@@ -62,6 +64,7 @@ session_start();
 }
 .swiper-slide{
   height: 600px;
+  position: relative
 }
 .slider .container {
   width: 100%;      /* Ensures container is full width */
@@ -81,23 +84,22 @@ session_start();
 }
 
 
-.muscle-map-s .container {
-  width: 100%;      /* Ensures container is full width */
-  max-width: 960px;  /* Removes any maximum width restrictions */
-  padding: 0;       /* Removes padding that might cause issues */
+.slide-caption {
+  position: absolute;
+  top: 40%;
+  left: 10%;
+  color: #fff;
+  z-index: 2;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.8);
+}
+.slide-caption h2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+.slide-caption .btn {
+  margin-top: 15px;
+}
 
-}
- .muscle-map-s .row {
-  width: 100%;      /* Ensures container is full width */
-  max-width: 960px;  /* Removes any maximum width restrictions */
-}
-
-.muscle-map-s {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
 
 
 .muscle-map {
@@ -129,6 +131,42 @@ session_start();
   margin-top: 0px !important;
 }
 
+.muscle-map-section {
+  background: linear-gradient(to bottom right, #f8f9fa, #e9ecef);
+  animation: fadeInUp 0.6s ease-in-out;
+}
+
+.container.bg-light {
+  background-color: #ffffff !important;
+  border: 1px solid #dee2e6;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(40px);
+  animation: fadeInUp 1s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
 </style>
 </head>
 <body>
@@ -143,10 +181,39 @@ session_start();
     <div class="row">
       <div class="swiper mySwiper">
         <div class="swiper-wrapper">
-          <div class="swiper-slide"><img src="images/foto1.jpg" alt=""></div>
-          <div class="swiper-slide"><img src="images/foto2.jpg" alt=""></div>
-          <div class="swiper-slide"><img src="images/foto3.jpg" alt=""></div>
-          <div class="swiper-slide"><img src="images/foto4.jpg" alt=""></div>
+          <div class="swiper-slide"><img src="images/foto1.jpg" alt="">
+
+            <div class="slide-caption">
+              <h2>Achieve Your Fitness Goals</h2>
+              <a href="exercises_page.php" class="btn btn-outline-light">Explore Exercises</a>
+            </div>
+
+          </div>
+          <div class="swiper-slide"><img src="images/foto2.jpg" alt="">
+
+            <div class="slide-caption">
+              <h2>Learn More About Us</h2>
+              <a href="aboutus.html" class="btn btn-outline-light">Read Our Story</a>
+            </div>
+
+          </div>
+          <div class="swiper-slide"><img src="images/foto3.jpg" alt="">
+          
+            
+            <div class="slide-caption">
+              <h2>Join Our Community</h2>
+              <a href="register.php" class="btn btn-outline-light">Sign Up Now</a>
+            </div>
+
+          </div>
+          <div class="swiper-slide"><img src="images/foto4.jpg" alt="">
+        
+            <div class="slide-caption">
+              <h2>Find the Nearest Gym</h2>
+              <a href="#map" class="btn btn-outline-light">Open Map</a>
+            </div>
+        
+          </div>
         </div>
         <div class="swiper-button-next"></div>
         <div class="swiper-button-prev"></div>
@@ -160,20 +227,41 @@ session_start();
 
 
 
-<section class="muscle-map-s">
-  <div class="container">
-    <div class="row" style="margin-top: 190px;">
-      <!-- Front view -->
-      <p class="muscle-text">Muscle selection</p>
-      <div class="col-12 col-lg-6">
+<section class="muscle-map-section py-5" id="muscle-map-section">
+  <div class="container bg-white shadow rounded p-4 fade-in">
+    <h2 class="text-center muscle-text mb-4">
+      <i class="bi bi-person-bounding-box me-2"></i>Muscle selection
+    </h2>
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-6 text-center mb-3">
         <img src="download 1body_smaller_front.png" class="img-fluid map maphilighted" alt="Front View" usemap="#muscle-map-front">
       </div>
-      <!-- Back view -->
-      <div class="col-12 col-lg-6">
-        <img src="download 1body_smaller_back.png" class="img-fluid map maphilighted" alt="Back View"  usemap="#muscle-map-back">
+      <div class="col-12 col-lg-6 text-center">
+        <img src="download 1body_smaller_back.png" class="img-fluid map maphilighted" alt="Back View" usemap="#muscle-map-back">
       </div>
     </div>
+    <div class="text-center mt-4">
+      <a href="exercises_page.php?category=Arms" class="btn btn-outline-primary me-2">
+        <i class="bi bi-arm me-1"></i> Arms
+      </a>
+      <a href="exercises_page.php?category=Chest" class="btn btn-outline-danger me-2">
+        <i class="bi bi-heart me-1"></i> Chest
+      </a>
+      <a href="exercises_page.php?category=Abs" class="btn btn-outline-secondary me-2">
+        <i class="bi bi-grid-1x2 me-1"></i> Abs
+      </a>
+      <a href="exercises_page.php?category=Back" class="btn btn-outline-warning me-2">
+        <i class="bi bi-arrow-return-left me-1"></i> Back
+      </a>
+      <a href="exercises_page.php?category=Legs" class="btn btn-outline-success me-2">
+        <i class="bi bi-hurricane me-1"></i> Legs
+      </a>
+    </div>
+
   </div>
+
+
+
   
 <map name="muscle-map-front">
 <area href="exercises_page.php?muscle=Forearms" title="left-forearm" shape="poly" coords="75,365,80,353,86,338,92,326,98,306,104,293,112,285,122,275,124,287,125,295,134,293,145,288,152,286,152,295,148,308,143,318,135,327,124,336,113,346,105,355,99,364,96,371,92,378" alt="Link" data-maphilight="{&quot;strokeColor&quot;:&quot;ffffff&quot;,&quot;strokeWidth&quot;:7,&quot;fillColor&quot;:&quot;6AA8FE&quot;,&quot;fillOpacity&quot;:0.9}" title="Metadata&#39;d up a bit">
@@ -221,47 +309,26 @@ session_start();
 </map>
 </section>
 
-<section>
 
-    <p class="map-text">Find your nearest gym!</p>
-    <div id="map" style="height: 600px; width: 100%;"></div>
+<!-- Секция карты -->
+<section id="map-section" class="bg-light py-5 fade-in">
+  <div class="container text-center mb-4">
+    <h2 class="fw-bold" style="font-family: 'Anton', sans-serif; font-size: 36px;">
+      <i class="bi bi-geo-alt-fill me-2"></i>Find Your Nearest Gym
+    </h2>
+    <p class="text-muted">Explore gyms around you on the map below</p>
+  </div>
+
+  <div class="container">
+    <div id="map" style="height: 600px; border-radius: 12px; box-shadow: 0 5px 30px rgba(0,0,0,0.2);"></div>
+  </div>
 </section>
+
+
 
 </main>
 
 
-<footer class="footer text-white text-center text-lg-start">
-  <div class="container">
-    <div class="row align-items-center" style="height: 100px;"> <!-- Выравниваем содержимое по центру и задаем высоту футера -->
-      <div class="col-lg-8 col-md-12">
-        <div class="insta d-inline-flex align-items-center me-3">
-          <a href="https://www.instagram.com/evgeni_ibubin" target="_blank" class="text-white">
-            <img src="images/instagram_icon.svg" alt="Иконка Instagram" class="me-2">
-            <p>evgeni_ibubin</p>
-          </a>
-        </div>
-        <div class="google d-inline-flex align-items-center">
-          <a href="#" class="text-white">
-            <img src="images/gmail_icon.svg" alt="Иконка Gmail" class="me-2">
-            <p>jevgenijs.bubins@gmail.com</p>
-          </a>
-        </div>
-      </div>
-      <div class="col-lg-4 col-md-12 d-flex justify-content-end">
-        <div class="back-to-top">
-          <a href="#" id="back-to-topid" class="text-white">
-            <p>Back to top</p>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</footer>
-
-
-
-
-<script src="script.js" defer></script>
   <!-- Swiper JS -->
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
@@ -286,5 +353,38 @@ session_start();
     });
 
   </script>
+
+<script>
+  function scrollToMuscleMap() {
+    const el = document.getElementById("muscle-map");
+    if (el) {
+      const yOffset = 150; // сместиться НИЖЕ
+      const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+  }
+
+  // Обработка перехода с других страниц (по хэшу)
+  document.addEventListener("DOMContentLoaded", function () {
+    if (window.location.hash === "#muscle-map") {
+      history.replaceState(null, null, ' ');
+      setTimeout(scrollToMuscleMap, 300);
+    }
+  });
+
+  // Обработка нажатия, если уже на index.php
+  document.getElementById("muscle-scroll-link")?.addEventListener("click", function (e) {
+    if (window.location.pathname.endsWith("index.php")) {
+      e.preventDefault(); // отменим обычный переход
+      scrollToMuscleMap();
+    }
+  });
+</script>
+
+
+
+
+<?php include 'includes/footer.php'; ?>
+ 
 </body>
 </html>

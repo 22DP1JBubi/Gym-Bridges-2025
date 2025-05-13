@@ -21,10 +21,24 @@ $avatarPath = $avatarPath ?? 'images/default_avatar.png'; // используе�
       <!-- ЛЕВОЕ МЕНЮ -->
       <ul class="navbar-nav me-auto ps-3"> <!-- отступ слева (от логотипа) -->
         <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="#target-muscle-map" onclick="scrollToSection()">Muscle selection</a></li>
+
+        <?php
+          $currentPage = basename($_SERVER['PHP_SELF']);
+          $scrollLink = $currentPage === 'index.php' ? '#muscle-map' : 'index.php#muscle-map';
+        ?>
+        <li class="nav-item">
+          <a class="nav-link" href="index.php#muscle-map-section">Muscle selection</a>
+        </li>
+
+
+
+        <li class="nav-item"><a class="nav-link" href="exercises_page.php">Exercises</a></li>
         <li class="nav-item"><a class="nav-link" href="programs.html">Training programs</a></li>
         <li class="nav-item"><a class="nav-link" href="aboutus.html">About us</a></li>
-        <li class="nav-item"><a class="nav-link" href="#section2">Contacts & Map</a></li>
+        <li class="nav-item">
+          <a class="nav-link" href="index.php#map-section">Contacts & Map</a>
+        </li>
+
       </ul>
 
       <!-- ПРАВОЕ МЕНЮ -->
