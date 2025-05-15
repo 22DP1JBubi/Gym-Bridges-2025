@@ -241,22 +241,23 @@ session_start();
       </div>
     </div>
     <div class="text-center mt-4">
-      <a href="exercises_page.php?category=Arms" class="btn btn-outline-primary me-2">
-        <i class="bi bi-arm me-1"></i> Arms
+      <a href="exercises_page.php?category=Arms" class="btn btn-outline-primary me-2 d-inline-flex align-items-center">
+        <img src="images/icons/biceps.png" alt="Arms" width="20" height="20" class="me-2"> Arms
       </a>
-      <a href="exercises_page.php?category=Chest" class="btn btn-outline-danger me-2">
-        <i class="bi bi-heart me-1"></i> Chest
+      <a href="exercises_page.php?category=Chest" class="btn btn-outline-danger me-2 d-inline-flex align-items-center">
+        <img src="images/icons/body.png" alt="Chest" width="20" height="20" class="me-2"> Chest
       </a>
-      <a href="exercises_page.php?category=Abs" class="btn btn-outline-secondary me-2">
-        <i class="bi bi-grid-1x2 me-1"></i> Abs
+      <a href="exercises_page.php?category=Abs" class="btn btn-outline-secondary me-2 d-inline-flex align-items-center">
+        <img src="images/icons/abs.png" alt="Abs" width="20" height="20" class="me-2"> Abs
       </a>
-      <a href="exercises_page.php?category=Back" class="btn btn-outline-warning me-2">
-        <i class="bi bi-arrow-return-left me-1"></i> Back
+      <a href="exercises_page.php?category=Back" class="btn btn-outline-warning me-2 d-inline-flex align-items-center">
+        <img src="images/icons/body-part.png" alt="Back" width="20" height="20" class="me-2"> Back
       </a>
-      <a href="exercises_page.php?category=Legs" class="btn btn-outline-success me-2">
-        <i class="bi bi-hurricane me-1"></i> Legs
+      <a href="exercises_page.php?category=Legs" class="btn btn-outline-success me-2 d-inline-flex align-items-center">
+        <img src="images/icons/leg.png" alt="Legs" width="20" height="20" class="me-2"> Legs
       </a>
     </div>
+
 
   </div>
 
