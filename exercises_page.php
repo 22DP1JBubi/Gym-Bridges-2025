@@ -7,6 +7,7 @@ if ($conn->connect_error) {
 }
 include 'includes/avatar_loader.php';
 
+mysqli_set_charset($conn, "utf8mb4");
 
 $muscleGroups = [
   "Arms" => ["Biceps", "Triceps", "Shoulders", "Forearms"],
@@ -167,7 +168,7 @@ $result = $stmt->get_result();
     }
     .card-content {
       width: 100%;
-      min-height: 104px;
+      min-height: 136px;
       background-color: #fff;
       border-top: 1px solid #E9E9EB;
       border-bottom-right-radius: 4px;
@@ -302,7 +303,6 @@ $result = $stmt->get_result();
 <?php $stmt->close(); $conn->close(); ?>
 
 </main>
-<script src="script.js" defer></script>
 
 <?php include 'includes/footer.php'; ?>
 

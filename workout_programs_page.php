@@ -1,6 +1,10 @@
 <?php
 $conn = new mysqli("localhost", "root", "", "gymbridges");
-if ($conn->connect_error) die("Connection failed: " . $conn->connect_error);
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+include 'includes/avatar_loader.php';
+
 mysqli_set_charset($conn, "utf8mb4");
 
 $goal = $_GET['goal'] ?? null;
@@ -31,6 +35,8 @@ $result = $stmt->get_result();
   <title>Workout Programs</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <link href='https://fonts.googleapis.com/css?family=Anton' rel='stylesheet'>
+  <link rel="stylesheet" type="text/css" href="style.css">
   <style>
     body {
       background: #f9f9f9;
@@ -90,7 +96,7 @@ $result = $stmt->get_result();
     .card-content {
       padding: 1rem 1.5rem;
       background-color: #fff;
-      min-height: 130px;
+      min-height: 190px;
     }
     .card-content h5 {
       font-size: 1rem;

@@ -33,7 +33,7 @@ $avatarPath = $avatarPath ?? 'images/default_avatar.png'; // используе�
 
 
         <li class="nav-item"><a class="nav-link" href="exercises_page.php">Exercises</a></li>
-        <li class="nav-item"><a class="nav-link" href="programs.html">Training programs</a></li>
+        <li class="nav-item"><a class="nav-link" href="workout_programs_page.php">Training programs</a></li>
         <li class="nav-item"><a class="nav-link" href="aboutus.html">About us</a></li>
         <li class="nav-item">
           <a class="nav-link" href="index.php#map-section">Contacts & Map</a>

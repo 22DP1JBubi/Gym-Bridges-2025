@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_id'])) {
     $goal = $_POST['goal'] ?? '';
     $type = $_POST['type'] ?? '';
     $level = $_POST['level'] ?? 'Beginner';
-    $duration = (int) ($_POST['duration'] ?? 0);
+    $duration = $_POST['duration'] ?? '';
     $days_per_week = (int) ($_POST['days_per_week'] ?? 0);
     $target_group = $_POST['target_group'] ?? '';
     $description = $_POST['description'] ?? '';
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_id'])) {
     }
 
     $stmt = $conn->prepare("UPDATE workout_programs SET title=?, description=?, tips=?, image=?, goal=?, type=?, level=?, days_per_week=?, duration_weeks=?, target_group=?, muscle_categories=?, muscle_groups=?, days_json=? WHERE id=?");
-    $stmt->bind_param("sssssssiissssi", 
+    $stmt->bind_param("sssssssisssssi", 
         $title, 
         $description, 
         $tips,
@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_submit'])) {
     $goal = $_POST['goal'] ?? '';
     $type = $_POST['type'] ?? '';
     $level = $_POST['level'] ?? 'Beginner';
-    $duration = (int) ($_POST['duration'] ?? 0);
+    $duration = $_POST['duration'] ?? '';
     $days_per_week = (int) ($_POST['days_per_week'] ?? 0);
     $target_group = $_POST['target_group'] ?? '';
     $description = $_POST['description'] ?? '';
@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_submit'])) {
         (title, description, tips, image, goal, type, level, days_per_week, duration_weeks, target_group, muscle_categories, muscle_groups, days_json) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-    $stmt->bind_param("sssssssiissss", 
+    $stmt->bind_param("sssssssisssss", 
         $title, 
         $description, 
         $tips,
@@ -173,6 +173,7 @@ $exercises = $conn->query("SELECT id, name FROM exercises ORDER BY name ASC");
                     <option value="Endurance Improvement">Endurance Improvement</option>
                     <option value="Toning">Toning</option>
                     <option value="Mobility & Flexibility">Mobility & Flexibility</option>
+                    <option value="Strength & Muscle Gain">Strength & Muscle Gain</option>
                     <option value="Rehabilitation">Rehabilitation</option>
                     <option value="Weight Maintenance">Weight Maintenance</option>
                     </select>
@@ -184,6 +185,8 @@ $exercises = $conn->query("SELECT id, name FROM exercises ORDER BY name ASC");
                     <option value="" disabled selected>Choose type</option>
                     <option value="Cardio">Cardio</option>
                     <option value="Strength Training">Strength Training</option>
+                    <option value="Powerbuilding">Powerbuilding</option>
+                    <option value="Bodybuilding-oriented">Bodybuilding-oriented</option>
                     <option value="HIIT">HIIT</option>
                     <option value="Bodyweight">Bodyweight</option>
                     <option value="Gym-based">Gym-based</option>
@@ -207,7 +210,8 @@ $exercises = $conn->query("SELECT id, name FROM exercises ORDER BY name ASC");
 
                 <div class="col-md-6">
                     <label for="duration" class="form-label">Duration (weeks)</label>
-                    <input type="number" name="duration" id="duration" class="form-control" min="1" required>
+                    <input type="text" name="duration" id="duration" class="form-control" placeholder="e.g. 6 or 6-12" required>
+
                 </div>
 
                 <div class="col-md-6">
@@ -296,8 +300,14 @@ $exercises = $conn->query("SELECT id, name FROM exercises ORDER BY name ASC");
                     <option value="">Select exercise</option>
                 </select>
                 </div>
-                <div class="col-md-2"> <input type="number" class="form-control sets" placeholder="Sets" min="1" max="100"></div>
-                <div class="col-md-2"><input type="number" class="form-control reps" placeholder="Reps" min="1" max="99"></div>
+
+                    <div class="col-md-2">
+                      <input type="text" class="form-control sets" placeholder="Sets (e.g. 4 or 3-5)">
+                    </div>
+
+                    <div class="col-md-2">
+                      <input type="text" class="form-control reps" placeholder="Reps (e.g. 10 or 8-12)">
+                    </div>
 
                 <div class="col-md-12 text-end">
                     <button type="button" class="btn btn-sm btn-outline-danger remove-exercise-btn">Remove</button>
@@ -335,6 +345,7 @@ $exercises = $conn->query("SELECT id, name FROM exercises ORDER BY name ASC");
                     <option value="Endurance Improvement" <?= $editProgram['goal'] == 'Endurance Improvement' ? 'selected' : '' ?>>Endurance Improvement</option>
                     <option value="Toning" <?= $editProgram['goal'] == 'Toning' ? 'selected' : '' ?>>Toning</option>
                     <option value="Mobility & Flexibility" <?= $editProgram['goal'] == 'Mobility & Flexibility' ? 'selected' : '' ?>>Mobility & Flexibility</option>
+                    <option value="Strength & Muscle Gain" <?= $editProgram['goal'] == 'Strength & Muscle Gain' ? 'selected' : '' ?>>Strength & Muscle Gain</option>
                     <option value="Rehabilitation" <?= $editProgram['goal'] == 'Rehabilitation' ? 'selected' : '' ?>>Rehabilitation</option>
                     <option value="Weight Maintenance" <?= $editProgram['goal'] == 'Weight Maintenance' ? 'selected' : '' ?>>Weight Maintenance</option>
                 </select>
@@ -347,8 +358,10 @@ $exercises = $conn->query("SELECT id, name FROM exercises ORDER BY name ASC");
                     <option value="Cardio" <?= $editProgram['type'] == 'Cardio' ? 'selected' : '' ?>>Cardio</option>
                     <option value="Strength Training" <?= $editProgram['type'] == 'Strength Training' ? 'selected' : '' ?>>Strength Training</option>
                     <option value="HIIT" <?= $editProgram['type'] == 'HIIT' ? 'selected' : '' ?>>HIIT</option>
+                    <option value="Bodybuilding-oriented" <?= $editProgram['type'] == 'Bodybuilding-oriented' ? 'selected' : '' ?>>Bodybuilding-oriented</option>
                     <option value="Bodyweight" <?= $editProgram['type'] == 'Bodyweight' ? 'selected' : '' ?>>Bodyweight</option>
                     <option value="Gym-based" <?= $editProgram['type'] == 'Gym-based' ? 'selected' : '' ?>>Gym-based</option>
+                    <option value="Powerbuilding" <?= $editProgram['type'] == 'Powerbuilding' ? 'selected' : '' ?>>Powerbuilding</option>
                     <option value="Home-based" <?= $editProgram['type'] == 'Home-based' ? 'selected' : '' ?>>Home-based</option>
                     <option value="Stretching" <?= $editProgram['type'] == 'Stretching' ? 'selected' : '' ?>>Stretching</option>
                     <option value="CrossFit" <?= $editProgram['type'] == 'CrossFit' ? 'selected' : '' ?>>CrossFit</option>
@@ -369,7 +382,8 @@ $exercises = $conn->query("SELECT id, name FROM exercises ORDER BY name ASC");
 
             <div class="col-md-6">
               <label class="form-label">Duration (weeks)</label>
-              <input type="number" name="duration" class="form-control" min="1" value="<?= htmlspecialchars($editProgram['duration_weeks']) ?>" required>
+              <input type="text" name="duration" id="duration" class="form-control" placeholder="e.g. 6 or 6-12" value="<?= htmlspecialchars($editProgram['duration_weeks']) ?>" required>
+
             </div>
 
             <div class="col-md-6">
@@ -588,11 +602,16 @@ const allMuscles = [...new Set(
 
 
 function addDay() {
-  const container = document.getElementById("days-container");
+  // Определяем, какая форма активна
+  const activeForm = document.querySelector('.form-section.active');
+  if (!activeForm) return;
+
+  const container = activeForm.querySelector("#days-container");
   const template = document.getElementById("day-template");
   const dayNode = template.content.cloneNode(true);
   container.appendChild(dayNode);
 }
+
 
 document.addEventListener("click", function (e) {
   if (e.target.classList.contains("add-exercise-btn")) {
