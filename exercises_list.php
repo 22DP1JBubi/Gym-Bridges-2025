@@ -1,4 +1,14 @@
 <?php
+
+session_start();
+if (!isset($_SESSION['role']) || !in_array($_SESSION['role'], ['admin', 'superadmin'])) {
+    header("Location: index.php");
+    exit();
+}
+
+$username = $_SESSION['username'] ?? 'Admin';
+
+
 $conn = new mysqli("localhost", "root", "", "gymbridges");
 if ($conn->connect_error) die("Connection failed: " . $conn->connect_error);
 mysqli_set_charset($conn, "utf8mb4");
@@ -133,7 +143,8 @@ $exercises = $conn->query("SELECT * FROM exercises ORDER BY id DESC");
     </style>
 </head>
 <body class="bg-light">
-<div class="container mt-5">
+<?php include 'includes/admin_sidebar.php'; ?>
+<div class="main-content" style="margin-left: 220px; padding: 30px;">
     <h2 class="mb-4">Exercise List</h2>
     <button class="btn btn-primary mb-3" onclick="toggleForm('createForm')">
         <i class="bi bi-plus-circle"></i> Add Exercise
@@ -313,10 +324,11 @@ $exercises = $conn->query("SELECT * FROM exercises ORDER BY id DESC");
                 </div>
             </div>
         <?php endwhile; ?>
-    </div>
-
-
-</div>
+        </div>                
+        </div>
+        </div> <!-- col-md-10 -->
+    </div> <!-- row -->
+</div> <!-- container-fluid -->
 
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

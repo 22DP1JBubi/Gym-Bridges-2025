@@ -25,7 +25,8 @@ if (empty($username) || empty($password)) {
     exit();
 }
 
-$stmt = $conn->prepare("SELECT userID, username, password FROM users WHERE username = ?");
+$stmt = $conn->prepare("SELECT userID, username, password, role FROM users WHERE username = ?");
+
 $stmt->bind_param("s", $username);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -34,6 +35,7 @@ if ($user = $result->fetch_assoc()) {
     if (password_verify($password, $user['password'])) {
         $_SESSION['user_id'] = $user['userID'];
         $_SESSION['username'] = $user['username'];
+        $_SESSION['role'] = $user['role'];
 
         $date = date('Y-m-d');
         $update = $conn->prepare("UPDATE users SET lastLoginDate = ? WHERE userID = ?");

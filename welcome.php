@@ -189,6 +189,14 @@ $avatarPath = !empty($user['avatar']) ? $user['avatar'] : 'images/default_avatar
                   <a href="notes.php" class="btn btn-outline-secondary me-2 mb-2"><i class="fas fa-sticky-note me-1"></i>Notes</a>
                   <a href="progress.php" class="btn btn-outline-success me-2 mb-2"><i class="fas fa-chart-bar me-1"></i>Track Progress</a>
                   <a href="index.php" class="btn btn-outline-dark me-2 mb-2"><i class="fas fa-home me-1"></i>Home</a>
+
+                  <?php if (in_array($_SESSION['role'], ['admin', 'superadmin'])): ?>
+                    <a href="admin_panel.php" class="btn btn-outline-dark me-2 mb-2">
+                      <i class="fas fa-user-shield me-1"></i> Admin Panel
+                    </a>
+                  <?php endif; ?>
+
+
                   <a href="logout.php" class="btn btn-danger me-2 mb-2"><i class="fas fa-sign-out-alt me-1"></i>Logout</a>
                 </div>
               </div>
