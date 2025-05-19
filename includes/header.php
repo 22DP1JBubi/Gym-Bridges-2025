@@ -10,6 +10,7 @@ $scrollLink = $currentPage === 'index.php' ? '#muscle-map' : 'index.php#muscle-m
 ?>
 
 <header>
+<link href='https://fonts.googleapis.com/css?family=Anton' rel='stylesheet'>  
 <style>
 
 /* Стили для выпадающего меню */
