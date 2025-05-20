@@ -153,7 +153,7 @@ $conn->close();
             </div>
 
             <!-- 🟦 Карточка добавления веса -->
-            <div class="card shadow-sm rounded-4 p-4 mb-4 card-style">
+            <div class="card shadow rounded-4 p-4 mb-4 card-style">
 
                 <!-- 🔹 Заголовок карточки формы -->
                 <div class="d-flex align-items-center mb-2">
@@ -175,7 +175,7 @@ $conn->close();
 
 
                <div class="mb-3">
-                <label for="date" class="form-label">Date of Entry</label>
+                <label for="date" class="form-label fw-bold">Date of Entry</label>
                 <div class="input-group">
                     <span class="input-group-text bg-light" id="calendar-addon" style="cursor: pointer;">
                     <i class="bi bi-calendar-event"></i>
@@ -239,7 +239,7 @@ $conn->close();
 
 
         <!-- Блок графика прогресса -->
-        <div class="card shadow-sm rounded-4 p-4 mb-4 card-style mt-4">
+        <div class="card shadow rounded-4 p-4 mb-4 card-style mt-4">
             <div class="d-flex align-items-center mb-3">
                 <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 50px; height: 50px;">
                     <i class="bi bi-bar-chart-line" style="font-size: 1.4rem;"></i>
@@ -296,7 +296,7 @@ $conn->close();
 
 
         <!-- Карточка Weight Records -->
-        <div class="card shadow-sm rounded-4 p-4 mb-4 card-style mt-4">
+        <div class="card shadow rounded-4 p-4 mb-4 card-style mt-4">
             <div class="d-flex align-items-center mb-3">
                 <div class="bg-warning text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 50px; height: 50px;">
                     <i class="bi bi-journal-text" style="font-size: 1.4rem;"></i>
