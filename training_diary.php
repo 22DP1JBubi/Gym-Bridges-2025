@@ -5,11 +5,18 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+$conn = new mysqli("localhost", "root", "", "gymbridges");
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 $user_id = $_SESSION['user_id'];
 
-$conn = new mysqli("localhost", "root", "", "gymbridges");
-if ($conn->connect_error) die("Connection failed: " . $conn->connect_error);
+include 'includes/avatar_loader.php';
+
 mysqli_set_charset($conn, "utf8mb4");
+
+include 'includes/header.php';
+
 
 if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
     $delete_id = intval($_GET['delete']);
@@ -152,6 +159,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'get_program_days_full' && isset($
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
 
     <style>
         .card {
@@ -354,7 +362,7 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'get_program_days_full' && isset($
             </button>
         </div>
 
-
+<div id="pdf-diary-content">
         <div class="card mt-4">
             <div class="card-header bg-light fw-bold d-none d-lg-flex">
                 <div class="col-lg-2">Date</div>
@@ -413,6 +421,13 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'get_program_days_full' && isset($
                 <?php endwhile; ?>
             </div>
         </div>
+    </div>
+        <div class="text-end mb-3">
+            <button class="btn btn-danger" onclick="generatePDF()">
+                <i class="bi bi-file-earmark-pdf-fill me-1"></i> Download Diary as PDF
+            </button>
+        </div>
+
 
     </div>
 </div>
@@ -463,6 +478,9 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'get_program_days_full' && isset($
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 
 
 
@@ -771,57 +789,69 @@ flatpickr("#training_time", {
   defaultDate: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
 });
 
-// Клик по иконке также открывает выбор времени
-document.getElementById("clock-addon").addEventListener("click", function () {
-  document.querySelector("#training_time")._flatpickr.open();
-});
 </script>
 
 <script>
-let order = {
-  trainingDate: false,
-  createdAt: false,
-  mood: false,
-  time: false
-};
-
-function sortTable(key, isTime = false) {
-  Object.keys(order).forEach(k => {
-    if (k !== key) document.getElementById('icon' + k.charAt(0).toUpperCase() + k.slice(1)).className = 'bi';
-  });
-
-  const rows = Array.from(document.querySelectorAll('.diary-entry-row'));
-  const container = rows[0].parentNode;
-
-  rows.sort((a, b) => {
-    let valA = a.dataset[key];
-    let valB = b.dataset[key];
-
-    if (isTime) {
-      valA = valA.split(':').reduce((acc, time) => 60 * acc + +time, 0);
-      valB = valB.split(':').reduce((acc, time) => 60 * acc + +time, 0);
+async function generatePDF() {
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+        alert("jsPDF not loaded");
+        return;
     }
 
-    if (!isNaN(valA) && !isNaN(valB)) {
-      valA = parseFloat(valA);
-      valB = parseFloat(valB);
+    const { jsPDF } = window.jspdf;
+
+    const diaryElement = document.getElementById("pdf-diary-content");
+    const nickname = "<?= $_SESSION['username'] ?? 'User' ?>"; // или подставь реальное имя
+    const date = new Date().toLocaleDateString();
+    if (!diaryElement) {
+        alert("Diary not found");
+        return;
     }
 
-    return order[key] ? valA > valB ? 1 : -1 : valA < valB ? 1 : -1;
-  });
+    // Загружаем логотип
+    const logoUrl = 'images/logo_black_2.png'; // путь к логотипу
+    const img = new Image();
+    img.src = logoUrl;
+    await img.decode();
 
-  rows.forEach(row => container.appendChild(row));
-  order[key] = !order[key];
+    html2canvas(diaryElement).then(canvas => {
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const imgData = canvas.toDataURL('image/png');
 
-  const icon = document.getElementById('icon' + key.charAt(0).toUpperCase() + key.slice(1));
-  icon.className = order[key] ? 'bi bi-arrow-up-short' : 'bi bi-arrow-down-short';
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const imgWidth = pageWidth - 20;
+        const imgHeight = imgWidth * (canvas.height / canvas.width);
+
+        const logoWidth = 35; // желаемая ширина
+        const aspectRatio = img.height / img.width;
+        const logoHeight = logoWidth * aspectRatio;
+
+        pdf.addImage(img, 'PNG', 10, 10, logoWidth, logoHeight);
+
+
+        // заголовок
+        // pdf.setFontSize(16);
+        // pdf.text('Training Diary Report', pageWidth / 2, 25, { align: 'center' });
+
+        // Заголовок
+        pdf.setFontSize(16);
+        pdf.setFont("helvetica", "bold");
+        pdf.text(`Training Diary Report for ${nickname}`, 105, 30, { align: "center" });
+
+        // Дата создания
+        pdf.setFontSize(10);
+        pdf.setFont("helvetica", "normal");
+        pdf.text(`Generated on: ${date}`, 105, 36, { align: "center" });
+
+        // сам дневник
+        pdf.addImage(imgData, 'PNG', 10, 40, imgWidth, imgHeight);
+
+        pdf.save('training_diary.pdf');
+    });
 }
 
-document.getElementById('sortByTrainingDate').onclick = () => sortTable('trainingDate');
-document.getElementById('sortByCreatedAt').onclick = () => sortTable('createdAt');
-document.getElementById('sortByMood').onclick = () => sortTable('mood');
-document.getElementById('sortByTime').onclick = () => sortTable('time', true);
 </script>
 
+<?php include 'includes/footer.php'; ?>
 </body>
 </html>

@@ -186,7 +186,7 @@ $avatarPath = !empty($user['avatar']) ? $user['avatar'] : 'images/default_avatar
                   <hr class="my-4">
                   <h5 class="mb-3">Actions</h5>
                   <a href="todo.php" class="btn btn-outline-primary me-2 mb-2"><i class="fas fa-tasks me-1"></i>To-Do List</a>
-                  <a href="notes.php" class="btn btn-outline-secondary me-2 mb-2"><i class="fas fa-sticky-note me-1"></i>Notes</a>
+                  <a href="training_diary.php" class="btn btn-outline-secondary me-2 mb-2"><i class="fas fa-sticky-note me-1"></i>Training diary</a>
                   <a href="progress.php" class="btn btn-outline-success me-2 mb-2"><i class="fas fa-chart-bar me-1"></i>Track Progress</a>
                   <a href="index.php" class="btn btn-outline-dark me-2 mb-2"><i class="fas fa-home me-1"></i>Home</a>
 

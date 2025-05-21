@@ -239,17 +239,17 @@ $conn->close();
 
 
         <!-- Блок графика прогресса -->
+    <div id="pdf-progress-content">
         <div class="card shadow rounded-4 p-4 mb-4 card-style mt-4">
             <div class="d-flex align-items-center mb-3">
                 <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 50px; height: 50px;">
                     <i class="bi bi-bar-chart-line" style="font-size: 1.4rem;"></i>
                 </div>
+                
                 <h4 class="mb-0">Weight Trend Chart</h4>
             </div>
             <p class="text-muted mb-4">Visual overview of your weight changes over time.</p>
 
-
-            <!-- Фильтры диапазона -->
 
             <!-- Фильтры диапазона -->
             <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
@@ -367,6 +367,12 @@ $conn->close();
                         </form>
                     </div>
                 <?php endforeach; ?>
+                    <div class="text-end my-3">
+                        <button class="btn btn-danger" onclick="generateProgressPDF()">
+                            <i class="bi bi-file-earmark-pdf-fill me-1"></i> Download PDF Report
+                        </button>
+                    </div>
+
 
 
             </div>
@@ -375,6 +381,7 @@ $conn->close();
 
     </div>
     </div>
+</div>
 </div>
 
 
@@ -418,6 +425,9 @@ $conn->close();
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 
 <script>
     function editRecord(id, date, weight) {
@@ -760,6 +770,69 @@ document.getElementById('sortByWeight').addEventListener('click', () => {
   }, 3000); // исчезает через 3 секунды
 </script>
 
+
+<script>
+async function generateProgressPDF() {
+  if (!window.jspdf || !window.jspdf.jsPDF) {
+    alert("jsPDF not loaded");
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const content = document.getElementById("pdf-progress-content");
+  const nickname = "<?= $_SESSION['username'] ?? 'User' ?>";
+  const now = new Date();
+  const date = `${String(now.getDate()).padStart(2, '0')}.${String(now.getMonth() + 1).padStart(2, '0')}.${now.getFullYear()}`;
+
+  if (!content) {
+    alert("Nothing to export");
+    return;
+  }
+
+  // Скрываем кнопку и убираем тени (если есть)
+  const button = content.querySelector("button");
+  const shadows = content.querySelectorAll(".shadow");
+  if (button) button.style.display = "none";
+  shadows.forEach(el => el.classList.remove("shadow"));
+
+  // Лого
+  const logoUrl = 'images/logo_black_2.png'; // путь к логотипу
+  const img = new Image();
+  img.src = logoUrl;
+  await img.decode();
+
+  
+
+  // Рендерим
+  const canvas = await html2canvas(content, { scale: 2 });
+
+  // Восстанавливаем UI
+  if (button) button.style.display = "inline-block";
+  shadows.forEach(el => el.classList.add("shadow"));
+
+  // Создаём PDF
+  const pdf = new jsPDF('p', 'mm', 'a4');
+  const imgData = canvas.toDataURL("image/png");
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const imgWidth = pageWidth - 20;
+  const imgHeight = imgWidth * (canvas.height / canvas.width);
+
+  const logoWidth = 35; // желаемая ширина
+  const aspectRatio = img.height / img.width;
+  const logoHeight = logoWidth * aspectRatio;
+
+  pdf.addImage(img, 'PNG', 10, 10, logoWidth, logoHeight);
+
+  pdf.setFontSize(16);
+  pdf.setFont("helvetica", "bold");
+  pdf.text(`Weight Progress Report for ${nickname}`, 105, 30, { align: "center" });
+  pdf.setFontSize(10);
+  pdf.text(`Generated on: ${date}`, 105, 36, { align: "center" });
+
+  pdf.addImage(imgData, 'PNG', 10, 45, imgWidth, imgHeight);
+  pdf.save("weight_progress_report.pdf");
+}
+</script>
 
 <?php include 'includes/footer.php'; ?>
 </body>

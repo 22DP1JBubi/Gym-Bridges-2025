@@ -232,85 +232,86 @@ include 'includes/header.php';
   </form>
 </div>
 
+<div id="pdf-diary-content">
+  <div id="result" class="d-none">
+      <div id="bmiCard" class="card p-4 mt-4 shadow">
+          <h4 class="text-center fw-bold mb-4" style="font-size: 1.8rem;">Your Result</h4>
+          <div class="d-inline-flex align-items-center">
+              <h5 class="mb-0 me-2">Body Mass Index (BMI)</h5>
+              <i class="bi bi-info-circle text-primary" data-bs-toggle="modal" data-bs-target="#bmiInfoModal" style="cursor:pointer; font-size: 1rem;"></i>
+          </div>
 
-<div id="result" class="d-none">
-    <div id="bmiCard" class="card p-4 mt-4 shadow">
-        <h4 class="text-center fw-bold mb-4" style="font-size: 1.8rem;">Your Result</h4>
-        <div class="d-inline-flex align-items-center">
-            <h5 class="mb-0 me-2">Body Mass Index (BMI)</h5>
-            <i class="bi bi-info-circle text-primary" data-bs-toggle="modal" data-bs-target="#bmiInfoModal" style="cursor:pointer; font-size: 1rem;"></i>
+
+
+          <div class="text-center my-3">
+              <span id="bmiValue" class="fw-bold" style="font-size: 2rem;">--</span>
+          </div>
+
+          <div class="position-relative">
+              <div class="bmi-scale w-100" style="height: 8px; border-radius: 4px; background: linear-gradient(to right, #4dc0ff 0%, #28a745 25%, #ffc107 50%, #fd7e14 75%, #dc3545 100%);"></div>
+              <div id="bmiPointer" class="position-absolute top-0" style="height: 20px; width: 2px; background: black; margin-top: -6px;"></div>
+          </div>
+
+          <div class="d-flex justify-content-between small text-muted mt-1 px-1">
+              <span>Underweight</span>
+              <span>Normal</span>
+              <span>Overweight</span>
+              <span>Obese</span>
+          </div>
+      </div>
+
+
+
+      <div id="calorieCard" class="card p-4 mt-4 shadow">
+          <div class="d-inline-flex align-items-center mb-3">
+              <h5 class="mb-0 me-2">Daily Calorie Needs</h5>
+              <i class="bi bi-info-circle text-primary" data-bs-toggle="modal" data-bs-target="#calorieInfoModal" style="cursor:pointer; font-size: 1rem;"></i>
+          </div>
+
+
+          <div class="row align-items-center">
+              <div class="col-md-5 text-center">
+              <div class="position-relative d-inline-block" style="width: 180px; height: 180px;">
+                  <canvas id="macroChart" width="180" height="180"></canvas>
+                  <div class="position-absolute top-50 start-50 translate-middle text-center">
+                  <div class="fw-bold fs-4" id="calories">--</div>
+                  <div class="text-muted small">kcal</div>
+                  </div>
+              </div>
+              </div>
+
+              <div class="col-md-7">
+              <p id="goalText" class="text-muted small mb-3" style="line-height: 1.4;"></p>
+              <ul class="list-unstyled mb-0">
+                  <li class="d-flex align-items-center mb-2">
+                      <span class="me-2" style="width: 12px; height: 12px; border-radius: 50%; background-color: #00b894; display: inline-block;"></span>
+                      <strong class="me-1" id="protein">--</strong><span>g protein</span>
+                  </li>
+                  <li class="d-flex align-items-center mb-2">
+                      <span class="me-2" style="width: 12px; height: 12px; border-radius: 50%; background-color: #fdcb6e; display: inline-block;"></span>
+                      <strong class="me-1" id="fat">--</strong><span>g fat</span>
+                  </li>
+                  <li class="d-flex align-items-center">
+                      <span class="me-2" style="width: 12px; height: 12px; border-radius: 50%; background-color: #0984e3; display: inline-block;"></span>
+                      <strong class="me-1" id="carbs">--</strong><span>g carbs</span>
+                  </li>
+              </ul>
+
+              <p class="text-muted small mt-3 mb-0" style="font-size: 0.85rem;">
+              * This is a general estimate. Results may vary depending on individual metabolism, health conditions, and activity level.  
+              For medical advice or concerns, please consult a certified healthcare professional.
+              </p>
+          </div>
+          <div class="text-end mb-3">
+            <button class="btn btn-danger" onclick="generatePDF()">
+                <i class="bi bi-file-earmark-pdf-fill me-1"></i> Download Diary as PDF
+            </button>
+          </div>
+
+
         </div>
-
-
-
-        <div class="text-center my-3">
-            <span id="bmiValue" class="fw-bold" style="font-size: 2rem;">--</span>
-        </div>
-
-        <div class="position-relative">
-            <div class="bmi-scale w-100" style="height: 8px; border-radius: 4px; background: linear-gradient(to right, #4dc0ff 0%, #28a745 25%, #ffc107 50%, #fd7e14 75%, #dc3545 100%);"></div>
-            <div id="bmiPointer" class="position-absolute top-0" style="height: 20px; width: 2px; background: black; margin-top: -6px;"></div>
-        </div>
-
-        <div class="d-flex justify-content-between small text-muted mt-1 px-1">
-            <span>Underweight</span>
-            <span>Normal</span>
-            <span>Overweight</span>
-            <span>Obese</span>
-        </div>
-    </div>
-
-
-
-    <div id="calorieCard" class="card p-4 mt-4 shadow">
-        <div class="d-inline-flex align-items-center mb-3">
-            <h5 class="mb-0 me-2">Daily Calorie Needs</h5>
-            <i class="bi bi-info-circle text-primary" data-bs-toggle="modal" data-bs-target="#calorieInfoModal" style="cursor:pointer; font-size: 1rem;"></i>
-        </div>
-
-
-        <div class="row align-items-center">
-            <div class="col-md-5 text-center">
-            <div class="position-relative d-inline-block" style="width: 180px; height: 180px;">
-                <canvas id="macroChart" width="180" height="180"></canvas>
-                <div class="position-absolute top-50 start-50 translate-middle text-center">
-                <div class="fw-bold fs-4" id="calories">--</div>
-                <div class="text-muted small">kcal</div>
-                </div>
-            </div>
-            </div>
-
-            <div class="col-md-7">
-            <p id="goalText" class="text-muted small mb-3" style="line-height: 1.4;"></p>
-            <ul class="list-unstyled mb-0">
-                <li class="d-flex align-items-center mb-2">
-                    <span class="me-2" style="width: 12px; height: 12px; border-radius: 50%; background-color: #00b894; display: inline-block;"></span>
-                    <strong class="me-1" id="protein">--</strong><span>g protein</span>
-                </li>
-                <li class="d-flex align-items-center mb-2">
-                    <span class="me-2" style="width: 12px; height: 12px; border-radius: 50%; background-color: #fdcb6e; display: inline-block;"></span>
-                    <strong class="me-1" id="fat">--</strong><span>g fat</span>
-                </li>
-                <li class="d-flex align-items-center">
-                    <span class="me-2" style="width: 12px; height: 12px; border-radius: 50%; background-color: #0984e3; display: inline-block;"></span>
-                    <strong class="me-1" id="carbs">--</strong><span>g carbs</span>
-                </li>
-            </ul>
-
-            <p class="text-muted small mt-3 mb-0" style="font-size: 0.85rem;">
-            * This is a general estimate. Results may vary depending on individual metabolism, health conditions, and activity level.  
-            For medical advice or concerns, please consult a certified healthcare professional.
-            </p>
-
-
-            </div>
-        </div>
-    </div>
-
-
-
-
-
+      </div>
+  </div>
 </div>
 
 
@@ -495,6 +496,8 @@ include 'includes/header.php';
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 
 <script>
@@ -689,6 +692,77 @@ include 'includes/header.php';
             btn.classList.add('active');
         })
     );
+
+</script>
+
+<script>
+async function generatePDF() {
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+        alert("jsPDF not loaded");
+        return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const diaryElement = document.getElementById("pdf-diary-content");
+    const nickname = "<?= $_SESSION['username'] ?? 'User' ?>";
+
+    const now = new Date();
+    const date = `${String(now.getDate()).padStart(2, '0')}.${String(now.getMonth() + 1).padStart(2, '0')}.${now.getFullYear()}`;
+
+    if (!diaryElement) {
+        alert("Report not found");
+        return;
+    }
+
+    // Элементы, которые надо временно скрыть
+    const downloadButton = diaryElement.querySelector("button");
+    const shadows = diaryElement.querySelectorAll(".shadow");
+
+    // Скрыть кнопку и убрать тень перед рендером
+    downloadButton.style.display = "none";
+    shadows.forEach(el => el.classList.remove("shadow"));
+
+    // Ждём отрисовки без этих элементов
+    const canvas = await html2canvas(diaryElement, { scale: 2 });
+
+    // Вернуть кнопку и тени
+    downloadButton.style.display = "inline-block"; // или "block", если так было
+    shadows.forEach(el => el.classList.add("shadow"));
+
+    // Генерация PDF
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const img = new Image();
+    img.src = 'images/logo_black_2.png';
+    await img.decode();
+
+    const imgData = canvas.toDataURL('image/png');
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const imgWidth = pageWidth - 20;
+    const imgHeight = imgWidth * (canvas.height / canvas.width);
+
+    const logoWidth = 35; // желаемая ширина
+    const aspectRatio = img.height / img.width;
+    const logoHeight = logoWidth * aspectRatio;
+
+    pdf.addImage(img, 'PNG', 10, 10, logoWidth, logoHeight);
+
+
+    // заголовок
+    pdf.setFontSize(16);
+    pdf.setFont("helvetica", "bold");
+    pdf.text(`Calorie Calculator Report for ${nickname}`, 105, 30, { align: "center" });
+
+    // дата
+    pdf.setFontSize(10);
+    pdf.setFont("helvetica", "normal");
+    pdf.text(`Generated on: ${date}`, 105, 36, { align: "center" });
+
+    // содержимое
+    pdf.addImage(imgData, 'PNG', 10, 45, imgWidth, imgHeight);
+
+    pdf.save('calorie_report.pdf');
+}
+
 
 </script>
 
