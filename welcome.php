@@ -37,7 +37,7 @@ if (!$user) {
 
 $regDate = !empty($user['registrationDate']) ? $user['registrationDate'] : 'N/A';
 $lastLogin = !empty($user['lastLoginDate']) ? $user['lastLoginDate'] : 'N/A';
-$isPremium = isset($user['isPremium']) ? ($user['isPremium'] ? 'Yes' : 'No') : 'N/A';
+$isPremium = isset($user['isPremium']) && $user['isPremium'] == 1;
 $birthdate = !empty($user['birthdate']) ? $user['birthdate'] : 'N/A';
 $height = isset($user['height']) ? htmlspecialchars($user['height']) : 'N/A';
 $weight = isset($user['weight']) ? htmlspecialchars($user['weight']) : 'N/A';
@@ -70,6 +70,7 @@ $avatarPath = !empty($user['avatar']) ? $user['avatar'] : 'images/default_avatar
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <link href="style.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Anton' rel='stylesheet'>
+  
   <style>
     .profile-header {
         background: linear-gradient(135deg, #4158D0 0%, #C850C0 100%);
@@ -164,6 +165,7 @@ $avatarPath = !empty($user['avatar']) ? $user['avatar'] : 'images/default_avatar
                     <a class="nav-link" href="#"><i class="fas fa-bell me-2"></i>Notifications</a>
                     <a class="nav-link" href="#"><i class="fas fa-credit-card me-2"></i>Billing</a>
                     <a class="nav-link" href="#"><i class="fas fa-chart-line me-2"></i>Progress</a>
+
                   </div>
                 </div>
               </div>
@@ -173,7 +175,7 @@ $avatarPath = !empty($user['avatar']) ? $user['avatar'] : 'images/default_avatar
                   <div class="row g-3">
                     <div class="col-md-6"><strong>Registration Date:</strong> <?= htmlspecialchars($user['registrationDate']) ?></div>
                     <div class="col-md-6"><strong>Last Login:</strong> <?= htmlspecialchars($user['lastLoginDate']) ?></div>
-                    <div class="col-md-6"><strong>Premium:</strong> <?= $user['isPremium'] ? 'Yes' : 'No' ?></div>
+                    <div class="col-md-6"><strong>Premium:</strong> <?= !empty($user['isPremium']) ? 'Yes' : 'No' ?></div>
                     <div class="col-md-6"><strong>Gender:</strong> <?= htmlspecialchars($user['gender']) ?></div>
                     <div class="col-md-6"><strong>Birthdate:</strong> <?= $birthdate ?></div>
                     <div class="col-md-6"><strong>Age:</strong> <?= $age ?></div>
@@ -195,9 +197,38 @@ $avatarPath = !empty($user['avatar']) ? $user['avatar'] : 'images/default_avatar
                       <i class="fas fa-user-shield me-1"></i> Admin Panel
                     </a>
                   <?php endif; ?>
-
-
                   <a href="logout.php" class="btn btn-danger me-2 mb-2"><i class="fas fa-sign-out-alt me-1"></i>Logout</a>
+
+                  <div class="row g-4 mt-5">
+                    <!-- Become a Trainer -->
+                    <div class="col-md-6">
+                      <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center">
+                          <i class="fas fa-dumbbell fa-2x text-primary mb-3"></i>
+                          <h5 class="card-title">Become a Trainer</h5>
+                          <p class="card-text">Submit your profile and become visible to clients.</p>
+                          <a href="<?= $isPremium ? 'trainer_submit.php' : '#' ?>" 
+                            class="btn btn-primary <?= $isPremium ? '' : 'premium-lock' ?>" 
+                            data-target="#premiumModal">Apply</a>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Find a Trainer -->
+                    <div class="col-md-6">
+                      <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center">
+                          <i class="fas fa-search fa-2x text-success mb-3"></i>
+                          <h5 class="card-title">Find a Trainer</h5>
+                          <p class="card-text">Browse certified personal trainers for your fitness goals.</p>
+                          <a href="<?= $isPremium ? 'trainers_page.php' : '#' ?>" 
+                            class="btn btn-success <?= $isPremium ? '' : 'premium-lock' ?>" 
+                            data-target="#premiumModal">Explore</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </div>
@@ -223,6 +254,22 @@ $avatarPath = !empty($user['avatar']) ? $user['avatar'] : 'images/default_avatar
   </div>
 </div>
 
+<!-- Premium Only Modal -->
+<div class="modal fade" id="premiumModal" tabindex="-1" aria-labelledby="premiumModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="premiumModalLabel">Premium Feature</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <i class="bi bi-lock-fill display-4 text-warning mb-3"></i>
+        <p>This feature is only available for Premium users.</p>
+        <a href="#" class="btn btn-warning">Upgrade to Premium</a>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -235,6 +282,16 @@ $avatarPath = !empty($user['avatar']) ? $user['avatar'] : 'images/default_avatar
       setTimeout(() => alert.remove(), 500); // Удаляем элемент из DOM
     }
   }, 3000); // 3 секунды
+</script>
+
+<script>
+  document.querySelectorAll('.premium-lock').forEach(link => {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      const modal = new bootstrap.Modal(document.getElementById('premiumModal'));
+      modal.show();
+    });
+  });
 </script>
 
 </body>
