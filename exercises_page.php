@@ -18,50 +18,97 @@ $muscleGroups = [
 ];
 
 
+// Получение параметров
 $muscle = $_GET['muscle'] ?? null;
 $category = $_GET['category'] ?? null;
+$diffSort = $_GET['diff_sort'] ?? '';
+$alphaSort = $_GET['alpha_sort'] ?? '';
+$difficulty = $_GET['difficulty'] ?? [];
 
-if ($muscle) {
-    $stmt = $conn->prepare("SELECT * FROM exercises WHERE FIND_IN_SET(?, muscle_group)");
-    $stmt->bind_param("s", $muscle);
-} elseif ($category && isset($muscleGroups[$category])) {
-    // Генерируем условие WHERE для всех мышц категории
-    $placeholders = implode(',', array_fill(0, count($muscleGroups[$category]), '?'));
-    $types = str_repeat('s', count($muscleGroups[$category]));
-    $stmt = $conn->prepare("SELECT * FROM exercises WHERE " . implode(" OR ", array_fill(0, count($muscleGroups[$category]), "FIND_IN_SET(?, muscle_group)")));
-    $stmt->bind_param($types, ...$muscleGroups[$category]);
-} else {
-    $stmt = $conn->prepare("SELECT * FROM exercises");
-}
 
-// Определим активную категорию
+
+// Определим текущую и активную категорию
+$currentMuscle = $muscle;
+$currentCategory = $category;
 $activeCategory = null;
-if ($muscle) {
-    foreach ($muscleGroups as $category => $muscles) {
-        if (in_array($muscle, $muscles)) {
-            $activeCategory = $category;
-            break;
-        }
-    }
-}
-
-$currentMuscle = $_GET['muscle'] ?? null;
-
-$currentCategory = $_GET['category'] ?? null;
 
 if (!$currentCategory && $currentMuscle) {
-    foreach ($muscleGroups as $category => $muscles) {
+    foreach ($muscleGroups as $cat => $muscles) {
         if (in_array($currentMuscle, $muscles)) {
-            $currentCategory = $category;
+            $currentCategory = $cat;
+            $activeCategory = $cat;
             break;
         }
     }
+} elseif ($currentCategory && isset($muscleGroups[$currentCategory])) {
+    $activeCategory = $currentCategory;
+}
+
+// Подготовка фильтров
+$whereParts = [];
+$params = [];
+$types = '';
+
+// === Фильтр по мышце/категории ===
+if ($muscle) {
+    $whereParts[] = "FIND_IN_SET(?, muscle_group)";
+    $params[] = $muscle;
+    $types .= 's';
+} elseif ($category && isset($muscleGroups[$category])) {
+    $group = $muscleGroups[$category];
+    $groupConditions = array_fill(0, count($group), "FIND_IN_SET(?, muscle_group)");
+    $whereParts[] = '(' . implode(' OR ', $groupConditions) . ')';
+    $params = array_merge($params, $group);
+    $types .= str_repeat('s', count($group));
+}
+
+// === Фильтр по сложности ===
+if (!empty($difficulty) && is_array($difficulty)) {
+    $valid = array_filter($difficulty, fn($v) => in_array($v, ['1','2','3','4','5']));
+    if ($valid) {
+        $inClause = implode(',', array_fill(0, count($valid), '?'));
+        $whereParts[] = "difficulty IN ($inClause)";
+        $params = array_merge($params, $valid);
+        $types .= str_repeat('i', count($valid));
+    }
+}
+
+// === Фильтрация по поиску ===
+$search = $_GET['search'] ?? null;
+$searchParam = $search ? "search=" . urlencode($search) . "&" : '';
+
+if ($search) {
+    $whereParts[] = "name LIKE ?";
+    $params[] = '%' . $search . '%';
+    $types .= 's';
+}
+
+// === Построение запроса ===
+$baseQuery = "SELECT * FROM exercises";
+if (!empty($whereParts)) {
+    $baseQuery .= ' WHERE ' . implode(' AND ', $whereParts);
 }
 
 
 
+// === Сортировка ===
+if ($alphaSort === 'asc') {
+    $baseQuery .= " ORDER BY name ASC";
+} elseif ($alphaSort === 'desc') {
+    $baseQuery .= " ORDER BY name DESC";
+} elseif ($diffSort === 'asc') {
+    $baseQuery .= " ORDER BY difficulty ASC";
+} elseif ($diffSort === 'desc') {
+    $baseQuery .= " ORDER BY difficulty DESC";
+}
 
 
+
+// === Выполнение запроса ===
+$stmt = $conn->prepare($baseQuery);
+if (!empty($params)) {
+    $stmt->bind_param($types, ...$params);
+}
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
@@ -74,6 +121,7 @@ $result = $stmt->get_result();
   <!-- Подключение CSS файла -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <link href='https://fonts.googleapis.com/css?family=Anton' rel='stylesheet'>
   <link rel="icon" href="Logo1.svg" type="image/x-icon">
   <link rel="stylesheet" type="text/css" href="style.css">
@@ -227,7 +275,53 @@ $result = $stmt->get_result();
 
 
 
+
+
     <div class="d-flex flex-wrap gap-2 justify-content-center mb-4">
+      <?php
+      $alphaSort = $_GET['alpha_sort'] ?? '';
+      $diffSort = $_GET['diff_sort'] ?? '';
+      $difficulty = $_GET['difficulty'] ?? [];
+
+      $baseLink = "exercises_page.php?";
+      if ($currentCategory) $baseLink .= "category=" . urlencode($currentCategory) . "&";
+      if ($currentMuscle) $baseLink .= "muscle=" . urlencode($currentMuscle) . "&";
+
+      $difficultyParams = '';
+      foreach ((array)$difficulty as $d) {
+          $difficultyParams .= "difficulty[]=" . urlencode($d) . "&";
+      }
+      ?>
+
+      <!-- Поиск -->
+      <form method="get" id="searchForm" class="d-flex">
+        <?php if ($currentCategory): ?>
+          <input type="hidden" name="category" value="<?= htmlspecialchars($currentCategory) ?>">
+        <?php endif; ?>
+        <?php if ($currentMuscle): ?>
+          <input type="hidden" name="muscle" value="<?= htmlspecialchars($currentMuscle) ?>">
+        <?php endif; ?>
+        <?php foreach ((array)$difficulty as $d): ?>
+          <input type="hidden" name="difficulty[]" value="<?= htmlspecialchars($d) ?>">
+        <?php endforeach; ?>
+        <?php if ($diffSort): ?>
+          <input type="hidden" name="diff_sort" value="<?= htmlspecialchars($diffSort) ?>">
+        <?php endif; ?>
+        <?php if ($alphaSort): ?>
+          <input type="hidden" name="alpha_sort" value="<?= htmlspecialchars($alphaSort) ?>">
+        <?php endif; ?>
+         <div class="input-group" style="min-width: 400px; ">
+          <span class="input-group-text bg-white border-primary text-primary">
+            <i class="bi bi-search"></i>
+          </span>
+          <input type="text" name="search" value="<?= htmlspecialchars($_GET['search'] ?? '') ?>"
+                class="form-control border-primary" placeholder="Search..." id="searchInput">
+        </div>
+      </form>
+
+
+
+
       <!-- Кнопка Show All -->
       <a href="exercises_page.php" class="btn btn-outline-primary <?= (!$currentMuscle && !$currentCategory) ? 'active' : '' ?>">Show All</a>
 
@@ -261,12 +355,97 @@ $result = $stmt->get_result();
 
     </div>
 
+      
+    <div class="d-flex flex-wrap gap-2 justify-content-center mb-4">
+  <!-- A-Z сортировка -->
 
+    
+    <!-- A-Z / Z-A -->
+    <div class="btn-group">
+      <a href="<?= $baseLink . $searchParam ?>alpha_sort=asc&<?= $difficultyParams ?>" class="btn btn-outline-primary <?= ($alphaSort === 'asc') ? 'active' : '' ?>">A–Z</a>
+      <a href="<?= $baseLink . $searchParam ?>alpha_sort=desc&<?= $difficultyParams ?>" class="btn btn-outline-primary <?= ($alphaSort === 'desc') ? 'active' : '' ?>">Z–A</a>
+    </div>
+
+    <!-- Difficulty фильтр и сортировка -->
+    <div class="dropdown">
+      <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+        <i class="bi bi-sliders me-1"></i> Difficulty
+      </button>
+
+      <form class="dropdown-menu p-3" style="min-width: 250px;" method="get" id="difficultyForm">
+        <!-- Hidden for muscle/category context -->
+         <?php if ($search): ?>
+          <input type="hidden" name="search" value="<?= htmlspecialchars($search) ?>">
+        <?php endif; ?>
+
+        <?php if ($currentCategory): ?>
+          <input type="hidden" name="category" value="<?= htmlspecialchars($currentCategory) ?>">
+        <?php endif; ?>
+        <?php if ($currentMuscle): ?>
+          <input type="hidden" name="muscle" value="<?= htmlspecialchars($currentMuscle) ?>">
+        <?php endif; ?>
+        <label class="form-check">
+          <input class="form-check-input" type="checkbox" name="difficulty[]" value="1" <?= in_array("1", $difficulty) ? "checked" : "" ?>>
+          <span>Difficulty:
+            <?= str_repeat('<img src="images/icon-dumbbell-color2.png" width="16">', 1) ?>
+          </span>
+        </label>
+
+        <label class="form-check">
+          <input class="form-check-input" type="checkbox" name="difficulty[]" value="2" <?= in_array("2", $difficulty) ? "checked" : "" ?>>
+          <span>Difficulty:
+            <?= str_repeat('<img src="images/icon-dumbbell-color2.png" width="16">', 2) ?>
+          </span>
+        </label>
+
+        <label class="form-check">
+          <input class="form-check-input" type="checkbox" name="difficulty[]" value="3" <?= in_array("3", $difficulty) ? "checked" : "" ?>>
+          <span>Difficulty:
+            <?= str_repeat('<img src="images/icon-dumbbell-color2.png" width="16">', 3) ?>
+          </span>
+        </label>
+
+        <label class="form-check">
+          <input class="form-check-input" type="checkbox" name="difficulty[]" value="4" <?= in_array("4", $difficulty) ? "checked" : "" ?>>
+          <span>Difficulty:
+            <?= str_repeat('<img src="images/icon-dumbbell-color2.png" width="16">', 4) ?>
+          </span>
+        </label>
+
+        <label class="form-check">
+          <input class="form-check-input" type="checkbox" name="difficulty[]" value="5" <?= in_array("5", $difficulty) ? "checked" : "" ?>>
+          <span>Difficulty:
+            <?= str_repeat('<img src="images/icon-dumbbell-color2.png" width="16">', 5) ?>
+          </span>
+        </label>
+
+        <hr class="my-2">
+
+        <label class="form-check">
+          <input class="form-check-input" type="radio" name="diff_sort" value="asc" <?= ($diffSort === 'asc') ? "checked" : "" ?>>
+          Difficulty ↑
+        </label>
+        <label class="form-check">
+          <input class="form-check-input" type="radio" name="diff_sort" value="desc" <?= ($diffSort === 'desc') ? "checked" : "" ?>>
+          Difficulty ↓
+        </label>
+
+        <!-- auto submit, no button needed -->
+
+      </form>
+    </div>
+  </div>
 
 
 
 
     <div class="row">
+      <?php if ($result->num_rows === 0): ?>
+        <div class="col-12 text-center mt-4">
+          <p class="text-muted">No exercises found for the selected filters.</p>
+        </div>
+      <?php endif; ?>
+
       <?php while ($row = $result->fetch_assoc()): ?>
         <div class="col-lg-3 col-md-6 mb-4">
           <div class="card">
@@ -305,6 +484,33 @@ $result = $stmt->get_result();
 </main>
 
 <?php include 'includes/footer.php'; ?>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.getElementById('difficultyForm');
+  if (form) {
+    form.querySelectorAll('input').forEach(input => {
+      input.addEventListener('change', () => {
+        form.submit();
+      });
+    });
+  }
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const input = document.getElementById('searchInput');
+  let timeout = null;
+
+  input.addEventListener('input', function () {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      document.getElementById('searchForm').submit();
+    }, 1000); // 500 мс задержка
+  });
+});
+</script>
 
 </body>
 </html>

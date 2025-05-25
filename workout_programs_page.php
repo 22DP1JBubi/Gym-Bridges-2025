@@ -10,6 +10,9 @@ mysqli_set_charset($conn, "utf8mb4");
 $goal = $_GET['goal'] ?? null;
 $type = $_GET['type'] ?? null;
 $level = $_GET['level'] ?? null;
+$target = $_GET['target'] ?? null;
+$search = $_GET['search'] ?? null;
+$alphaSort = $_GET['alpha_sort'] ?? null;
 
 $where = [];
 $params = [];
@@ -18,15 +21,37 @@ $types = '';
 if ($goal) { $where[] = "goal = ?"; $params[] = $goal; $types .= 's'; }
 if ($type) { $where[] = "type = ?"; $params[] = $type; $types .= 's'; }
 if ($level) { $where[] = "level = ?"; $params[] = $level; $types .= 's'; }
+if ($target) { $where[] = "target_group = ?"; $params[] = $target; $types .= 's'; }
+if ($search) { $where[] = "title LIKE ?"; $params[] = "%$search%"; $types .= 's'; }
 
 $sql = "SELECT * FROM workout_programs";
 if (!empty($where)) $sql .= " WHERE " . implode(" AND ", $where);
-$sql .= " ORDER BY id DESC";
+if ($alphaSort === 'asc') $sql .= " ORDER BY title ASC";
+elseif ($alphaSort === 'desc') $sql .= " ORDER BY title DESC";
+else $sql .= " ORDER BY id DESC";
 
 $stmt = $conn->prepare($sql);
 if (!empty($params)) $stmt->bind_param($types, ...$params);
 $stmt->execute();
 $result = $stmt->get_result();
+
+$goals = ["Fat Loss", "Muscle Gain", "Strength Building", "Toning", "Endurance Improvement"];
+$typesList = ["Split", "Full Body", "Upper/Lower"];
+$levels = ["Beginner", "Intermediate", "Advanced"];
+$targets = ["Men", "Women", "Seniors", "Athletes"];
+
+function buildQuery($newParams = []) {
+    $params = $_GET;
+    foreach ($newParams as $key => $value) {
+        if ($value === null) {
+            unset($params[$key]);
+        } else {
+            $params[$key] = $value;
+        }
+    }
+    return '?' . http_build_query($params);
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -121,42 +146,146 @@ $result = $stmt->get_result();
 <div class="container my-5">
   <h2 class="text-center mb-4">Workout Programs</h2>
 
-  <!-- Фильтры -->
-  <div class="filters d-flex flex-wrap gap-2 justify-content-center mb-4">
-    <a href="?" class="btn btn-outline-primary <?= (!$goal && !$type && !$level) ? 'active' : '' ?>">All</a>
-    <?php
-      $goals = ["Fat Loss", "Muscle Gain", "Strength Building", "Toning", "Endurance Improvement"];
-      foreach ($goals as $g) {
-          echo '<a href="?goal=' . urlencode($g) . '" class="btn btn-outline-primary ' . ($goal === $g ? 'active' : '') . '">' . $g . '</a>';
-      }
-    ?>
+  <form id="filtersForm" method="get" class="d-flex flex-wrap justify-content-center gap-2 mb-4">
+
+  <!-- Поиск -->
+  <div class="input-group" style="max-width: 400px;">
+    <span class="input-group-text bg-white border-primary text-primary">
+      <i class="bi bi-search"></i>
+    </span>
+    <input type="text" name="search" value="<?= htmlspecialchars($_GET['search'] ?? '') ?>" class="form-control border-primary" placeholder="Search..." id="searchInput">
   </div>
 
+  <!-- Goal -->
+<div class="dropdown">
+  <button class="btn <?= $goal ? 'btn-primary active' : 'btn-outline-primary' ?> dropdown-toggle" data-bs-toggle="dropdown">
+    Goal
+  </button>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item <?= !$goal ? 'active' : '' ?>" href="<?= $_SERVER['PHP_SELF'] ?>">Show All</a></li>
+    <?php foreach ($goals as $g): ?>
+      <li>
+        <a class="dropdown-item <?= ($goal === $g) ? 'active' : '' ?>"
+           href="?<?= http_build_query(array_merge($_GET, ['goal' => $g])) ?>">
+          <?= $g ?>
+        </a>
+      </li>
+    <?php endforeach; ?>
+  </ul>
+</div>
+
+<!-- Type -->
+<div class="dropdown">
+  <button class="btn <?= $type ? 'btn-primary active' : 'btn-outline-primary' ?> dropdown-toggle" data-bs-toggle="dropdown">
+    Type
+  </button>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item <?= !$type ? 'active' : '' ?>" href="<?= $_SERVER['PHP_SELF'] ?>">Show All</a></li>
+    <?php foreach ($typesList as $t): ?>
+      <li>
+        <a class="dropdown-item <?= ($type === $t) ? 'active' : '' ?>"
+           href="?<?= http_build_query(array_merge($_GET, ['type' => $t])) ?>">
+          <?= $t ?>
+        </a>
+      </li>
+    <?php endforeach; ?>
+  </ul>
+</div>
+
+<!-- Level -->
+<div class="dropdown">
+  <button class="btn <?= $level ? 'btn-primary active' : 'btn-outline-primary' ?> dropdown-toggle" data-bs-toggle="dropdown">
+    Level
+  </button>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item <?= !$level ? 'active' : '' ?>" href="<?= $_SERVER['PHP_SELF'] ?>">Show All</a></li>
+    <?php foreach ($levels as $l): ?>
+      <li>
+        <a class="dropdown-item <?= ($level === $l) ? 'active' : '' ?>"
+           href="?<?= http_build_query(array_merge($_GET, ['level' => $l])) ?>">
+          <?= $l ?>
+        </a>
+      </li>
+    <?php endforeach; ?>
+  </ul>
+</div>
+
+<!-- Target Group -->
+<div class="dropdown">
+  <button class="btn <?= $target ? 'btn-primary active' : 'btn-outline-primary' ?> dropdown-toggle" data-bs-toggle="dropdown">
+    Target Group
+  </button>
+  <ul class="dropdown-menu">
+    <li><a class="dropdown-item <?= !$target ? 'active' : '' ?>" href="<?= $_SERVER['PHP_SELF'] ?>">Show All</a></li>
+    <?php foreach ($targets as $tg): ?>
+      <li>
+        <a class="dropdown-item <?= ($target === $tg) ? 'active' : '' ?>"
+           href="?<?= http_build_query(array_merge($_GET, ['target_group' => $tg])) ?>">
+          <?= $tg ?>
+        </a>
+      </li>
+    <?php endforeach; ?>
+  </ul>
+</div>
+
+  <!-- Сортировка A-Z / Z-A -->
+  <div class="btn-group">
+    <a href="<?= buildQuery(['alpha_sort' => 'asc']) ?>" class="btn btn-outline-primary <?= ($alphaSort === 'asc') ? 'active' : '' ?>">A–Z</a>
+    <a href="<?= buildQuery(['alpha_sort' => 'desc']) ?>" class="btn btn-outline-primary <?= ($alphaSort === 'desc') ? 'active' : '' ?>">Z–A</a>
+  </div>
+</form>
+
+
+
   <div class="row">
-    <?php while ($prog = $result->fetch_assoc()): ?>
-      <div class="col-lg-3 col-md-6 mb-4">
-        <div class="card">
-          <div class="card-img" style="background-image:url('<?= htmlspecialchars($prog['image']) ?>');">
-            <div class="overlay">
-              <div class="overlay-content">
-                <a href="workout_program_view.php?id=<?= $prog['id'] ?>">Show program</a>
+    <?php if ($result->num_rows > 0): ?>
+      <?php while ($prog = $result->fetch_assoc()): ?>
+        <div class="col-lg-3 col-md-6 mb-4">
+          <div class="card">
+            <div class="card-img" style="height:220px;background-size:cover;background-image:url('<?= htmlspecialchars($prog['image']) ?>')">
+              <div class="overlay d-flex align-items-center justify-content-center" style="background:rgba(0,0,0,0.5);opacity:0;transition:0.3s;">
+                <a href="workout_program_view.php?id=<?= $prog['id'] ?>" class="btn btn-light">Show program</a>
               </div>
             </div>
-          </div>
-          <div class="card-content">
-            <h5><?= htmlspecialchars($prog['title']) ?></h5>
-            <p><strong>Goal:</strong> <?= htmlspecialchars($prog['goal']) ?></p>
-            <p><strong>Type:</strong> <?= htmlspecialchars($prog['type']) ?></p>
-            <p class="text-muted small"><?= htmlspecialchars(mb_strimwidth($prog['description'], 0, 70, "...")) ?></p>
+            <div class="card-content p-3">
+              <h5><?= htmlspecialchars($prog['title']) ?></h5>
+              <p><strong>Goal:</strong> <?= htmlspecialchars($prog['goal']) ?></p>
+              <p><strong>Type:</strong> <?= htmlspecialchars($prog['type']) ?></p>
+              <p class="text-muted small"><?= htmlspecialchars(mb_strimwidth($prog['description'], 0, 70, "...")) ?></p>
+            </div>
           </div>
         </div>
+      <?php endwhile; ?>
+    <?php else: ?>
+      <div class="col-12 text-center mt-4">
+        <p class="text-muted">No workout programs found for the selected filters.</p>
       </div>
-    <?php endwhile; ?>
+    <?php endif; ?>
   </div>
+</div>
+
+
 </div>
 
 <?php $stmt->close(); $conn->close(); ?>
 <?php include 'includes/footer.php'; ?>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const input = document.getElementById('searchInput');
+  let timeout = null;
+
+  input.addEventListener('input', function () {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      document.getElementById('filtersForm').submit();
+    }, 700);
+  });
+});
+</script>
+
 
 </body>
 </html>

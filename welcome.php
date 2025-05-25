@@ -110,6 +110,10 @@ $avatarPath = !empty($user['avatar']) ? $user['avatar'] : 'images/default_avatar
         left: -7px;
         top: 5px;
     }
+    .profile-header {
+  transition: background 0.4s ease;
+}
+
   </style>
 </head>
 <body>
@@ -128,11 +132,18 @@ $avatarPath = !empty($user['avatar']) ? $user['avatar'] : 'images/default_avatar
   <div class="container py-5">
     <div class="row">
       <div class="col-12 mb-4">
-        <div class="profile-header position-relative mb-4">
+
+        <!-- Профильный блок -->
+        <div class="profile-header position-relative mb-4 rounded" id="profileHeader" style="background: linear-gradient(to right, #4f46e5, #ec4899); height: 150px;">
           <div class="position-absolute top-0 end-0 p-3">
-            <button class="btn btn-light"><i class="fas fa-edit me-2"></i>Edit Cover</button>
+            <button class="btn btn-light" data-bs-toggle="modal" data-bs-target="#coverModal">
+              <i class="fas fa-edit me-2"></i>Edit Cover
+            </button>
           </div>
         </div>
+
+
+
         <div class="text-center">
           <div class="position-relative d-inline-block">
 
@@ -159,14 +170,29 @@ $avatarPath = !empty($user['avatar']) ? $user['avatar'] : 'images/default_avatar
             <div class="row g-0">
               <div class="col-lg-3 border-end">
                 <div class="p-4">
-                  <div class="nav flex-column nav-pills">
-                    <a class="nav-link active" href="#"><i class="fas fa-user me-2"></i>Profile</a>
-                    <a class="nav-link" href="#"><i class="fas fa-lock me-2"></i>Security</a>
-                    <a class="nav-link" href="#"><i class="fas fa-bell me-2"></i>Notifications</a>
-                    <a class="nav-link" href="#"><i class="fas fa-credit-card me-2"></i>Billing</a>
-                    <a class="nav-link" href="#"><i class="fas fa-chart-line me-2"></i>Progress</a>
-
+                  <div class="list-group">
+                    <a href="todo.php" class="list-group-item list-group-item-action d-flex align-items-center <?= basename($_SERVER['PHP_SELF']) === 'todo.php' ? 'active' : '' ?>">
+                      <i class="fas fa-list-check me-2"></i> To-Do List
+                    </a>
+                    <a href="training_diary.php" class="list-group-item list-group-item-action d-flex align-items-center <?= basename($_SERVER['PHP_SELF']) === 'training_diary.php' ? 'active' : '' ?>">
+                      <i class="fas fa-book-open me-2"></i> Training Diary
+                    </a>
+                    <a href="progress.php" class="list-group-item list-group-item-action d-flex align-items-center <?= basename($_SERVER['PHP_SELF']) === 'progress.php' ? 'active' : '' ?>">
+                      <i class="fas fa-chart-line me-2"></i> Progress
+                    </a>
+                    <a href="index.php" class="list-group-item list-group-item-action d-flex align-items-center <?= basename($_SERVER['PHP_SELF']) === 'index.php' ? 'active' : '' ?>">
+                      <i class="fas fa-home me-2"></i> Home
+                    </a>
+                    <?php if (in_array($_SESSION['role'], ['admin', 'superadmin'])): ?>
+                    <a href="admin_panel.php" class="list-group-item list-group-item-action d-flex align-items-center <?= basename($_SERVER['PHP_SELF']) === 'admin_panel.php' ? 'active' : '' ?>">
+                      <i class="fas fa-user-shield me-2"></i> Admin Panel
+                    </a>
+                    <?php endif; ?>
+                    <a href="logout.php" class="list-group-item list-group-item-action d-flex align-items-center text-danger">
+                      <i class="fas fa-sign-out-alt me-2"></i> Logout
+                    </a>
                   </div>
+
                 </div>
               </div>
               <div class="col-lg-9">
@@ -239,6 +265,27 @@ $avatarPath = !empty($user['avatar']) ? $user['avatar'] : 'images/default_avatar
   </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="coverModal" tabindex="-1" aria-labelledby="coverModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="coverModalLabel">Change Cover Color</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <label for="coverColorPicker" class="form-label">Choose color</label>
+        <input type="color" id="coverColorPicker" class="form-control form-control-color mx-auto" value="#4f46e5" title="Choose your color">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="applyCoverColor">Apply</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <!-- Модальное окно для увеличенного аватара -->
 <div class="modal fade" id="avatarModal" tabindex="-1" aria-labelledby="avatarModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -293,6 +340,18 @@ $avatarPath = !empty($user['avatar']) ? $user['avatar'] : 'images/default_avatar
     });
   });
 </script>
+
+<script>
+  document.getElementById('applyCoverColor').addEventListener('click', function () {
+    const color = document.getElementById('coverColorPicker').value;
+    const header = document.getElementById('profileHeader');
+
+    header.style.background = color;
+    const modal = bootstrap.Modal.getInstance(document.getElementById('coverModal'));
+    modal.hide();
+  });
+</script>
+
 
 </body>
 </html>

@@ -168,21 +168,26 @@ $currentFilterLabel = $filterLabels[$filter] ?? 'All';
 
 <div class="container my-4 px-2">
 
+
+
   <!-- Header -->
   <div class="row justify-content-center mb-4">
     <div class="col-12 text-center">
-      <h1 class="text-primary">
-        <i class="fa fa-check bg-primary text-white rounded p-2"></i>
-        <u>To do tasks</u>
+      <h1 class="text-dark">
+        <i class="bi bi-list-task bg-primary text-white rounded p-2"></i>
+        <strong>My Tasks</strong>
       </h1>
+
     </div>
   </div>
 
-  <!-- Add Task Form -->
-  <form method="POST">
-    <div class="row g-2 align-items-center bg-white rounded shadow-sm py-3 px-2 mb-4">
+
+  <!-- Add Task Form in Card -->
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <form method="POST" class="row g-2 align-items-center">
       <div class="col-12 col-md-6">
-        <input name="task" class="form-control form-control-lg border-0 bg-transparent rounded" placeholder="Add new .." required>
+        <input name="task" class="form-control form-control-lg border-0 bg-light rounded" placeholder="Add new .." required>
       </div>
 
       <div class="col-6 col-md-3 text-start text-md-end">
@@ -193,16 +198,14 @@ $currentFilterLabel = $filterLabels[$filter] ?? 'All';
         <input type="hidden" name="due_date" id="hidden-due-date">
       </div>
 
-      
       <div class="col-6 col-md-3 text-end">
         <button class="btn btn-primary w-100" type="submit">Add</button>
       </div>
-    </div>
-  </form>
+    </form>
+  </div>
+</div>
 
 
-<!-- Filter & Sort -->
-<!-- Filter & Sort -->
 <!-- Filter & Sort -->
 <form class="mb-4" method="GET">
 
@@ -285,16 +288,9 @@ $currentFilterLabel = $filterLabels[$filter] ?? 'All';
 
 
 
-
-
-
-
-
-
-
-
   <!-- Task List -->
-  <div id="taskList">
+  <div class="card shadow-sm">
+  <div class="card-body" id="taskList">
   <?php while ($task = $tasks->fetch_assoc()): ?>
     <div class="row todo-item p-3 my-2 rounded bg-white align-items-center <?= $task['is_completed'] ? 'completed' : '' ?>" data-id="<?= $task['id'] ?>">
       <div class="col-12 col-sm-1 text-center">
@@ -302,7 +298,7 @@ $currentFilterLabel = $filterLabels[$filter] ?? 'All';
           <i class="fa <?= $task['is_completed'] ? 'fa-check-square-o fa-2x' : 'fa-square-o fa-2x' ?> text-primary btn"></i>
         </a>
       </div>
-
+  
       <div class="col-12 col-sm-6 mt-2 mt-sm-0">
         <input type="text" class="form-control form-control-lg border-0 edit-todo-input bg-transparent rounded" readonly value="<?= htmlspecialchars($task['task']) ?>" />
       </div>
@@ -310,13 +306,20 @@ $currentFilterLabel = $filterLabels[$filter] ?? 'All';
       <!-- Дедлайн -->
       <div class="col-12 col-sm-2 mt-2 mt-sm-0 text-sm-end text-start">
         <?php if (!empty($task['due_date'])): ?>
-          <div class="d-inline-flex align-items-center bg-white border border-warning rounded px-2 py-1">
-            <i class="fa fa-hourglass-2 text-warning me-2"></i>
-            <span><?= date('j M Y', strtotime($task['due_date'])) ?></span>
+          <?php
+            $dueDate = strtotime($task['due_date']);
+            $today = strtotime(date('Y-m-d'));
+            $isOverdue = $dueDate < $today && !$task['is_completed'];
+            $color = $isOverdue ? 'danger' : 'warning';
+          ?>
+          <div class="d-inline-flex align-items-center bg-white border border-<?= $color ?> rounded px-2 py-1">
+            <i class="fa fa-hourglass-2 text-<?= $color ?> me-2"></i>
+            <span><?= date('j M Y', $dueDate) ?></span>
           </div>
         <?php else: ?>
           <div class="d-inline-block px-2 py-1">&nbsp;</div>
         <?php endif; ?>
+
       </div>
 
       <!-- Действия и даты -->
@@ -343,7 +346,8 @@ $currentFilterLabel = $filterLabels[$filter] ?? 'All';
       </div>
     </div>
   <?php endwhile; ?>
-
+ 
+  </div>
 </div>
 
 
