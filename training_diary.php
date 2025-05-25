@@ -15,7 +15,10 @@ include 'includes/avatar_loader.php';
 
 mysqli_set_charset($conn, "utf8mb4");
 
-include 'includes/header.php';
+if (!isset($_GET['ajax'])) {
+    include 'includes/header.php';
+}
+
 
 
 if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
