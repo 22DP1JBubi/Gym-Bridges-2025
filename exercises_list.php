@@ -158,7 +158,11 @@ $exercises = $conn->query("SELECT * FROM exercises ORDER BY id DESC");
             <div class="row">
                 <div class="col-md-6 mb-3"><label>Name</label><input name="name" class="form-control" required></div>
                 <div class="col-md-6 mb-3"><label>Video URL</label><input name="video_url" class="form-control"></div>
-                <div class="col-md-6 mb-3"><label>Image</label><input type="file" name="image" class="form-control"></div>
+                <div class="col-md-6 mb-3"><label>Image</label><input type="file" name="image" class="form-control">
+                    <div class="form-text text-muted">
+                        Max 20 images, total size must not exceed 40MB.
+                    </div>
+                </div>
 
                 <div class="col-md-6 mb-3">
                     <label>Equipment</label>
@@ -257,8 +261,13 @@ $exercises = $conn->query("SELECT * FROM exercises ORDER BY id DESC");
 
                 <div class="col-md-6 mb-3">
                     <label>New Image (optional)</label>
+
                     <input type="file" name="new_image" class="form-control">
+                    <div class="form-text text-muted">
+                        Max 20 images, total size must not exceed 40MB.
+                    </div>
                 </div>
+
             </div>
 
 

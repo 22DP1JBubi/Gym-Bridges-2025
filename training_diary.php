@@ -270,6 +270,10 @@ if (isset($_GET['ajax']) && $_GET['ajax'] === 'get_program_days_full' && isset($
                     <button type="button" class="btn btn-outline-primary mt-2" onclick="document.getElementById('imageInput').click()">
                         <i class="bi bi-plus-circle"></i> Add Images
                     </button>
+                    <div class="form-text text-muted">
+                        Max 20 images, total size must not exceed 40MB.
+                    </div>
+
                 </div>
 
             </div>

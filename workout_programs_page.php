@@ -78,6 +78,17 @@ function buildQuery($newParams = []) {
       transform: translateY(-4px);
       box-shadow: 0 4px 25px 0 rgba(0, 0, 0, .3), 0 0 1px 0 rgba(0, 0, 0, .25);
     }
+
+    .card:hover .card-content, .card.hover .card-content {
+      box-shadow: inset 0 3px 0 0 #ccb65e;
+      border-color: #ccb65e;
+    }
+    .card:hover .card-img .overlay, .card.hover .card-img .overlay {
+      background-color: rgba(25, 29, 38, .85);
+      transition: opacity .2s ease;
+      opacity: 1;
+    }
+
     .card-img {
       position: relative;
       height: 220px;
@@ -243,9 +254,11 @@ function buildQuery($newParams = []) {
         <div class="col-lg-3 col-md-6 mb-4">
           <div class="card">
             <div class="card-img" style="height:220px;background-size:cover;background-image:url('<?= htmlspecialchars($prog['image']) ?>')">
-              <div class="overlay d-flex align-items-center justify-content-center" style="background:rgba(0,0,0,0.5);opacity:0;transition:0.3s;">
-                <a href="workout_program_view.php?id=<?= $prog['id'] ?>" class="btn btn-light">Show program</a>
+             <div class="overlay">
+              <div class="overlay-content">
+                <a class="hover" href="workout_program_view.php?id=<?= $prog['id'] ?>">Show program</a>
               </div>
+            </div>
             </div>
             <div class="card-content p-3">
               <h5><?= htmlspecialchars($prog['title']) ?></h5>

@@ -17,21 +17,21 @@ $muscleGroups = [
   "Legs" => ["Quadriceps", "Hamstrings", "Adductors", "Calves", "Glutes"]
 ];
 
-
-// Получение параметров
 $muscle = $_GET['muscle'] ?? null;
 $category = $_GET['category'] ?? null;
 $diffSort = $_GET['diff_sort'] ?? '';
 $alphaSort = $_GET['alpha_sort'] ?? '';
 $difficulty = $_GET['difficulty'] ?? [];
+$search = $_GET['search'] ?? null;
 
+$perPage = 16;
+$page = isset($_GET['page']) && is_numeric($_GET['page']) ? (int)$_GET['page'] : 1;
+$offset = ($page - 1) * $perPage;
 
-
-// Определим текущую и активную категорию
+// Определение активной категории
 $currentMuscle = $muscle;
 $currentCategory = $category;
 $activeCategory = null;
-
 if (!$currentCategory && $currentMuscle) {
     foreach ($muscleGroups as $cat => $muscles) {
         if (in_array($currentMuscle, $muscles)) {
@@ -44,12 +44,11 @@ if (!$currentCategory && $currentMuscle) {
     $activeCategory = $currentCategory;
 }
 
-// Подготовка фильтров
+// Подготовка запроса
 $whereParts = [];
 $params = [];
 $types = '';
 
-// === Фильтр по мышце/категории ===
 if ($muscle) {
     $whereParts[] = "FIND_IN_SET(?, muscle_group)";
     $params[] = $muscle;
@@ -62,20 +61,15 @@ if ($muscle) {
     $types .= str_repeat('s', count($group));
 }
 
-// === Фильтр по сложности ===
 if (!empty($difficulty) && is_array($difficulty)) {
     $valid = array_filter($difficulty, fn($v) => in_array($v, ['1','2','3','4','5']));
     if ($valid) {
-        $inClause = implode(',', array_fill(0, count($valid), '?'));
-        $whereParts[] = "difficulty IN ($inClause)";
+        $placeholders = implode(',', array_fill(0, count($valid), '?'));
+        $whereParts[] = "difficulty IN ($placeholders)";
         $params = array_merge($params, $valid);
         $types .= str_repeat('i', count($valid));
     }
 }
-
-// === Фильтрация по поиску ===
-$search = $_GET['search'] ?? null;
-$searchParam = $search ? "search=" . urlencode($search) . "&" : '';
 
 if ($search) {
     $whereParts[] = "name LIKE ?";
@@ -83,35 +77,54 @@ if ($search) {
     $types .= 's';
 }
 
-// === Построение запроса ===
+// === Считаем общее количество
+$countQuery = "SELECT COUNT(*) as total FROM exercises";
+if (!empty($whereParts)) {
+    $countQuery .= " WHERE " . implode(" AND ", $whereParts);
+}
+$countStmt = $conn->prepare($countQuery);
+if (!empty($params)) {
+    $countStmt->bind_param($types, ...$params);
+}
+$countStmt->execute();
+$totalResult = $countStmt->get_result();
+$totalExercises = $totalResult->fetch_assoc()['total'] ?? 0;
+$countStmt->close();
+$totalPages = ceil($totalExercises / $perPage);
+
+// === Запрос данных
 $baseQuery = "SELECT * FROM exercises";
 if (!empty($whereParts)) {
-    $baseQuery .= ' WHERE ' . implode(' AND ', $whereParts);
+    $baseQuery .= " WHERE " . implode(" AND ", $whereParts);
 }
-
-
 
 // === Сортировка ===
+$orderClause = '';
 if ($alphaSort === 'asc') {
-    $baseQuery .= " ORDER BY name ASC";
+    $orderClause = " ORDER BY name ASC";
 } elseif ($alphaSort === 'desc') {
-    $baseQuery .= " ORDER BY name DESC";
+    $orderClause = " ORDER BY name DESC";
 } elseif ($diffSort === 'asc') {
-    $baseQuery .= " ORDER BY difficulty ASC";
+    $orderClause = " ORDER BY difficulty ASC";
 } elseif ($diffSort === 'desc') {
-    $baseQuery .= " ORDER BY difficulty DESC";
+    $orderClause = " ORDER BY difficulty DESC";
 }
 
+$baseQuery .= $orderClause;
+$baseQuery .= " LIMIT ? OFFSET ?";
+$params[] = $perPage;
+$params[] = $offset;
+$types .= 'ii';
 
 
-// === Выполнение запроса ===
+// Выполнение
 $stmt = $conn->prepare($baseQuery);
-if (!empty($params)) {
-    $stmt->bind_param($types, ...$params);
-}
+$stmt->bind_param($types, ...$params);
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -284,6 +297,11 @@ $result = $stmt->get_result();
       $difficulty = $_GET['difficulty'] ?? [];
 
       $baseLink = "exercises_page.php?";
+
+      $searchParam = $search ? "search=" . urlencode($search) . "&" : "";
+      $diffSortParam = $diffSort ? "diff_sort=" . urlencode($diffSort) . "&" : "";
+
+
       if ($currentCategory) $baseLink .= "category=" . urlencode($currentCategory) . "&";
       if ($currentMuscle) $baseLink .= "muscle=" . urlencode($currentMuscle) . "&";
 
@@ -362,8 +380,8 @@ $result = $stmt->get_result();
     
     <!-- A-Z / Z-A -->
     <div class="btn-group">
-      <a href="<?= $baseLink . $searchParam ?>alpha_sort=asc&<?= $difficultyParams ?>" class="btn btn-outline-primary <?= ($alphaSort === 'asc') ? 'active' : '' ?>">A–Z</a>
-      <a href="<?= $baseLink . $searchParam ?>alpha_sort=desc&<?= $difficultyParams ?>" class="btn btn-outline-primary <?= ($alphaSort === 'desc') ? 'active' : '' ?>">Z–A</a>
+       <a href="<?= $baseLink . $searchParam . $diffSortParam ?>alpha_sort=asc&<?= $difficultyParams ?>" class="btn btn-outline-primary <?= ($alphaSort === 'asc') ? 'active' : '' ?>">A–Z</a>
+       <a href="<?= $baseLink . $searchParam . $diffSortParam ?>alpha_sort=desc&<?= $difficultyParams ?>" class="btn btn-outline-primary <?= ($alphaSort === 'desc') ? 'active' : '' ?>">Z–A</a>
     </div>
 
     <!-- Difficulty фильтр и сортировка -->
@@ -475,6 +493,43 @@ $result = $stmt->get_result();
           </div>
         </div>
       <?php endwhile; ?>
+      
+      <?php if ($totalPages > 1): ?>
+        <div class="d-flex justify-content-center mt-4">
+          <nav>
+            <ul class="pagination">
+
+              <?php
+              // Сохраняем текущие GET-параметры, кроме page
+              $queryWithoutPage = $_GET;
+              unset($queryWithoutPage['page']);
+              ?>
+
+              <?php if ($page > 1): ?>
+                <li class="page-item">
+                  <a class="page-link" href="?<?= http_build_query(array_merge($queryWithoutPage, ['page' => $page - 1])) ?>">Previous</a>
+                </li>
+              <?php endif; ?>
+
+              <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
+                  <a class="page-link" href="?<?= http_build_query(array_merge($queryWithoutPage, ['page' => $i])) ?>"><?= $i ?></a>
+                </li>
+              <?php endfor; ?>
+
+              <?php if ($page < $totalPages): ?>
+                <li class="page-item">
+                  <a class="page-link" href="?<?= http_build_query(array_merge($queryWithoutPage, ['page' => $page + 1])) ?>">Next</a>
+                </li>
+              <?php endif; ?>
+
+            </ul>
+          </nav>
+        </div>
+      <?php endif; ?>
+
+
+
     </div>
   </div>
 </div>

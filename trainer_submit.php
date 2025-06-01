@@ -172,6 +172,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <label class="form-label d-block">Profile Photo</label>
         <input type="file" name="image" id="imageInput" class="form-control mb-2" accept="image/*" required>
         <img id="previewImage" src="#" alt="Preview" class="img-fluid rounded shadow" style="max-width: 200px; display: none;">
+
+        <div class="form-text text-muted">
+                    Max 20 images, total size must not exceed 40MB.
+        </div>
       </div>
 
       <div class="col-md-12">
@@ -331,7 +335,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </div>
 
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdfFvIVxr2LFwZq37NDkl0prXsPet6KGM&libraries=places"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdfFvIVxr2LFwZq37NDkl0prXsPet6KGM&libraries=places&callback=initAutocomplete" async defer></script>
+
 
 
 <script>

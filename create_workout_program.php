@@ -242,6 +242,10 @@ $exercises = $conn->query("SELECT id, name FROM exercises ORDER BY name ASC");
                 <div class="col-md-6">
                     <label for="image" class="form-label">Program Image</label>
                     <input type="file" name="image" id="image" class="form-control">
+
+                    <div class="form-text text-muted">
+                        Max 20 images, total size must not exceed 40MB.
+                    </div>
                 </div>
 
                 <div class="col-md-6 mb-3">
@@ -444,6 +448,10 @@ $exercises = $conn->query("SELECT id, name FROM exercises ORDER BY name ASC");
                 </div>
                 <input type="hidden" name="existing_image" value="<?= htmlspecialchars($editProgram['image']) ?>">
               <?php endif; ?>
+
+              <div class="form-text text-muted">
+                    Max 20 images, total size must not exceed 40MB.
+                </div>
             </div>
 
             <div class="mt-5">

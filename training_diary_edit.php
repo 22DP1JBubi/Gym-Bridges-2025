@@ -229,6 +229,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_diary'])) {
             <button type="button" class="btn btn-outline-primary mt-2" onclick="document.getElementById('imageInput').click()">
                 <i class="bi bi-plus-circle"></i> Add Images
             </button>
+            <div class="form-text text-muted">
+                Max 20 images, total size must not exceed 40MB.
+            </div>
+
         </div>
     </div>
 

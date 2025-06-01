@@ -104,7 +104,7 @@ $scrollLink = $currentPage === 'index.php' ? '#muscle-map' : 'index.php#muscle-m
         <li class="nav-item"><a class="nav-link" href="exercises_page.php">Exercises</a></li>
         <li class="nav-item"><a class="nav-link" href="workout_programs_page.php">Training programs</a></li>
         <li class="nav-item"><a class="nav-link" href="calorie_calculator.php">Calorie calculator</a></li>
-        <li class="nav-item"><a class="nav-link" href="aboutus.html">About us</a></li>
+        <li class="nav-item"><a class="nav-link" href="aboutus.php">About us</a></li>
 
       </ul>
 
